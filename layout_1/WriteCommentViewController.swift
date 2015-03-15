@@ -101,27 +101,18 @@ class WriteCommentViewController: UIViewController {
             }
             else {
                 // The JSONObjectWithData constructor didn't return an error. But, we should still
-                
-                
-                
                 // check and make sure that json has a value using optional binding.
                 if let parseJSON = json {
                     
-                 //   self.theJSON = json
-                  //  self.hasLoaded = true
-                   // self.numOfCells = parseJSON["results"]!.count
+              
                     
-                   // self.reload_table()
-                    // Okay, the parsedJSON is here, let's get the value for 'success' out of it
-                    //self.theJSON = parseJSON
-                    //var success = parseJSON["results"]![0]["hearts"] as? String
-                    //println("Succes: \(success)")
-                    //self.hearts[0] = parseJSON["results"]![0]["hearts"]
+                    self.commentView.resignFirstResponder()
+                    
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                    
                 }
                 else {
-                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
-                    //let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
-                    //println("Error could not parse JSON: \(jsonStr)")
+                   
                 }
             }
         })

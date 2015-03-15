@@ -23,6 +23,11 @@
 		EC9B53C71AA7ED1500348B31 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC9B53C51AA7ED1500348B31 /* LaunchScreen.xib */; };
 		EC9B53D31AA7ED1500348B31 /* layout_1Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9B53D21AA7ED1500348B31 /* layout_1Tests.swift */; };
 		ECA90EB61AB404AF00195A75 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA90EB51AB404AF00195A75 /* ViewController.swift */; };
+		ECA90EB81AB5445200195A75 /* profile_cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA90EB71AB5445200195A75 /* profile_cell.swift */; };
+		ECA90EBA1AB54F7800195A75 /* UserPostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA90EB91AB54F7800195A75 /* UserPostsViewController.swift */; };
+		ECA90EBC1AB551B800195A75 /* UserFriendsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA90EBB1AB551B800195A75 /* UserFriendsViewController.swift */; };
+		ECA90EBE1AB55FFA00195A75 /* user_cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA90EBD1AB55FFA00195A75 /* user_cell.swift */; };
+		ECA90EC01AB5653E00195A75 /* KarmaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA90EBF1AB5653E00195A75 /* KarmaViewController.swift */; };
 		ECAE3B131AB188F500B5AD65 /* MyProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECAE3B121AB188F500B5AD65 /* MyProfileViewController.swift */; };
 		ECAE3B151AB2421500B5AD65 /* loader.gif in Resources */ = {isa = PBXBuildFile; fileRef = ECAE3B141AB2421500B5AD65 /* loader.gif */; };
 		ECAE3B171AB2433A00B5AD65 /* Gif.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECAE3B161AB2433A00B5AD65 /* Gif.swift */; };
@@ -62,6 +67,11 @@
 		EC9B53D11AA7ED1500348B31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EC9B53D21AA7ED1500348B31 /* layout_1Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = layout_1Tests.swift; sourceTree = "<group>"; };
 		ECA90EB51AB404AF00195A75 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		ECA90EB71AB5445200195A75 /* profile_cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = profile_cell.swift; sourceTree = "<group>"; };
+		ECA90EB91AB54F7800195A75 /* UserPostsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPostsViewController.swift; sourceTree = "<group>"; };
+		ECA90EBB1AB551B800195A75 /* UserFriendsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserFriendsViewController.swift; sourceTree = "<group>"; };
+		ECA90EBD1AB55FFA00195A75 /* user_cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = user_cell.swift; sourceTree = "<group>"; };
+		ECA90EBF1AB5653E00195A75 /* KarmaViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KarmaViewController.swift; sourceTree = "<group>"; };
 		ECAE3B121AB188F500B5AD65 /* MyProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyProfileViewController.swift; sourceTree = "<group>"; };
 		ECAE3B141AB2421500B5AD65 /* loader.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loader.gif; sourceTree = "<group>"; };
 		ECAE3B161AB2433A00B5AD65 /* Gif.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Gif.swift; sourceTree = "<group>"; };
@@ -124,6 +134,7 @@
 				EC9B53BC1AA7ED1500348B31 /* AppDelegate.swift */,
 				EC9986961AABE31F00E0583D /* ThirdViewController.swift */,
 				EC21857C1AAA7E2E00703CF9 /* custom_cell.swift */,
+				ECA90EB71AB5445200195A75 /* profile_cell.swift */,
 				EC21856F1AAA6D4F00703CF9 /* PMBPostTableViewCell.h */,
 				EC9B53C01AA7ED1500348B31 /* Main.storyboard */,
 				EC9B53C31AA7ED1500348B31 /* Images.xcassets */,
@@ -134,10 +145,14 @@
 				EC4EDD1B1AAFF217006270F3 /* data.swift */,
 				EC4EDD531AB00CEE006270F3 /* FBLoginViewController.swift */,
 				EC4EDD561AB010BD006270F3 /* Bridging-Header.h */,
-				ECAE3B121AB188F500B5AD65 /* MyProfileViewController.swift */,
 				ECAE3B161AB2433A00B5AD65 /* Gif.swift */,
 				ECAE3B181AB3A6E800B5AD65 /* FirstSceneViewController.swift */,
 				ECA90EB51AB404AF00195A75 /* ViewController.swift */,
+				ECAE3B121AB188F500B5AD65 /* MyProfileViewController.swift */,
+				ECA90EBD1AB55FFA00195A75 /* user_cell.swift */,
+				ECA90EBF1AB5653E00195A75 /* KarmaViewController.swift */,
+				ECA90EB91AB54F7800195A75 /* UserPostsViewController.swift */,
+				ECA90EBB1AB551B800195A75 /* UserFriendsViewController.swift */,
 			);
 			path = layout_1;
 			sourceTree = "<group>";
@@ -274,15 +289,20 @@
 				ECAE3B131AB188F500B5AD65 /* MyProfileViewController.swift in Sources */,
 				EC4EDD501AAFF32D006270F3 /* layout_1.xcdatamodeld in Sources */,
 				EC9986971AABE31F00E0583D /* ThirdViewController.swift in Sources */,
+				ECA90EB81AB5445200195A75 /* profile_cell.swift in Sources */,
 				ECAE3B171AB2433A00B5AD65 /* Gif.swift in Sources */,
 				EC99869D1AABECD300E0583D /* ProfileViewController.swift in Sources */,
 				ECAE3B191AB3A6E800B5AD65 /* FirstSceneViewController.swift in Sources */,
 				ECA90EB61AB404AF00195A75 /* ViewController.swift in Sources */,
+				ECA90EC01AB5653E00195A75 /* KarmaViewController.swift in Sources */,
+				ECA90EBE1AB55FFA00195A75 /* user_cell.swift in Sources */,
 				EC21857D1AAA7E2E00703CF9 /* custom_cell.swift in Sources */,
+				ECA90EBA1AB54F7800195A75 /* UserPostsViewController.swift in Sources */,
 				EC4EDD541AB00CEE006270F3 /* FBLoginViewController.swift in Sources */,
 				EC4EDD161AAF76D2006270F3 /* WriteCommentViewController.swift in Sources */,
 				EC4EDD1C1AAFF217006270F3 /* data.swift in Sources */,
 				EC9B53BD1AA7ED1500348B31 /* AppDelegate.swift in Sources */,
+				ECA90EBC1AB551B800195A75 /* UserFriendsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

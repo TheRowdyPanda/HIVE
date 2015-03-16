@@ -146,10 +146,25 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             cell.heart_icon?.addGestureRecognizer(voteUp)
         }
         
+        let oldH = cell.frame.height
+        
+      //  cell.comImage.removeFromSuperview()
+       // cell.systemLayoutSizeFittingSize(CGSize(width: cell.frame.width, height: oldH), withHorizontalFittingPriority: UILayoutFittingExpandedSize, verticalFittingPriority: UILayoutFittingExpandedSize)
+        
+      //  cell.systemLayoutSizeFittingSize(CGSize(width: cell.frame.width, height: oldH), withHorizontalFittingPriority: UILayoutFittingExpandedSize, verticalFittingPriority: UILayoutFittingExpandedSize)
+        
+     //   cell.systemLayoutSizeFittingSize(CGSize(width: cell.frame.width, height: oldH))
+        
+      //  cell.frame = CGRect(x: cell.frame.origin.x, y: cell.frame.origin.y, width: cell.frame.width, height:oldH)
+      //  self.tableView.rowHeight = oldH
+        //cell.comImage.frame = CGRect(x: cell.comImage.frame.origin.x, y: cell.comImage.frame.origin.y, width: cell.comImage.frame.width, height: 1.0)
+        //cell.comImage.frame = CGRect(x: comImage.frame.origin.x, y: comImage.frame.origin.y, width: comImage.frame.width, height: 0.0)
         return cell
     }
     
-    
+//   func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+//       return 68
+//    }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         

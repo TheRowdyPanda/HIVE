@@ -253,6 +253,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         cell.valueLabel?.text = self.leftHandItems[indexPath.row]
         
+        if(indexPath.row == 0){
+            cell.userInteractionEnabled = false
+        }
+        
         return cell
     }
     

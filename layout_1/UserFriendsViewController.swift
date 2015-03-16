@@ -19,6 +19,10 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
    @IBOutlet var tableView:UITableView!
     @IBOutlet var titleItem:UINavigationItem!
     
+    var theJSON: NSDictionary!
+    var hasLoaded:Bool = false
+    var numOfCells = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -62,7 +66,7 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         //make sure the json has loaded before we do anything
-        return 5
+        return numOfCells
     }
     
     
@@ -71,10 +75,43 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
         var cell = tableView.dequeueReusableCellWithIdentifier("user_cell") as user_cell
         
     
+        var fbid = theJSON["results"]![indexPath.row]["userID"] as String!
+
+        
+        let url = NSURL(string: "http://graph.facebook.com/\(fbid)/picture?width=50&height=50")
+        let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
+        
+        
+        cell.userImage?.image = UIImage(data: data!)
+        cell.nameLabel.text = theJSON["results"]![indexPath.row]["userName"] as String!
+
+        
+        let followTest = theJSON["results"]![indexPath.row]["userFollow"] as String!
+        //test if general user is following the presented user
+        //cell.followButton.titleLabel?.text = "test"
+        
+        if(followTest == "yes"){//the user is follow, we give option to change
+             cell.followButton.setTitle("Unfollow", forState: UIControlState.Normal)
+        }
+        else{
+            cell.followButton.setTitle("Follow", forState: UIControlState.Normal)
+        }
+
+        
+       // cell.followButton.addTarget(self, action: "DidPressFollow:", forControlEvents: .TouchUpInside)
+        //cell.followButton.tag = indexPath.row
+        cell.userFBID = fbid
 
         return cell
     }
     
+//    
+//    func DidPressFollow(sender: UIButton!){
+//        println("KLSDFJKSDFJ:\(sender.tag)")
+//        
+//
+//        //self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: sender.tag, inSection: 0)], withRowAnimation: UITableViewRowAnimation.None)
+//    }
     
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -126,9 +163,11 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
                 if let parseJSON = json {
                     
                     
-                    dispatch_async(dispatch_get_main_queue(),{
-
-                    })
+                    self.theJSON = json
+                    self.hasLoaded = true
+                    self.numOfCells = parseJSON["results"]!.count
+                    
+                    self.reload_table()
                     
                     
                     
@@ -144,6 +183,30 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
 
         
     }
+    
+    func reload_table(){
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+            Int64(0.3 * Double(NSEC_PER_SEC)))
+        
+        dispatch_after(delayTime, dispatch_get_main_queue()) {
+            
+            dispatch_async(dispatch_get_main_queue(),{
+                self.tableView.reloadData()
+                //self.removeLoadingScreen()
+            })
+            
+        }
+        
+    }
 
+    
+    
+    
+    
+    
+    
+    
+    
+       
     
 }

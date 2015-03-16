@@ -20,10 +20,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet var tableView: UITableView!
     @IBOutlet var customSC: UISegmentedControl!
     
+    var navCont: UINavigationController!
+    @IBOutlet var navBar: UINavigationBar!
+    @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
+    var isBounce:Bool! = false
+    
+    
+    
     var hasLoaded = false
     var theJSON: NSDictionary!
     var savedFBID = "none"
     var numOfCells = 0
+    var oldScrollPost:CGFloat = 0.0
     
     
     var currentUserLocation = "none"
@@ -58,6 +66,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         //set up the segmented control action
         customSC.addTarget(self, action: "toggleComments:", forControlEvents: .ValueChanged)
+    
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -100,6 +109,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as String!
         cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as String!
         cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as String!
+        cell.user_id = theJSON["results"]![indexPath.row]["user_id"] as String!
+        
+        
+        let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
+        // 4
+        authorTap.delegate = self
+        cell.author_label?.tag = indexPath.row
+        cell.author_label?.userInteractionEnabled = true
+        cell.author_label?.addGestureRecognizer(authorTap)
+        
         
         //find out if the user has liked the comment or not
         var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as String!
@@ -153,8 +172,81 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
-
+    func scrollViewDidScrollToTop(scrollView: UIScrollView) {
+        isBounce = true
+    }
     
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        
+        var currentOffset = scrollView.contentOffset.y;
+        
+        var test = self.oldScrollPost - currentOffset
+        
+        println("SCROLL:\(currentOffset)")
+        println("SIZE:\(scrollView.contentSize.height)")
+        println("FRAME:\(scrollView.frame.height)")
+        if(test >= 0 ){
+          //  animateBarDown()
+        }
+        else{
+        //    animateBarUp()
+            
+        }
+       
+        
+        self.oldScrollPost = currentOffset
+        
+        if(currentOffset > 20 && currentOffset < (scrollView.contentSize.height - scrollView.frame.height - 100)){
+                animateBar(test)
+        }
+
+    }
+    
+    func animateBar(byNum: CGFloat){
+        
+        let initVal:CGFloat = -20
+        let maxVal = 0 - self.navBar.frame.height
+        
+        
+        topLayoutConstraint.constant = topLayoutConstraint.constant + byNum
+        
+        if(topLayoutConstraint.constant < maxVal){
+            topLayoutConstraint.constant = maxVal
+        }
+        else if(topLayoutConstraint.constant > initVal){
+            topLayoutConstraint.constant = initVal
+        }
+        
+        UIView.animateWithDuration(0.2, delay: 0.0, options: .BeginFromCurrentState, animations: {
+            self.view.layoutIfNeeded()
+            }, completion: nil)
+        
+    }
+    func animateBarUp(){
+        
+        topLayoutConstraint.constant = -100
+        
+        UIView.animateWithDuration(0.2, delay: 0.0, options: .BeginFromCurrentState, animations: {
+            self.view.layoutIfNeeded()
+            }, completion: nil)
+    
+    
+    }
+    
+    func animateBarDown(){
+        
+        
+        UIView.animateWithDuration(0.2, delay:0.1, options: .CurveEaseOut, animations: {
+            
+
+            }, completion: { finished in
+                println("Basket doors opened!")
+        })
+        
+        
+    }
+
     
     
     //pragma mark - ajax
@@ -294,6 +386,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
+    
+    func showUserProfile(sender: UIGestureRecognizer){
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+        let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as ProfileViewController
+        
+        
+        var authorLabel = sender.view? as UILabel
+        
+        let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as custom_cell
+        
+        //profView.comment = gotCell.comment_label.text!
+        profView.userFBID = gotCell.user_id
+        
+        profView.userName = gotCell.author_label.text!
+        
+        self.presentViewController(profView, animated: true, completion: nil)
+        
+        
+    }
     
     func voteCommentUp(sender: UIGestureRecognizer){
         

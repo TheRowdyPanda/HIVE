@@ -19,6 +19,7 @@ class custom_cell: UITableViewCell {
     @IBOutlet var loc_label: UILabel!
     
     var comment_id = "nil"
+    var user_id = "nil"
     
 
     override func awakeFromNib() {

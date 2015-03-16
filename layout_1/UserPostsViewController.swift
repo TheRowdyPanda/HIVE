@@ -14,6 +14,8 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
     
      @IBOutlet var tableView:UITableView!
     
+    var userFBID = "none"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

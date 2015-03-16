@@ -31,7 +31,7 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
             titleItem.title = "Following"
         }
         
-        
+        get_user_followers()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -83,6 +83,67 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
         
     }
     
+    
+    
+    //pragma mark - ajax
+    func get_user_followers(){
+        
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        
+        
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_user_followers")
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        var params = ["gUser_fbID":fbid, "iUser_fbID":userFBID] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+            }
+            else {
+                
+                if let parseJSON = json {
+                    
+                    
+                    dispatch_async(dispatch_get_main_queue(),{
+
+                    })
+                    
+                    
+                    
+                }
+                else {
+                    
+                    
+                }
+            }
+        })
+        task.resume()
+        //END AJAX
+
+        
+    }
 
     
 }

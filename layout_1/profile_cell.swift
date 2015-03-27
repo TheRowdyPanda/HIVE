@@ -14,11 +14,13 @@ class profile_cell: UITableViewCell {
     @IBOutlet var idLabel: UILabel!
     @IBOutlet var valueLabel: UILabel!
     
-    
+    var userFBID = "none"
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        
         
     }
     

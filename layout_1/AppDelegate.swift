@@ -19,6 +19,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         FBLoginView.self
         FBProfilePictureView.self
+        
+        
+      //  [GAI sharedInstance].trackUncaughtExceptions = YES;
+        GAI.sharedInstance().trackUncaughtExceptions = true
+        // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
+        //[GAI sharedInstance].dispatchInterval = 20;
+        GAI.sharedInstance().dispatchInterval = 20
+        
+        // Optional: set Logger to VERBOSE for debug information.
+        //[[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelVerbose];
+        GAI.sharedInstance().logger.logLevel =  GAILogLevel.Verbose;
+        
+        // Initialize tracker. Replace with your tracking ID.
+        //[[GAI sharedInstance] trackerWithTrackingId:@"UA-XXXX-Y"];
+        GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
+        
+        //registering for sending user various kinds of notifications
+
+//        let notificationType = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound
+//        let settings = UIUserNotificationSettings(forTypes: notificationType, categories: nil)
+//        application.registerUserNotificationSettings(settings)
+        
         return true
     }
 
@@ -153,7 +175,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }()
     
     
-    
+    //pragma mark - notifications
+//    
+//    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
+//        application.registerForRemoteNotifications()
+//    }
+//    
+//    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
+//        if(identifier == "declineAction"){
+//            
+//        }
+//        else if(identifier == "answerAction"){
+//            
+//        }
+//    }
+//    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+//        NSLog("My device token is: %@", deviceToken)
+//    }
+//    
+//    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+//        NSLog("Failed to get token %@", error)
+//    }
     // MARK: - Core Data Saving support
     
     

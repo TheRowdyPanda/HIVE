@@ -10,7 +10,7 @@ import UIKit
 
 
 
-class custom_cell: UITableViewCell {
+class custom_cell: UITableViewCell{
     
     @IBOutlet var heart_label: UILabel!
     @IBOutlet var comment_label: UILabel!
@@ -23,69 +23,50 @@ class custom_cell: UITableViewCell {
     @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
     var comment_id = "nil"
     var user_id = "nil"
+    var imageLink = "none"
     
    
     
 
     override func awakeFromNib() {
         super.awakeFromNib()
+
+        
         // Initialization code
         
 
-//        
-//        for c in comImage.constraints(){
-//        comImage.removeConstraint(c as NSLayoutConstraint)
+//        if(imageLink == "none"){
+//            //xcomImage.removeFromSuperview()
+//            //            /http://i.imgur.com/qG8Pg55.jpg
+//            let url = NSURL(string: "http://i.imgur.com/ckSBw57.jpg")
+//            let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
+//            comImage.image = UIImage(data: data!)
 //        }
-//        
-    comImage.removeFromSuperview()
-//        
-        
-//        let leftConstraint = NSLayoutConstraint(item:self.author_label,
-//            attribute:NSLayoutAttribute.Top,
-//            relatedBy:NSLayoutRelation.Equal,
-//            toItem:self.comment_label,
-//            attribute:NSLayoutAttribute.Bottom,
-//            multiplier:1.0,
-//            constant:20);
-//        
-//        self.addConstraint(leftConstraint);
-//        
-//        let leftConstraint2 = NSLayoutConstraint(item:self.loc_label,
-//            attribute:NSLayoutAttribute.Top,
-//            relatedBy:NSLayoutRelation.Equal,
-//            toItem:self.comment_label,
-//            attribute:NSLayoutAttribute.Bottom,
-//            multiplier:1.0,
-//            constant:20);
-//        
-//        self.addConstraint(leftConstraint2);
-        
-//        let leftConstraint = NSLayoutConstraint(item:self.author_label,
-//            attribute:NSLayoutAttribute.Top,
-//            relatedBy:NSLayoutRelation.Equal,
-//            toItem:self.comment_label,
-//            attribute:NSLayoutAttribute.Bottom,
-//            multiplier:1.0,
-//            constant:20);
-//        
-    //    self.addConstraint(leftConstraint);
-        
+//        else{
+//            
+//            let url = NSURL(string: imageLink)
+//            let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
+//            comImage.image = UIImage(data: data!)
+//            
+//            
+//        }
+
         self.comment_label.numberOfLines = 0
         self.comment_label.sizeToFit()
         
-        //topLayoutConstraint.secondItem = self.comment_label
-//        let imageName = "honey_full.jpg"
-//        let image = UIImage(named: imageName)
-//        let imageView = UIImageView(image: image!)
-//        
-//        imageView.frame = CGRect(x: 0, y: 0, width: 200, height: 400)
-//        imageView.backgroundColor = UIColor.blackColor()
-//        self.addSubview(imageView)
+
         
     }
-
+//    
+//    override func prepareForReuse() {
+//        super.prepareForReuse()
+//        self.comImage = nil
+//        
+//    }
+    
+//    
     override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
+        super.setSelected(selected, animated: false)
 
         // Configure the view for the selected state
     }

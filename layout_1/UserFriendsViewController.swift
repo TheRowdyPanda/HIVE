@@ -30,12 +30,14 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
         
         if(ajaxRequestString == "followers"){
             titleItem.title = "Followers"
+            get_user_followers()
         }
         else if(ajaxRequestString == "following"){
             titleItem.title = "Following"
+            get_user_following()
         }
         
-        get_user_followers()
+        
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -116,7 +118,26 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-     
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+        let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as ProfileViewController
+        
+        
+      //  var authorLabel = sender.view? as UILabel
+        
+     //   let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
+        
+        
+         let gotCell = tableView.cellForRowAtIndexPath(indexPath) as user_cell
+
+            profView.userFBID = gotCell.userFBID
+            profView.userName = gotCell.nameLabel.text!
+
+        
+        
+        self.presentViewController(profView, animated: true, completion: nil)
+        
+        
         
     }
     
@@ -183,6 +204,68 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
 
         
     }
+    
+    func get_user_following(){
+        
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        
+        
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_user_following")
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        var params = ["gUser_fbID":fbid, "iUser_fbID":userFBID] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+            }
+            else {
+                
+                if let parseJSON = json {
+                    
+                    
+                    self.theJSON = json
+                    self.hasLoaded = true
+                    self.numOfCells = parseJSON["results"]!.count
+                    
+                    self.reload_table()
+                    
+                    
+                    
+                }
+                else {
+                    
+                    
+                }
+            }
+        })
+        task.resume()
+        //END AJAX
+        
+        
+    }
+    
     
     func reload_table(){
         let delayTime = dispatch_time(DISPATCH_TIME_NOW,

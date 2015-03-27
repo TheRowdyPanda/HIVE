@@ -35,7 +35,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     let leftHandItems = ["","Last Check In", "Posts", "Karma","Followers", "Following"]
     
-    let rightHandItems = ["","@This Place", "250","1023", "92", "99"]
+    var rightHandItems: [String] = ["", "", "@This Place", "250", "92", "99"]
     
     //let transportItems = ["Bus","Helicopter","Truck","Boat","Bicycle","Motorcycle","Plane","Train","Car","Scooter","Caravan"]
     
@@ -72,7 +72,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         followButton.titleLabel?.text = ""
         
         is_user_following()
-        
+        getUserInfo()
     }
     
     func getUserPicture(){
@@ -160,6 +160,83 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
+    
+    func getUserInfo(){
+        
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_user_info")
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+
+        var params = ["fb_id":userFBID] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            
+            //self.theJSON = NSJSONSerialization.JSONObjectWithData(json, options:.MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+                
+                
+            }
+            else {
+                // The JSONObjectWithData constructor didn't return an error. But, we should still
+                
+                
+                
+                // check and make sure that json has a value using optional binding.
+                if let parseJSON = json {
+                    
+                    
+                    //                    self.rightHandItems[1] = ""
+                    //let leftHandItems = ["","Last Check In", "Posts", "Karma","Followers", "Following"]
+                    self.rightHandItems[1] = parseJSON["results"]![0]["lastLoc"] as String! ?? ""
+                    self.rightHandItems[2] = parseJSON["results"]![0]["comments"] as String! ?? ""
+                    self.rightHandItems[3] = parseJSON["results"]![0]["karma"] as String! ?? ""
+                    self.rightHandItems[4] = parseJSON["results"]![0]["followers"] as String! ?? ""
+                    self.rightHandItems[5] = parseJSON["results"]![0]["following"] as String! ?? ""
+                    
+                    
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.tableView.reloadData()
+                    })
+                    //
+                    
+                    
+                    //   self.reload_table()
+                    
+                }
+                else {
+                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                    //   self.showErrorScreen("top")
+                }
+            }
+        })
+        task.resume()
+        //END AJAX
+        
+        
+        
+    }
+
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -251,13 +328,15 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         cell.idLabel?.text = self.leftHandItems[indexPath.row]
         
         
-        cell.valueLabel?.text = self.leftHandItems[indexPath.row]
+        cell.valueLabel?.text = self.rightHandItems[indexPath.row]
         
         if(indexPath.row == 0){
             cell.userInteractionEnabled = false
         }
         
         return cell
+        
+        
     }
     
     

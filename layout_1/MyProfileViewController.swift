@@ -24,11 +24,12 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBOutlet var navTitle:UINavigationItem!
     //let transportItems = ["Bus","Helicopter","Truck","Boat","Bicycle","Motorcycle","Plane","Train","Car","Scooter","Caravan"]
     
-    let leftHandItems = ["","Last Check In", "Posts", "Followers", "Following"]
+    let leftHandItems: [String] = ["","Last Check In", "Posts", "Followers", "Following"]
     
-    let rightHandItems = ["","@This Place", "250", "92", "99"]
+    var rightHandItems: [String] = ["","@This Place", "250", "92", "99"]
     
-    
+     var theJSON: NSDictionary!
+    var hasLoaded = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,6 +54,8 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         self.fbLoginView.delegate = self
         self.fbLoginView.readPermissions = ["public_profile", "email", "user_friends"]
+        
+        
     }
 
     
@@ -60,6 +63,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         super.viewDidAppear(animated)
         
         getUserPicture()
+        self.getUserInfo()
         // removeLoadingScreen()
     }
     
@@ -71,6 +75,16 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         let url = NSURL(string: "http://graph.facebook.com/\(fbid)/picture?width=720&height=720")
         let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
         profilePic.image = UIImage(data: data!)
+        
+//        let coverImg = UIImageView()
+//        
+//        coverImg.frame = profilePic.frame
+//        
+//        //coverImg.backgroundColor = UIColor.redColor()
+//        coverImg.image = UIImage(named: "profileCover.png")
+//        self.view.addSubview(coverImg)
+      //  self.addSubview(coverImg)
+        
         profilePic.layer.borderWidth=1.0
         profilePic.layer.masksToBounds = false
         profilePic.layer.borderColor = UIColor.whiteColor().CGColor
@@ -148,12 +162,22 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     {
         var cell = tableView.dequeueReusableCellWithIdentifier("profile_cell") as profile_cell
         
+        if(indexPath.row == 0){
+            cell.userInteractionEnabled = false
+        }
         
         cell.idLabel?.text = self.leftHandItems[indexPath.row]
       
         
-        cell.valueLabel?.text = self.leftHandItems[indexPath.row]
+//        if(self.hasLoaded == false){
+//        
+//            cell.valueLabel?.text = self.rightHandItems[indexPath.row]
+//        }
+//        else{
+//            cell.valueLabel?.text = theJSON["results"]![0][indexPath.row] as String!
+//        }
 
+        cell.valueLabel?.text = self.rightHandItems[indexPath.row]
         return cell
     }
     
@@ -175,6 +199,12 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
             let postView = mainStoryboard.instantiateViewControllerWithIdentifier("user_post_scene_id") as UserPostsViewController
             
+            let defaults = NSUserDefaults.standardUserDefaults()
+            let fbid = defaults.stringForKey("saved_fb_id") as String!
+            
+            
+            
+            postView.userFBID = fbid
             
                     // self.dismissViewControllerAnimated(true, completion: nil)
 
@@ -216,6 +246,87 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             
         }
     }
+    
+    
+    //AJAX
+    
+    func getUserInfo(){
+        
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_user_info")
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        var params = ["fb_id":fbid] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            
+            //self.theJSON = NSJSONSerialization.JSONObjectWithData(json, options:.MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+                
+                
+            }
+            else {
+                // The JSONObjectWithData constructor didn't return an error. But, we should still
+                
+                
+                
+                // check and make sure that json has a value using optional binding.
+                if let parseJSON = json {
+                    
+                    
+//                    self.rightHandItems[1] = ""
+                    // let leftHandItems: [String] = ["","Last Check In", "Posts", "Followers", "Following"]
+                    self.rightHandItems[1] = parseJSON["results"]![0]["lastLoc"] as String! ?? ""
+                    self.rightHandItems[2] = parseJSON["results"]![0]["comments"] as String! ?? ""
+                    self.rightHandItems[3] = parseJSON["results"]![0]["followers"] as String! ?? ""
+                    self.rightHandItems[4] = parseJSON["results"]![0]["following"] as String! ?? ""
+           
+                    
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.tableView.reloadData()
+                    })
+//
+                    
+
+                 //   self.reload_table()
+                    
+                }
+                else {
+                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                 //   self.showErrorScreen("top")
+                }
+            }
+        })
+        task.resume()
+        //END AJAX
+        
+        
+        
+    }
+
     
     
     

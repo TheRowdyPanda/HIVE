@@ -37,9 +37,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //registering for sending user various kinds of notifications
 
-//        let notificationType = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound
-//        let settings = UIUserNotificationSettings(forTypes: notificationType, categories: nil)
-//        application.registerUserNotificationSettings(settings)
+        let notificationType = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound
+        let settings = UIUserNotificationSettings(forTypes: notificationType, categories: nil)
+        application.registerUserNotificationSettings(settings)
         
         return true
     }
@@ -177,25 +177,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     //pragma mark - notifications
 //    
-//    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
-//        application.registerForRemoteNotifications()
-//    }
-//    
-//    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
-//        if(identifier == "declineAction"){
-//            
-//        }
-//        else if(identifier == "answerAction"){
-//            
-//        }
-//    }
-//    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-//        NSLog("My device token is: %@", deviceToken)
-//    }
-//    
-//    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
-//        NSLog("Failed to get token %@", error)
-//    }
+    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
+        application.registerForRemoteNotifications()
+    }
+    
+    func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forRemoteNotification userInfo: [NSObject : AnyObject], completionHandler: () -> Void) {
+        if(identifier == "declineAction"){
+            
+        }
+        else if(identifier == "answerAction"){
+            
+        }
+    }
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        NSLog("My device token is: %@", deviceToken)
+    }
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        NSLog("Failed to get token %@", error)
+    }
     // MARK: - Core Data Saving support
     
     

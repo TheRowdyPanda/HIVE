@@ -74,7 +74,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         let url = NSURL(string: "http://graph.facebook.com/\(fbid)/picture?width=720&height=720")
         let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
-        profilePic.image = UIImage(data: data!)
+       // profilePic.image = UIImage(data: data!)
         
 //        let coverImg = UIImageView()
 //        

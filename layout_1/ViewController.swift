@@ -59,6 +59,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         
         customSC.selectedSegmentIndex = 1
+        let font = UIFont(name: "Arial", size: 22)
+        let attr = NSDictionary(objects: [font!, UIColor.whiteColor()], forKeys: [NSFontAttributeName, NSForegroundColorAttributeName])
+        //let attr = NSDictionary(object: font!, forKey: NSFontAttributeName)
+       // customSC.titleForSegmentAtIndex(0) = "skdfK"
+       // customSC.setTitleTextAttributes = [NSForegroundColorAttributeName: UIColor.blueColor()]
+       customSC.setTitleTextAttributes(attr, forState: UIControlState.Normal)
+        customSC.setTitleTextAttributes(attr, forState: UIControlState.Highlighted)
+        //customSC.titleTextAttributesForState(UIControlState.Normal) = attr
         
         tableView.estimatedRowHeight = 68.0
         tableView.rowHeight = UITableViewAutomaticDimension
@@ -881,18 +889,25 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func toggleLocButtonLayout(){
         
-        radButton15ft.backgroundColor = UIColor.blackColor()
-        radButton150ft.backgroundColor = UIColor.blackColor()
-        radButton15min.backgroundColor = UIColor.blackColor()
+        radButton15ft.backgroundColor = UIColor.clearColor()
+        radButton150ft.backgroundColor = UIColor.clearColor()
+        radButton15min.backgroundColor = UIColor.clearColor()
+        radButton15ft.titleLabel?.textColor = UIColor.blackColor()
+        radButton150ft.titleLabel?.textColor = UIColor.blackColor()
+        radButton15min.titleLabel?.textColor = UIColor.blackColor()
+        
         if(radValue == 1){
-            radButton15ft.backgroundColor = UIColor.blueColor()
+            radButton15ft.titleLabel?.textColor = UIColor.whiteColor()
+            radButton15ft.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
             
         }
         if(radValue == 2){
-             radButton150ft.backgroundColor = UIColor.blueColor()
+             radButton150ft.titleLabel?.textColor = UIColor.whiteColor()
+            radButton150ft.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         }
         if(radValue == 3){
-             radButton15min.backgroundColor = UIColor.blueColor()
+             radButton15min.titleLabel?.textColor = UIColor.whiteColor()
+            radButton15min.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         }
         
         

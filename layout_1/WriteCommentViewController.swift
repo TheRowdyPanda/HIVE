@@ -22,6 +22,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var commentLabel: UILabel!
     @IBOutlet var authorLabel: UILabel!
+    @IBOutlet var buttonHolder: UIView!
     var testString = "1"
     var comment = "empty"
     var authorID = "empty"
@@ -75,6 +76,14 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         commentView.textColor = UIColor.lightGrayColor()
         commentView.delegate = self
        
+        let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
+        
+        buttonHolder.layer.borderWidth=2.0
+                buttonHolder.layer.masksToBounds = false
+                buttonHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
+        
+                //profilePic.layer.cornerRadius = 13
+                buttonHolder.clipsToBounds = true
         
     }
     

@@ -11,7 +11,7 @@ import UIKit
 
 
 //http://graph.facebook.com/xUID/picture?width=720&height=720
-class MyProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, FBLoginViewDelegate {
+class MyProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, FBLoginViewDelegate, UIGestureRecognizerDelegate {
     
     
     @IBOutlet var fbLoginView : FBLoginView!
@@ -22,6 +22,15 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBOutlet var tableView:UITableView!
     @IBOutlet var navBar:UINavigationBar!
     @IBOutlet var navTitle:UINavigationItem!
+    @IBOutlet var postLabelHolder: UIView!
+    
+    
+    @IBOutlet var locLable:UILabel!
+    @IBOutlet var timeLabel:UILabel!
+    @IBOutlet var followersName:UILabel!
+    @IBOutlet var followersLabel:UILabel!
+    @IBOutlet var followingName:UILabel!
+    @IBOutlet var followingLabel:UILabel!
     //let transportItems = ["Bus","Helicopter","Truck","Boat","Bicycle","Motorcycle","Plane","Train","Car","Scooter","Caravan"]
     
     let leftHandItems: [String] = ["","Last Check In", "Posts", "Followers", "Following"]
@@ -55,6 +64,34 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         self.fbLoginView.delegate = self
         self.fbLoginView.readPermissions = ["public_profile", "email", "user_friends"]
         
+        let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
+        
+        postLabelHolder.layer.borderWidth=2.0
+        postLabelHolder.layer.masksToBounds = false
+        postLabelHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
+        
+        //profilePic.layer.cornerRadius = 13
+        postLabelHolder.clipsToBounds = true
+        
+        
+        let followingTap = UITapGestureRecognizer(target: self, action:Selector("showFollowing"))
+        // 4
+        followingTap.delegate = self
+        followingLabel.userInteractionEnabled = true
+        followingLabel.addGestureRecognizer(followingTap)
+        followingName.userInteractionEnabled = true
+        followingName.addGestureRecognizer(followingTap)
+        
+        
+        
+        let followersTap = UITapGestureRecognizer(target: self, action:Selector("showFollowers"))
+        // 4
+        followersTap.delegate = self
+        followersLabel.userInteractionEnabled = true
+        followersLabel.addGestureRecognizer(followersTap)
+        followersName.userInteractionEnabled = true
+        followersName.addGestureRecognizer(followersTap)
+        
         
     }
 
@@ -84,14 +121,14 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
 //        coverImg.image = UIImage(named: "profileCover.png")
 //        self.view.addSubview(coverImg)
       //  self.addSubview(coverImg)
-        
-        profilePic.layer.borderWidth=1.0
-        profilePic.layer.masksToBounds = false
-        profilePic.layer.borderColor = UIColor.whiteColor().CGColor
-        //profilePic.layer.cornerRadius = 13
-        profilePic.layer.cornerRadius = profilePic.frame.size.height/2
-        profilePic.clipsToBounds = true
-        
+//        
+//        profilePic.layer.borderWidth=1.0
+//        profilePic.layer.masksToBounds = false
+//        profilePic.layer.borderColor = UIColor.whiteColor().CGColor
+//        //profilePic.layer.cornerRadius = 13
+//        profilePic.layer.cornerRadius = profilePic.frame.size.height/2
+//        profilePic.clipsToBounds = true
+//        
     }
     
 //    func removeLoadingScreen(){
@@ -185,69 +222,47 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        //nothing
-        if(indexPath.row == 0){
-            
-        }
-        //last check in
-        if(indexPath.row == 1){
-            
-        }
-        //posts
-        if(indexPath.row == 2){
-            
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-            let postView = mainStoryboard.instantiateViewControllerWithIdentifier("user_post_scene_id") as UserPostsViewController
-            
-            let defaults = NSUserDefaults.standardUserDefaults()
-            let fbid = defaults.stringForKey("saved_fb_id") as String!
-            
-            
-            
-            postView.userFBID = fbid
-            
-                    // self.dismissViewControllerAnimated(true, completion: nil)
-
-                    self.presentViewController(postView, animated: true, completion: nil)
-            
-            
-        }
-        //followers
-        if(indexPath.row == 3){
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-            let friendView = mainStoryboard.instantiateViewControllerWithIdentifier("user_friends_scene_id") as UserFriendsViewController
-            
-            
-            let defaults = NSUserDefaults.standardUserDefaults()
-            let fbid = defaults.stringForKey("saved_fb_id") as String!
-            
-            
-            friendView.ajaxRequestString = "followers"
-            friendView.userFBID = fbid
-            // self.dismissViewControllerAnimated(true, completion: nil)
-            
-            self.presentViewController(friendView, animated: true, completion: nil)
-        }
-        //following
-        if(indexPath.row == 4){
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-            let friendView = mainStoryboard.instantiateViewControllerWithIdentifier("user_friends_scene_id") as UserFriendsViewController
-            
-            
-            let defaults = NSUserDefaults.standardUserDefaults()
-            let fbid = defaults.stringForKey("saved_fb_id") as String!
-            
-            
-            friendView.ajaxRequestString = "following"
-            friendView.userFBID = fbid
-            // self.dismissViewControllerAnimated(true, completion: nil)
-            
-            self.presentViewController(friendView, animated: true, completion: nil)
-            
-        }
+     
     }
     
     
+    
+    //User info buttons
+    
+    func showFollowers(){
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let friendView = mainStoryboard.instantiateViewControllerWithIdentifier("user_friends_scene_id") as UserFriendsViewController
+        
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        
+        friendView.ajaxRequestString = "followers"
+        friendView.userFBID = fbid
+        // self.dismissViewControllerAnimated(true, completion: nil)
+        
+        self.presentViewController(friendView, animated: true, completion: nil)
+    }
+    
+    func showFollowing(){
+        
+        println("SLDKFJLS:DKFJLS:DKFSDF")
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let friendView = mainStoryboard.instantiateViewControllerWithIdentifier("user_friends_scene_id") as UserFriendsViewController
+        
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        
+        friendView.ajaxRequestString = "following"
+        friendView.userFBID = fbid
+        // self.dismissViewControllerAnimated(true, completion: nil)
+        
+        self.presentViewController(friendView, animated: true, completion: nil)
+        
+    }
     //AJAX
     
     func getUserInfo(){
@@ -304,8 +319,14 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
                     self.rightHandItems[3] = parseJSON["results"]![0]["followers"] as String! ?? ""
                     self.rightHandItems[4] = parseJSON["results"]![0]["following"] as String! ?? ""
            
+                   
+   
                     
                     dispatch_async(dispatch_get_main_queue(), {
+                        self.locLable!.text = parseJSON["results"]![0]["lastLoc"] as String! ?? ""
+                        self.timeLabel!.text = ""
+                        self.followersLabel!.text = parseJSON["results"]![0]["followers"] as String! ?? ""
+                        self.followingLabel!.text = parseJSON["results"]![0]["following"] as String! ?? ""
                         self.tableView.reloadData()
                     })
 //

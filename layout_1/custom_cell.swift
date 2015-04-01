@@ -20,6 +20,9 @@ class custom_cell: UITableViewCell{
     @IBOutlet var comImage:UIImageView!
     @IBOutlet var userImage:UIImageView!
     @IBOutlet var shareButton:UIImageView!
+    @IBOutlet var shareLabel:UILabel!
+    
+    @IBOutlet var buttonHolder:UIView!
     
     @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
     var comment_id = "nil"
@@ -63,7 +66,16 @@ class custom_cell: UITableViewCell{
         
         userImage.layer.cornerRadius = userImage.layer.frame.width
         userImage.clipsToBounds = true
+
         
+        
+        
+        
+        let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
+        
+        buttonHolder.layer.borderWidth=2.0
+        buttonHolder.layer.masksToBounds = false
+        buttonHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
         
     }
 //    

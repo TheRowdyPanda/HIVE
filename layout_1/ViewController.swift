@@ -43,6 +43,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //UIApplication.sharedApplication().openURL(NSURL(string: "http://www.reddit.com")!)
         self.locationManager.delegate = self
         
         self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -209,6 +210,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         //image
         var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell") as custom_cell
         
+            
             cell.separatorInset.left = -10
             cell.layoutMargins = UIEdgeInsetsZero
         cell.imageLink = testImage
@@ -223,6 +225,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as String!
         cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as String!
             
+            
+            let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
+            
+             let myMutableString2 = NSMutableAttributedString(string: "World", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 8.0)!])
+            
+            myMutableString.appendAttributedString(myMutableString2)
+            
+            
+       //     cell.comment_label?.attributedText = myMutableString
+            
+            //var doit: NSAttributedString! = self.parseHTMLString(cell.comment_label?.text!)
+            
+            let asdfasd = cell.comment_label?.text!
+            self.parseHTMLString(asdfasd!)
             let userFBID = theJSON["results"]![indexPath.row]["user_id"] as String!
         cell.user_id = userFBID
             
@@ -247,6 +263,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             cell.shareButton?.tag = indexPath.row
             cell.shareButton?.userInteractionEnabled = true
             cell.shareButton?.addGestureRecognizer(shareTap)
+            
+            
+            
+            cell.shareLabel?.tag = indexPath.row
+            cell.shareLabel?.userInteractionEnabled = true
+            cell.shareLabel?.addGestureRecognizer(shareTap)
             
         
         //find out if the user has liked the comment or not
@@ -593,13 +615,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func shareComment(sender: UIGestureRecognizer){
 
-        var sharedButton = sender.view? as UIImageView
+        var sharedButton:AnyObject
+//        if(sender.view? == UIImageView()){
+//            
+//          sharedButton = sender.view? as UIImageView
+//            
+//        }
+//        else{
+//            sharedButton = sender.view? as UILabel
+//        }
+        
+        sharedButton = sender.view!
+    
+        
+        
+
         let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag, inSection: 0))
 
         if(indCell?.tag == 100){
             let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag, inSection: 0)) as custom_cell_no_images
             
-            let shareCom = gotCell.comment_label.text
+            let shareCom = gotCell.comment_label.text as String!
             
             let objectsToShare = [shareCom]
             let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
@@ -612,6 +648,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if(indCell?.tag == 200){
             let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag, inSection: 0)) as custom_cell
 
+            
+            let shareCom = gotCell.comment_label.text as String!
+            let hiveSite = NSURL(string: "http://www.yalehive.com/")
+            
+            let shareImage = gotCell.comImage?.image as UIImage!
+            
+                let objectsToShare = [shareCom, hiveSite!, shareImage]
+            
+            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            
+            //New Excluded Activities Code
+            activityVC.excludedActivityTypes = [UIActivityTypeAirDrop,
+                                                    UIActivityTypeAddToReadingList,
+                                                    UIActivityTypePostToTencentWeibo,
+                                                    UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMail,UIActivityTypePostToFlickr,UIActivityTypePostToVimeo,UIActivityTypePostToWeibo,UIActivityTypePrint]
+            //
+            
+            self.presentViewController(activityVC, animated: true, completion: nil)
+            
+            
         }
         
         
@@ -990,4 +1046,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.refreshControl.endRefreshing()
     }
     
+    
+    func parseHTMLString(daString:NSString) -> NSAttributedString{
+        if (daString.containsString("Http://") == true){
+            println(daString)
+            println("YEAH BUDDY")
+        }
+        
+        var newString = NSAttributedString(string: daString)
+        
+        return newString
+        //return "OH YEAH"
+    }
 }

@@ -18,7 +18,8 @@ class custom_cell: UITableViewCell{
     @IBOutlet var heart_icon: UIImageView!
     @IBOutlet var loc_label: UILabel!
     @IBOutlet var comImage:UIImageView!
-    
+    @IBOutlet var userImage:UIImageView!
+    @IBOutlet var shareButton:UIImageView!
     
     @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
     var comment_id = "nil"
@@ -55,6 +56,14 @@ class custom_cell: UITableViewCell{
         self.comment_label.sizeToFit()
         
 
+        
+        userImage.layer.borderWidth=0.0
+        userImage.layer.masksToBounds = false
+       // postLabelHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
+        
+        userImage.layer.cornerRadius = userImage.layer.frame.width
+        userImage.clipsToBounds = true
+        
         
     }
 //    

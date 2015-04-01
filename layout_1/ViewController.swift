@@ -118,7 +118,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
     
-    
+    override func viewDidLayoutSubviews() {
+        
+        let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
+        self.tableView.separatorColor = color
+        //self.tableView.separatorStyle
+        self.tableView.separatorInset.left = 0
+        self.tableView.layoutMargins = UIEdgeInsetsZero
+    }
     
     //pragma mark - table view
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -139,7 +146,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if(testImage == "none"){
             var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell_no_images") as custom_cell_no_images
             
-            
+            cell.separatorInset.left = -10
+            cell.layoutMargins = UIEdgeInsetsZero
             
             
             cell.tag = 100
@@ -201,6 +209,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         //image
         var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell") as custom_cell
         
+            cell.separatorInset.left = -10
+            cell.layoutMargins = UIEdgeInsetsZero
         cell.imageLink = testImage
           cell.tag = 200
             
@@ -212,8 +222,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as String!
         cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as String!
         cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as String!
-        cell.user_id = theJSON["results"]![indexPath.row]["user_id"] as String!
-        
+            
+            let userFBID = theJSON["results"]![indexPath.row]["user_id"] as String!
+        cell.user_id = userFBID
+            
+            let imageLink = "http://graph.facebook.com/\(userFBID)/picture?type=small"
+            let url = NSURL(string: imageLink)
+            let data2 = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
+            //            comImage.image = UIImage(data: data!)
+            
+            cell.userImage.image = UIImage(data:data2!)
         
         let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
         // 4
@@ -222,6 +240,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.author_label?.userInteractionEnabled = true
         cell.author_label?.addGestureRecognizer(authorTap)
         
+            
+            let shareTap = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
+            // 4
+            shareTap.delegate = self
+            cell.shareButton?.tag = indexPath.row
+            cell.shareButton?.userInteractionEnabled = true
+            cell.shareButton?.addGestureRecognizer(shareTap)
+            
         
         //find out if the user has liked the comment or not
         var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as String!
@@ -564,6 +590,38 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         
     }
+    
+    func shareComment(sender: UIGestureRecognizer){
+
+        var sharedButton = sender.view? as UIImageView
+        let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag, inSection: 0))
+
+        if(indCell?.tag == 100){
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag, inSection: 0)) as custom_cell_no_images
+            
+            let shareCom = gotCell.comment_label.text
+            
+            let objectsToShare = [shareCom]
+            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            
+            self.presentViewController(activityVC, animated: true, completion: nil)
+            
+            
+            
+        }
+        if(indCell?.tag == 200){
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag, inSection: 0)) as custom_cell
+
+        }
+        
+        
+        
+
+        
+        
+    }
+    
+    
     func toggleCommentVote(sender:UIGestureRecognizer){
         //get the attached sender imageview
         var heartImage = sender.view? as UIImageView

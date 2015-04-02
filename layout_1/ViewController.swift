@@ -16,6 +16,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     let locationManager = CLLocationManager()
     
     var imageCache = [String : UIImage]()
+    var userImageCache = [String: UIImage]()
     var refreshControl:UIRefreshControl!
     
     @IBOutlet var tableView: UITableView!
@@ -211,6 +212,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell") as custom_cell
         
             
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            
             cell.separatorInset.left = -10
             cell.layoutMargins = UIEdgeInsetsZero
         cell.imageLink = testImage
@@ -224,7 +227,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as String!
         cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as String!
         cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as String!
-            
+            cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as String!
             
             let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
             
@@ -238,17 +241,75 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             //var doit: NSAttributedString! = self.parseHTMLString(cell.comment_label?.text!)
             
             let asdfasd = cell.comment_label?.text!
-            self.parseHTMLString(asdfasd!)
+            
+            var gotURL = self.parseHTMLString(asdfasd!)
+            
+            println("OH YEAH:\(gotURL)")
+            
+            if(gotURL.count == 0){
+                println("NO SHOW")
+                cell.urlLink = "none"
+            }
+            else{
+                println("LAST TIME BuDDY:\(gotURL.last)")
+                cell.urlLink = gotURL.last!
+            }
+            
+            
             let userFBID = theJSON["results"]![indexPath.row]["user_id"] as String!
         cell.user_id = userFBID
-            
-            let imageLink = "http://graph.facebook.com/\(userFBID)/picture?type=small"
-            let url = NSURL(string: imageLink)
-            let data2 = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
+            let testUserImg = "http://graph.facebook.com/\(userFBID)/picture?type=small"
+       //     let imageLink = "http://graph.facebook.com/\(userFBID)/picture?type=small"
+        //    let url = NSURL(string: imageLink)
+         //   let data2 = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
             //            comImage.image = UIImage(data: data!)
             
-            cell.userImage.image = UIImage(data:data2!)
+           // cell.userImage.image = UIImage(data:data2!)
         
+            
+            
+            //GET TEH USER IMAGE
+            var upimage = self.userImageCache[testUserImg]
+            if( upimage == nil ) {
+                // If the image does not exist, we need to download it
+                
+                var imgURL: NSURL = NSURL(string: testUserImg)!
+                
+                // Download an NSData representation of the image at the URL
+                let request: NSURLRequest = NSURLRequest(URL: imgURL)
+                NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
+                    if error == nil {
+                        upimage = UIImage(data: data)
+                        
+                        // Store the image in to our cache
+                        self.userImageCache[testUserImg] = upimage
+                        dispatch_async(dispatch_get_main_queue(), {
+                            if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell {
+                                cellToUpdate.userImage?.image = upimage
+                            }
+                        })
+                    }
+                    else {
+                        println("Error: \(error.localizedDescription)")
+                    }
+                })
+                
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell {
+                        cellToUpdate.userImage?.image = upimage
+                    }
+                })
+            }
+
+            
+            
+            
+            
+            
+            
+            
         let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
         // 4
         authorTap.delegate = self
@@ -256,21 +317,60 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.author_label?.userInteractionEnabled = true
         cell.author_label?.addGestureRecognizer(authorTap)
         
+         
+            
+            
+//            let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
+//            likersTap.delegate = self
+//            cell.likerButtonLabel?.tag = indexPath.row
+//            cell.likerButtonLabel?.userInteractionEnabled = true
+//            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
+//            
+//            
+//            
+//            
+//            let repliesTap = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
+//            repliesTap.delegate = self
+//            cell.replyButtonImage?.tag = indexPath.row
+//            cell.replyButtonImage?.userInteractionEnabled = true
+//            cell.replyButtonImage?.addGestureRecognizer(repliesTap)
+//            
+//            let repliesTap2 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
+//            repliesTap2.delegate = self
+//            cell.replyButtonLabel?.tag = indexPath.row
+//            cell.replyButtonLabel?.userInteractionEnabled = true
+//            cell.replyButtonLabel?.addGestureRecognizer(repliesTap2)
+//            
+//            let repliesTap3 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
+//            repliesTap3.delegate = self
+//            cell.replyNumLabel?.tag = indexPath.row
+//            cell.replyNumLabel?.userInteractionEnabled = true
+//            cell.replyNumLabel?.addGestureRecognizer(repliesTap3)
+//            
+//            
+            
             
             let shareTap = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
             // 4
             shareTap.delegate = self
-            cell.shareButton?.tag = indexPath.row
-            cell.shareButton?.userInteractionEnabled = true
-            cell.shareButton?.addGestureRecognizer(shareTap)
-            
-            
-            
+//            
+//            let shareTap2 = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
+//            // 4
+//            shareTap2.delegate = self
+//            
+//            
             cell.shareLabel?.tag = indexPath.row
             cell.shareLabel?.userInteractionEnabled = true
             cell.shareLabel?.addGestureRecognizer(shareTap)
+            cell.bringSubviewToFront(cell.shareLabel)
+           // cell.contentView.bringSubviewToFront(cell.shareLabel)
             
-        
+//            cell.shareButton?.tag = indexPath.row
+//            cell.shareButton?.userInteractionEnabled = true
+//            cell.shareButton?.addGestureRecognizer(shareTap2)
+//            cell.bringSubviewToFront(cell.shareButton)
+//            
+            
         //find out if the user has liked the comment or not
         var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as String!
         
@@ -308,9 +408,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             cell.comImage.image = imagegif
             
             
+            
+            //GET TEH COMMENT IMAGE
             var image = self.imageCache[testImage]
-            
-            
             if( image == nil ) {
                 // If the image does not exist, we need to download it
                 var imgURL: NSURL = NSURL(string: testImage)!
@@ -355,36 +455,28 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-        let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as ThirdViewController
-        
+//        
+//        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+//        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+//        let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as ThirdViewController
+//        
         let indCell = tableView.cellForRowAtIndexPath(indexPath)
-        
+//        
         if(indCell?.tag == 100){
             let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell_no_images
-            
-            comView.comment = gotCell.comment_label.text!
-            
-            comView.author = gotCell.author_label.text!
-            comView.imgLink = "none2"
-            comView.commentID = gotCell.comment_id
+       
             
         }
         if(indCell?.tag == 200){
         let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell
-
-        comView.comment = gotCell.comment_label.text!
-        
-        comView.author = gotCell.author_label.text!
-        comView.imgLink = gotCell.imageLink
-        comView.commentID = gotCell.comment_id
+            let urlString = gotCell.urlLink
+            
+            UIApplication.sharedApplication().openURL(NSURL(string:urlString)!)
         
         }
-        // self.dismissViewControllerAnimated(true, completion: nil)
-        
-        self.presentViewController(comView, animated: true, completion: nil)
+//        // self.dismissViewControllerAnimated(true, completion: nil)
+//        
+//        self.presentViewController(comView, animated: true, completion: nil)
         
     }
     
@@ -613,8 +705,89 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
+    func showLikers(sender: UIGestureRecognizer){
+        
+        println("Presenting Likers, ya heard.")
+        
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+        let likeView = mainStoryboard.instantiateViewControllerWithIdentifier("comment_likers_id") as CommentLikersViewController
+        
+        var authorLabel:AnyObject
+        
+        authorLabel = sender.view!
+        
+        
+        let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
+        
+        if(indCell?.tag == 100){
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as custom_cell_no_images
+            
+            likeView.sentLocation = currentUserLocation
+            likeView.commentID = gotCell.comment_id
+            
+            //profView.comment = gotCell.comment_label.text!
+            // profView.userFBID = gotCell.user_id
+            
+            //profView.userName = gotCell.author_label.text!
+        }
+        if(indCell?.tag == 200){
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as custom_cell
+            
+            likeView.sentLocation = currentUserLocation
+            likeView.commentID = gotCell.comment_id
+            //profView.comment = gotCell.comment_label.text!
+            //profView.userFBID = gotCell.user_id
+            
+            //profView.userName = gotCell.author_label.text!
+        }
+        
+        
+        self.presentViewController(likeView, animated: true, completion: nil)
+        
+    }
+    
+    func showReplies(sender: UIGestureRecognizer){
+        
+        println("SLKFJS:LDKFJ")
+        
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+        let repView = mainStoryboard.instantiateViewControllerWithIdentifier("comment_reply_id") as CommentReplyViewController
+        
+        var authorLabel:AnyObject
+
+        authorLabel = sender.view!
+        
+        
+        let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
+        
+        if(indCell?.tag == 100){
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as custom_cell_no_images
+            
+            //profView.comment = gotCell.comment_label.text!
+           // profView.userFBID = gotCell.user_id
+            
+            //profView.userName = gotCell.author_label.text!
+        }
+        if(indCell?.tag == 200){
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as custom_cell
+            
+            //profView.comment = gotCell.comment_label.text!
+            //profView.userFBID = gotCell.user_id
+            
+            //profView.userName = gotCell.author_label.text!
+        }
+        
+        
+        self.presentViewController(repView, animated: true, completion: nil)
+        
+    }
+    
     func shareComment(sender: UIGestureRecognizer){
 
+        
+        println("DID PRESS SHARE")
         var sharedButton:AnyObject
 //        if(sender.view? == UIImageView()){
 //            
@@ -625,15 +798,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 //            sharedButton = sender.view? as UILabel
 //        }
         
-        sharedButton = sender.view!
+       sharedButton = sender.view!
     
-        
-        
 
+        
         let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag, inSection: 0))
-
+        
         if(indCell?.tag == 100){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag, inSection: 0)) as custom_cell_no_images
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag!, inSection: 0)) as custom_cell_no_images
             
             let shareCom = gotCell.comment_label.text as String!
             
@@ -646,7 +818,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
         }
         if(indCell?.tag == 200){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag, inSection: 0)) as custom_cell
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag!, inSection: 0)) as custom_cell
 
             
             let shareCom = gotCell.comment_label.text as String!
@@ -1047,15 +1219,42 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
-    func parseHTMLString(daString:NSString) -> NSAttributedString{
-        if (daString.containsString("Http://") == true){
-            println(daString)
-            println("YEAH BUDDY")
+    func parseHTMLString(daString:NSString) -> [NSString]{
+        
+        
+        println("DA STRING:\(daString)")
+        let detector = NSDataDetector(types: NSTextCheckingType.Link.rawValue, error: nil)
+        
+        let fakejf = String(daString)
+        let length = fakejf.utf16Count
+       // let links = detector?.matchesInString(daString, options: NSMatchingOptions.ReportCompletion, range: NSMakeRange(0, length)).map {$0 as NSTextCheckingResult}
+        
+        let links = detector?.matchesInString(daString, options: NSMatchingOptions.ReportCompletion, range: NSMakeRange(0, length)).map {$0 as NSTextCheckingResult}
+        
+//        var d = daString as StringE
+//        if (d.containsString("Http://") == true){
+//            println(daString)
+//            println("YEAH BUDDY")
+//        }
+        
+        var retString = NSString(string: "none")
+//        
+
+        return links!.filter { link in
+            return link.URL != nil
+            }.map { link -> NSString in
+                //let urString = String(contentsOfURL: link.URL!)
+                let urString = link.URL!.absoluteString
+                println("DA STRING:\(urString)")
+                retString = urString!
+                return urString!
         }
         
-        var newString = NSAttributedString(string: daString)
-        
-        return newString
+       // var newString = retString
+//        
+        return [retString]
         //return "OH YEAH"
     }
+    
+
 }

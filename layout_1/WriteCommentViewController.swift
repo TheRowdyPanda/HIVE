@@ -35,6 +35,11 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     
     @IBOutlet var oimageView: UIImageView!
     
+   // @IBOutlet var cameraBut:UIImageView!
+    @IBOutlet var cameraBLabel:UILabel!
+     //@IBOutlet var chooseBut:UIImageView!
+    @IBOutlet var chooseBLabel:UILabel!
+    
     var imagePicker: UIImagePickerController!
     
     var hasImage = false
@@ -103,13 +108,29 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         println("THIS IS THE SENT LOCATION:\(sentLocation)")
         
         
+
+//        oimageView.userInteractionEnabled = true
+//        oimageView.addGestureRecognizer(imageTap)
+        scrollView.bringSubviewToFront(oimageView)
+        
         let imageTap = UITapGestureRecognizer(target: self, action:Selector("clickImage:"))
         // 4
         imageTap.delegate = self
-        oimageView.userInteractionEnabled = true
-        oimageView.addGestureRecognizer(imageTap)
-        scrollView.bringSubviewToFront(oimageView)
+//        cameraBut.userInteractionEnabled = true
+//        cameraBut.addGestureRecognizer(imageTap)
+//        
+        cameraBLabel.userInteractionEnabled = true
+        cameraBLabel.addGestureRecognizer(imageTap)
 
+        
+        let rollTap = UITapGestureRecognizer(target: self, action:Selector("clickRoll:"))
+        // 4
+        rollTap.delegate = self
+      //  chooseBut.userInteractionEnabled = true
+      //  chooseBut.addGestureRecognizer(rollTap)
+        
+        chooseBLabel.userInteractionEnabled = true
+        chooseBLabel.addGestureRecognizer(rollTap)
     }
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
@@ -121,31 +142,11 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         let image = info[UIImagePickerControllerEditedImage] as? UIImage
         
         
-        savedImage = imageWithImage(image!, scaledToSize: CGSizeMake(600, 600))
-//    let imageView = UIImageView(image: savedImage!)
-//       //  imageView.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-//    imageView.sizeThatFits(CGSizeMake(100, 200))
-//        
-//        imageView.intrinsicContentSize()
-//      //  self.view.addSubview(imageView)
-//     //   self.scrollView.addSubview(imageView)
-//        
-        
+        savedImage = imageWithImage(image!, scaledToSize: CGSizeMake(500, 500))
+
         oimageView.image = savedImage
         hasImage = true
-        
-//        let leftConstraint = NSLayoutConstraint(item: imageView,
-//            attribute: .Right,
-//            relatedBy: .Equal,
-//            toItem: self.view,
-//            attribute: .Right,
-//            multiplier: 1.0,
-//            constant: 0.0);
-//        
-//        self.view.addConstraint(leftConstraint);
-//        
-//       // self.view.layOutIfNeeded()
-//        self.view.layoutIfNeeded()
+
     }
     
     
@@ -177,22 +178,86 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
 
         
     }
-    
-    @IBAction func showCamera(){
+    @IBAction func cameraButton(){
+        println("CLICK CLICK CLICK")
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
             println("Button capture")
             
             imagePicker = UIImagePickerController()
             imagePicker.delegate = self
-            imagePicker.sourceType = UIImagePickerControllerSourceType.Camera;
+            //imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
+            imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
+            //imagePicker.mediaTypes = [kUTTypeImage]
             imagePicker.mediaTypes = [kUTTypeImage]
             imagePicker.allowsEditing = true
             
             self.presentViewController(imagePicker, animated: true, completion: nil)
         }
         
+        
     }
     
+    
+    func clickRoll(sender: UIGestureRecognizer){
+        
+        println("ROLLING ROLLING ROLLING")
+       /// if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
+            println("Button capture")
+            
+            imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
+           // imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
+            //imagePicker.mediaTypes = [kUTTypeImage]
+            imagePicker.mediaTypes = [kUTTypeImage]
+            imagePicker.allowsEditing = true
+            
+            self.presentViewController(imagePicker, animated: true, completion: nil)
+        //}
+        
+        
+    }
+    @IBAction func rollButton(){
+        
+        println("ROLLING ROLLING ROLLING")
+        /// if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
+        println("Button capture")
+        
+        imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
+        // imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
+        //imagePicker.mediaTypes = [kUTTypeImage]
+        imagePicker.mediaTypes = [kUTTypeImage]
+        imagePicker.allowsEditing = true
+        
+        self.presentViewController(imagePicker, animated: true, completion: nil)
+        //}
+        
+        
+    }
+    
+
+    
+//    @IBAction func showCamera(){
+//        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
+//            println("Button capture")
+//            
+//            imagePicker = UIImagePickerController()
+//            imagePicker.delegate = self
+//            imagePicker.sourceType = UIImagePickerControllerSourceType.Camera;
+//            imagePicker.mediaTypes = [kUTTypeImage]
+//            imagePicker.allowsEditing = true
+//            
+//            self.presentViewController(imagePicker, animated: true, completion: nil)
+//        }
+//        
+//    }
+//    
+
+    func clickChoosePhoto(){
+        
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -308,7 +373,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         //var image : UIImage = UIImage(named:"laptop-classroom-1.jpg")!
         //let image = info[UIImagePickerControllerOriginalImage] as? UIImage
         let image = self.savedImage// self.sendImg
-        var imageData: NSData = UIImageJPEGRepresentation(image, 0.7)
+        var imageData: NSData = UIImageJPEGRepresentation(image, 0.66)
         
         var requestBody: NSMutableData = NSMutableData()
         
@@ -477,7 +542,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     
     func textViewDidChange(textView: UITextView) { //Handle the text changes here
        // print(textView.text); //the textView parameter is the textView where text was changed
-        let height2 = commentView.frame.height + oimageView.frame.height + 40
+        let height2 = commentView.frame.height + oimageView.frame.height + 200.0
         scrollView.contentSize = CGSize(width:scrollView.frame.width, height:height2)
         
     }

@@ -109,25 +109,11 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         let defaults = NSUserDefaults.standardUserDefaults()
         let fbid = defaults.stringForKey("saved_fb_id") as String!
         
-        let url = NSURL(string: "http://graph.facebook.com/\(fbid)/picture?width=720&height=720")
+        let url = NSURL(string: "http://graph.facebook.com/\(fbid)/picture?width=200&height=200")
         let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
-       // profilePic.image = UIImage(data: data!)
+        profilePic.image = UIImage(data: data!)
         
-//        let coverImg = UIImageView()
-//        
-//        coverImg.frame = profilePic.frame
-//        
-//        //coverImg.backgroundColor = UIColor.redColor()
-//        coverImg.image = UIImage(named: "profileCover.png")
-//        self.view.addSubview(coverImg)
-      //  self.addSubview(coverImg)
-//        
-//        profilePic.layer.borderWidth=1.0
-//        profilePic.layer.masksToBounds = false
-//        profilePic.layer.borderColor = UIColor.whiteColor().CGColor
-//        //profilePic.layer.cornerRadius = 13
-//        profilePic.layer.cornerRadius = profilePic.frame.size.height/2
-//        profilePic.clipsToBounds = true
+
 //        
     }
     
@@ -198,23 +184,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
         var cell = tableView.dequeueReusableCellWithIdentifier("profile_cell") as profile_cell
-        
-        if(indexPath.row == 0){
-            cell.userInteractionEnabled = false
-        }
-        
-        cell.idLabel?.text = self.leftHandItems[indexPath.row]
-      
-        
-//        if(self.hasLoaded == false){
-//        
-//            cell.valueLabel?.text = self.rightHandItems[indexPath.row]
-//        }
-//        else{
-//            cell.valueLabel?.text = theJSON["results"]![0][indexPath.row] as String!
-//        }
 
-        cell.valueLabel?.text = self.rightHandItems[indexPath.row]
         return cell
     }
     

@@ -17,6 +17,7 @@ class custom_cell: UITableViewCell{
     @IBOutlet var author_label: UILabel!
     @IBOutlet var heart_icon: UIImageView!
     @IBOutlet var loc_label: UILabel!
+    @IBOutlet var time_label:UILabel!
     @IBOutlet var comImage:UIImageView!
     @IBOutlet var userImage:UIImageView!
     @IBOutlet var shareButton:UIImageView!
@@ -24,10 +25,18 @@ class custom_cell: UITableViewCell{
     
     @IBOutlet var buttonHolder:UIView!
     
+    @IBOutlet var replyButtonLabel: UILabel!
+    @IBOutlet var replyButtonImage: UIImageView!
+    @IBOutlet var replyNumLabel: UILabel!
+    
+    @IBOutlet var likerButtonLabel:UILabel!
+    
     @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
     var comment_id = "nil"
     var user_id = "nil"
     var imageLink = "none"
+    
+    var urlLink = "none"
     
    
     
@@ -35,7 +44,7 @@ class custom_cell: UITableViewCell{
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        
+  
         // Initialization code
         
 
@@ -71,9 +80,9 @@ class custom_cell: UITableViewCell{
         
         
         
-        let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
+        let color: UIColor = UIColor( red: CGFloat(51.0/255.0), green: CGFloat(51.0/255.0), blue: CGFloat(51.0/255.0), alpha: CGFloat(0.2) )
         
-        buttonHolder.layer.borderWidth=2.0
+        buttonHolder.layer.borderWidth=1.0
         buttonHolder.layer.masksToBounds = false
         buttonHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
         

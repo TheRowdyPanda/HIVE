@@ -25,7 +25,7 @@ class CustomTabBarViewController: UITabBarController {
     }
     
     override func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem!) {
-       // item.image = UIImage(named: "honey_full.jpg")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+       // item.image = UIImage(named: "Me.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
     }
 
     

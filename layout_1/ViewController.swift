@@ -148,11 +148,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if(testImage == "none"){
             var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell_no_images") as custom_cell_no_images
             
+            
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            
             cell.separatorInset.left = -10
             cell.layoutMargins = UIEdgeInsetsZero
-            
-            
+            cell.imageLink = testImage
             cell.tag = 100
+            
+            
             
             //set the cell contents with the ajax data
             cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as String!
@@ -160,7 +164,89 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as String!
             cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as String!
             cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as String!
-            cell.user_id = theJSON["results"]![indexPath.row]["user_id"] as String!
+            cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as String!
+            cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as String!
+            let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
+            
+            let myMutableString2 = NSMutableAttributedString(string: "World", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 8.0)!])
+            
+            myMutableString.appendAttributedString(myMutableString2)
+            
+            
+            //     cell.comment_label?.attributedText = myMutableString
+            
+            //var doit: NSAttributedString! = self.parseHTMLString(cell.comment_label?.text!)
+            
+            let asdfasd = cell.comment_label?.text!
+            
+            var gotURL = self.parseHTMLString(asdfasd!)
+            
+            println("OH YEAH:\(gotURL)")
+            
+            if(gotURL.count == 0){
+                println("NO SHOW")
+                cell.urlLink = "none"
+            }
+            else{
+                println("LAST TIME BuDDY:\(gotURL.last)")
+                cell.urlLink = gotURL.last!
+            }
+            
+            
+            let userFBID = theJSON["results"]![indexPath.row]["user_id"] as String!
+            cell.user_id = userFBID
+            
+           // cell.userImage.frame = CGRectMake(20, 20, 20, 20)
+            let testUserImg = "http://graph.facebook.com/\(userFBID)/picture?type=small"
+            //     let imageLink = "http://graph.facebook.com/\(userFBID)/picture?type=small"
+                //let url = NSURL(string: imageLink)
+              // let data2 = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
+                       // comImage.image = UIImage(data: data!)
+            
+           //  cell.userImage.image = UIImage(data:data2!)
+            
+            
+            
+            //GET TEH USER IMAGE
+            var upimage = self.userImageCache[testUserImg]
+            if( upimage == nil ) {
+                // If the image does not exist, we need to download it
+                
+                var imgURL: NSURL = NSURL(string: testUserImg)!
+                
+                // Download an NSData representation of the image at the URL
+                let request: NSURLRequest = NSURLRequest(URL: imgURL)
+                NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
+                    if error == nil {
+                        upimage = UIImage(data: data)
+                        
+                        // Store the image in to our cache
+                        self.userImageCache[testUserImg] = upimage
+                        dispatch_async(dispatch_get_main_queue(), {
+                            if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_no_images {
+                                cellToUpdate.userImage?.image = upimage
+                            }
+                        })
+                    }
+                    else {
+                        println("Error: \(error.localizedDescription)")
+                    }
+                })
+                
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_no_images {
+                        cellToUpdate.userImage?.image = upimage
+                    }
+                })
+            }
+            
+            
+            
+            
+            
+            
             
             
             let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
@@ -170,6 +256,65 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             cell.author_label?.userInteractionEnabled = true
             cell.author_label?.addGestureRecognizer(authorTap)
             
+            let authorTap2 = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
+            // 4
+            authorTap2.delegate = self
+            cell.userImage?.tag = indexPath.row
+            cell.userImage?.userInteractionEnabled = true
+            cell.userImage?.addGestureRecognizer(authorTap2)
+            
+            
+            
+            let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
+            likersTap.delegate = self
+            cell.likerButtonLabel?.tag = indexPath.row
+            cell.likerButtonLabel?.userInteractionEnabled = true
+            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
+            
+            
+            
+            
+            let repliesTap = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
+            repliesTap.delegate = self
+            cell.replyButtonImage?.tag = indexPath.row
+            cell.replyButtonImage?.userInteractionEnabled = true
+            cell.replyButtonImage?.addGestureRecognizer(repliesTap)
+            
+            let repliesTap2 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
+            repliesTap2.delegate = self
+            cell.replyButtonLabel?.tag = indexPath.row
+            cell.replyButtonLabel?.userInteractionEnabled = true
+            cell.replyButtonLabel?.addGestureRecognizer(repliesTap2)
+            
+            let repliesTap3 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
+            repliesTap3.delegate = self
+            cell.replyNumLabel?.tag = indexPath.row
+            cell.replyNumLabel?.userInteractionEnabled = true
+            cell.replyNumLabel?.addGestureRecognizer(repliesTap3)
+            
+            
+            
+            
+            
+            //
+            
+            //
+            //
+            let shareTap = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
+            shareTap.delegate = self
+            cell.shareLabel?.tag = indexPath.row
+            cell.shareLabel?.userInteractionEnabled = true
+            cell.shareLabel?.addGestureRecognizer(shareTap)
+            // cell.bringSubviewToFront(cell.shareLabel)
+            // cell.contentView.bringSubviewToFront(cell.shareLabel)
+            
+            let shareTap2 = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
+            shareTap2.delegate = self
+            cell.shareButton?.tag = indexPath.row
+            cell.shareButton?.userInteractionEnabled = true
+            cell.shareButton?.addGestureRecognizer(shareTap2)
+            // cell.bringSubviewToFront(cell.shareButton)
+            //
             
             //find out if the user has liked the comment or not
             var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as String!
@@ -197,8 +342,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 cell.heart_icon?.addGestureRecognizer(voteUp)
             }
             
+    
+        
+
             
-         
             
             
             
@@ -228,7 +375,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as String!
         cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as String!
             cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as String!
-            
+            cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as String!
             let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
             
              let myMutableString2 = NSMutableAttributedString(string: "World", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 8.0)!])
@@ -317,59 +464,67 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.author_label?.userInteractionEnabled = true
         cell.author_label?.addGestureRecognizer(authorTap)
         
+            
+            
+            let authorTap2 = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
+            // 4
+            authorTap2.delegate = self
+            cell.userImage?.tag = indexPath.row
+            cell.userImage?.userInteractionEnabled = true
+            cell.userImage?.addGestureRecognizer(authorTap2)
          
             
             
-//            let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
-//            likersTap.delegate = self
-//            cell.likerButtonLabel?.tag = indexPath.row
-//            cell.likerButtonLabel?.userInteractionEnabled = true
-//            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
-//            
-//            
-//            
-//            
-//            let repliesTap = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
-//            repliesTap.delegate = self
-//            cell.replyButtonImage?.tag = indexPath.row
-//            cell.replyButtonImage?.userInteractionEnabled = true
-//            cell.replyButtonImage?.addGestureRecognizer(repliesTap)
-//            
-//            let repliesTap2 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
-//            repliesTap2.delegate = self
-//            cell.replyButtonLabel?.tag = indexPath.row
-//            cell.replyButtonLabel?.userInteractionEnabled = true
-//            cell.replyButtonLabel?.addGestureRecognizer(repliesTap2)
-//            
-//            let repliesTap3 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
-//            repliesTap3.delegate = self
-//            cell.replyNumLabel?.tag = indexPath.row
-//            cell.replyNumLabel?.userInteractionEnabled = true
-//            cell.replyNumLabel?.addGestureRecognizer(repliesTap3)
-//            
-//            
+            let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
+            likersTap.delegate = self
+            cell.likerButtonLabel?.tag = indexPath.row
+            cell.likerButtonLabel?.userInteractionEnabled = true
+            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
             
             
+            
+            
+            let repliesTap = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
+            repliesTap.delegate = self
+            cell.replyButtonImage?.tag = indexPath.row
+            cell.replyButtonImage?.userInteractionEnabled = true
+            cell.replyButtonImage?.addGestureRecognizer(repliesTap)
+            
+            let repliesTap2 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
+            repliesTap2.delegate = self
+            cell.replyButtonLabel?.tag = indexPath.row
+            cell.replyButtonLabel?.userInteractionEnabled = true
+            cell.replyButtonLabel?.addGestureRecognizer(repliesTap2)
+            
+            let repliesTap3 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
+            repliesTap3.delegate = self
+            cell.replyNumLabel?.tag = indexPath.row
+            cell.replyNumLabel?.userInteractionEnabled = true
+            cell.replyNumLabel?.addGestureRecognizer(repliesTap3)
+            
+            
+            
+            
+            
+//            
+            
+//
+//            
             let shareTap = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
-            // 4
             shareTap.delegate = self
-//            
-//            let shareTap2 = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
-//            // 4
-//            shareTap2.delegate = self
-//            
-//            
             cell.shareLabel?.tag = indexPath.row
             cell.shareLabel?.userInteractionEnabled = true
             cell.shareLabel?.addGestureRecognizer(shareTap)
-            cell.bringSubviewToFront(cell.shareLabel)
+           // cell.bringSubviewToFront(cell.shareLabel)
            // cell.contentView.bringSubviewToFront(cell.shareLabel)
             
-//            cell.shareButton?.tag = indexPath.row
-//            cell.shareButton?.userInteractionEnabled = true
-//            cell.shareButton?.addGestureRecognizer(shareTap2)
-//            cell.bringSubviewToFront(cell.shareButton)
-//            
+            let shareTap2 = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
+            shareTap2.delegate = self
+            cell.shareButton?.tag = indexPath.row
+            cell.shareButton?.userInteractionEnabled = true
+            cell.shareButton?.addGestureRecognizer(shareTap2)
+           // cell.bringSubviewToFront(cell.shareButton)
+//
             
         //find out if the user has liked the comment or not
         var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as String!
@@ -517,6 +672,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let maxVal = 0 - self.navBar.frame.height - self.radButton150ft.frame.height*1.8
         
         
+        if(byNum > 0){
+            byNum*2.5
+        }
+        
         topLayoutConstraint.constant = topLayoutConstraint.constant + byNum
         
         if(topLayoutConstraint.constant < maxVal){
@@ -565,6 +724,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 println(err!.localizedDescription)
                 let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
                 println("Error could not parse JSON: '\(jsonStr)'")
+                
+                dispatch_async(dispatch_get_main_queue(),{
+                    
+                    
+                    if(self.currentUserLocation == "none"){
+                        self.showErrorMessage("We're having trouble getting your location.", targetString: "loadTopComments")
+                    }
+                    else{
+                        self.showErrorMessage("We're having trouble top comments.", targetString: "loadTopComments")
+                    }
+                    
+                })
+                
+                
             }
             else {
                 // The JSONObjectWithData constructor didn't return an error. But, we should still
@@ -624,7 +797,21 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 println(err!.localizedDescription)
                 let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
                 println("Error could not parse JSON: '\(jsonStr)'")
+                
+                dispatch_async(dispatch_get_main_queue(),{
+
+                
+                if(self.currentUserLocation == "none"){
+                    self.showErrorMessage("We're having trouble getting your location.", targetString: "loadNewComments")
+                }
+                else{
+                    self.showErrorMessage("We're having trouble getting new comments.", targetString: "loadNewComments")
+                }
+                    
+            })
+                
             }
+                    
             else {
                 // The JSONObjectWithData constructor didn't return an error. But, we should still
                 
@@ -679,7 +866,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as ProfileViewController
         
         
-        var authorLabel = sender.view? as UILabel
+        //var authorLabel = sender.view? as UILabel
+        var authorLabel:AnyObject
+        
+        authorLabel = sender.view!
+        
         let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
         
         if(indCell?.tag == 100){
@@ -765,6 +956,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if(indCell?.tag == 100){
             let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as custom_cell_no_images
             
+            repView.sentLocation = currentUserLocation
+            repView.commentID = gotCell.comment_id
             //profView.comment = gotCell.comment_label.text!
            // profView.userFBID = gotCell.user_id
             
@@ -773,6 +966,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if(indCell?.tag == 200){
             let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as custom_cell
             
+            repView.sentLocation = currentUserLocation
+            repView.commentID = gotCell.comment_id
             //profView.comment = gotCell.comment_label.text!
             //profView.userFBID = gotCell.user_id
             
@@ -784,6 +979,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
+
     func shareComment(sender: UIGestureRecognizer){
 
         
@@ -1090,6 +1286,63 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 view.removeFromSuperview()
             }
         }
+    }
+    
+    func showErrorMessage(errorString: NSString, targetString: NSString){
+        
+        removeLoadingScreen()
+        let screenSize: CGRect = UIScreen.mainScreen().bounds
+        
+        let squareSize = screenSize.width * 0.5
+        let xPos = screenSize.width/2 - squareSize/2
+        let yPos = screenSize.height/2 - squareSize/2
+        
+        let holdView = UIView(frame: CGRect(x: xPos, y: yPos, width: squareSize, height: squareSize*1.1))
+        holdView.backgroundColor = UIColor.whiteColor()
+        holdView.tag = 998
+        
+        holdView.layer.borderWidth=1.0
+        holdView.layer.masksToBounds = false
+        holdView.layer.borderColor = UIColor.blackColor().CGColor
+        //profilePic.layer.cornerRadius = 13
+        holdView.layer.cornerRadius = holdView.frame.size.height/10
+        holdView.clipsToBounds = true
+        
+        view.addSubview(holdView)
+        
+        
+        
+        
+        
+        
+        var label = UILabel(frame: CGRectMake(holdView.frame.width*0.1, -0.2*holdView.frame.height, holdView.frame.width*0.8, holdView.frame.height*0.8))
+        label.textAlignment = NSTextAlignment.Center
+        label.text = errorString
+        label.numberOfLines = 0
+        holdView.addSubview(label)
+        
+        
+        let button   = UIButton.buttonWithType(UIButtonType.System) as UIButton
+        button.frame = CGRectMake(0, holdView.frame.height*0.6, holdView.frame.width, holdView.frame.height*0.2)
+        //button.backgroundColor = UIColor.greenColor()
+        button.setTitle("RETRY", forState: UIControlState.Normal)
+        let s = NSSelectorFromString(targetString)
+        let s2 = NSSelectorFromString("removeErrorScreen")
+        button.addTarget(self, action:s, forControlEvents: UIControlEvents.TouchUpInside)
+        button.addTarget(self, action:s2, forControlEvents: UIControlEvents.TouchUpInside)
+        holdView.addSubview(button)
+   
+    }
+    
+
+    func removeErrorScreen(){
+       
+        for view in self.view.subviews {
+            if(view.tag == 998){
+                view.removeFromSuperview()
+            }
+        }
+        
     }
     
     @IBAction func showWriteViewController(){

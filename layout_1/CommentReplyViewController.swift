@@ -14,7 +14,7 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
     //@IBOutlet var authorLabel: UILabel!
     //@IBOutlet var authorPicture: UIImageView!
     //@IBOutlet var commentView: UITextView!
-    //@IBOutlet var replyHolderView: UIView!
+    @IBOutlet var replyHolderView: UIView!
     @IBOutlet var tableView: UITableView! //holds replies and likes
     //  @IBOutlet var tabBar: UITabBar! //controls tableview
     //@IBOutlet var scrollView: UIScrollView!
@@ -98,7 +98,7 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
         //        let firstItem = tabBar.items![0] as UITabBarItem
         //        tabBar.selectedItem = firstItem
         //get_comment_replies()
-        get_likers()
+        get_comments()
         
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShowNotification:", name: UIKeyboardWillShowNotification, object: nil)
@@ -134,7 +134,7 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
     
     func updateBottomLayoutConstraintWithNotification(notification: NSNotification) {
         
-        //println("S:LKDFJL:SKDFLSDK")
+        println("S:LKDFJL:SKDFLSDK")
         let userInfo = notification.userInfo!
         
         let animationDuration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as NSNumber).doubleValue
@@ -147,11 +147,11 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
         
         let animationCurve = UIViewAnimationOptions(UInt(rawAnimationCurve))
         
-        //  bottomLayoutConstraint.constant = 0 - CGRectGetMinY(convertedKeyboardEndFrame)/2 - replyHolderView.frame.height
+          bottomLayoutConstraint.constant = 0 + CGRectGetMinY(convertedKeyboardEndFrame)/2 + replyHolderView.frame.height + 5
         
-        //   UIView.animateWithDuration(animationDuration, delay: 0.0, options: .BeginFromCurrentState | animationCurve, animations: {
-        //     self.view.layoutIfNeeded()
-        //    }, completion: nil)
+           UIView.animateWithDuration(animationDuration, delay: 0.0, options: .BeginFromCurrentState | animationCurve, animations: {
+             self.view.layoutIfNeeded()
+            }, completion: nil)
     }
     
     
@@ -179,10 +179,10 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
     {
         println("DID SHOW CELL")
         
-        var cell = tableView.dequeueReusableCellWithIdentifier("user_cell") as user_cell
+        var cell = tableView.dequeueReusableCellWithIdentifier("reply_cell") as reply_cell
         
         
-        var fbid = theJSON["results"]![indexPath.row]["userID"] as String!
+        var fbid = theJSON["results"]![indexPath.row]["user_id"] as String!
         
         
         let url = NSURL(string: "http://graph.facebook.com/\(fbid)/picture?width=50&height=50")
@@ -190,27 +190,14 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
         
         
         cell.userImage?.image = UIImage(data: data!)
-        cell.nameLabel.text = theJSON["results"]![indexPath.row]["userName"] as String!
+        cell.nameLabel.text = theJSON["results"]![indexPath.row]["author"] as String!
         
-        
-        let followTest = theJSON["results"]![indexPath.row]["userFollow"] as String!
-        //test if general user is following the presented user
-        //cell.followButton.titleLabel?.text = "test"
-        
-        if(followTest == "yes"){//the user is follow, we give option to change
-            cell.followButton.setTitle("Unfollow", forState: UIControlState.Normal)
-        }
-        else{
-            cell.followButton.setTitle("Follow", forState: UIControlState.Normal)
-        }
-        
-        
-        // cell.followButton.addTarget(self, action: "DidPressFollow:", forControlEvents: .TouchUpInside)
-        //cell.followButton.tag = indexPath.row
+        cell.replyLabel.text = theJSON["results"]![indexPath.row]["comments"] as String!
+        //cell.replyLabel.text = "SLKFJSLKJF"
         cell.userFBID = fbid
         
         return cell
-        
+
         
     }
     
@@ -224,8 +211,8 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
         
     }
     
-    func get_likers(){
-        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_comment_likers")
+    func get_comments(){
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_comment_replies")
         //let url = NSURL(string: "http://www.groopie.co/mobile_get2_top_comments")
         //START AJAX
         var request = NSMutableURLRequest(URL: url!)
@@ -263,7 +250,7 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
                     
                     self.theJSON = parseJSON
                     self.hasLoaded = true
-                    self.focusTableOn = "likers"
+                    self.focusTableOn = "replies"
                     self.numOfCells = parseJSON["results"]!.count
                     
                     self.reload_table()
@@ -276,7 +263,6 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
             }
         })
         task.resume()
-        
     }
     
     @IBAction func did_hit_reply(){

@@ -39,6 +39,8 @@
 		EC8139981AC9DA9700985BC5 /* Time.png in Resources */ = {isa = PBXBuildFile; fileRef = EC8139891AC9DA9700985BC5 /* Time.png */; };
 		EC8139991AC9DA9700985BC5 /* Unfollow.png in Resources */ = {isa = PBXBuildFile; fileRef = EC81398A1AC9DA9700985BC5 /* Unfollow.png */; };
 		EC81399C1ACC5D5B00985BC5 /* Raleway in Resources */ = {isa = PBXBuildFile; fileRef = EC81399B1ACC5D5B00985BC5 /* Raleway */; };
+		EC8B8AE91ACF5527002AD793 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = EC8B8AE81ACF5527002AD793 /* logo.png */; };
+		EC8B8AEB1ACF5624002AD793 /* appIcons in Resources */ = {isa = PBXBuildFile; fileRef = EC8B8AEA1ACF5624002AD793 /* appIcons */; };
 		EC9986971AABE31F00E0583D /* ThirdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9986961AABE31F00E0583D /* ThirdViewController.swift */; };
 		EC99869D1AABECD300E0583D /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC99869C1AABECD300E0583D /* ProfileViewController.swift */; };
 		EC9B53BD1AA7ED1500348B31 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9B53BC1AA7ED1500348B31 /* AppDelegate.swift */; };
@@ -61,6 +63,7 @@
 		ECB095891ACCA6EA00802E9F /* backIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = ECB095881ACCA6EA00802E9F /* backIcon.png */; };
 		ECB0958B1ACCEB3400802E9F /* CommentLikersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB0958A1ACCEB3400802E9F /* CommentLikersViewController.swift */; };
 		ECB0958D1ACD0BA300802E9F /* CommentReplyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB0958C1ACD0BA300802E9F /* CommentReplyViewController.swift */; };
+		ECCBD1271ACE4E2F005C0495 /* loginScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = ECCBD1261ACE4E2F005C0495 /* loginScreen.png */; };
 		ECFDDD181AB7B9B3000F5880 /* blank.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFDDD171AB7B9B3000F5880 /* blank.png */; };
 		ECFDDD1C1AB94FF8000F5880 /* clicktoupload.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFDDD1B1AB94FF8000F5880 /* clicktoupload.png */; };
 /* End PBXBuildFile section */
@@ -120,6 +123,8 @@
 		EC8139891AC9DA9700985BC5 /* Time.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Time.png; sourceTree = "<group>"; };
 		EC81398A1AC9DA9700985BC5 /* Unfollow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Unfollow.png; sourceTree = "<group>"; };
 		EC81399B1ACC5D5B00985BC5 /* Raleway */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Raleway; sourceTree = "<group>"; };
+		EC8B8AE81ACF5527002AD793 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		EC8B8AEA1ACF5624002AD793 /* appIcons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = appIcons; sourceTree = "<group>"; };
 		EC9986961AABE31F00E0583D /* ThirdViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = "<group>"; };
 		EC99869C1AABECD300E0583D /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		EC9B53B71AA7ED1500348B31 /* layout_1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = layout_1.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -146,6 +151,7 @@
 		ECB095881ACCA6EA00802E9F /* backIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backIcon.png; sourceTree = "<group>"; };
 		ECB0958A1ACCEB3400802E9F /* CommentLikersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentLikersViewController.swift; sourceTree = "<group>"; };
 		ECB0958C1ACD0BA300802E9F /* CommentReplyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentReplyViewController.swift; sourceTree = "<group>"; };
+		ECCBD1261ACE4E2F005C0495 /* loginScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loginScreen.png; sourceTree = "<group>"; };
 		ECFDDD171AB7B9B3000F5880 /* blank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blank.png; sourceTree = "<group>"; };
 		ECFDDD1B1AB94FF8000F5880 /* clicktoupload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clicktoupload.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -203,7 +209,9 @@
 		EC81397B1AC9DA5A00985BC5 /* icons */ = {
 			isa = PBXGroup;
 			children = (
+				ECCBD1261ACE4E2F005C0495 /* loginScreen.png */,
 				EC81397C1AC9DA9700985BC5 /* Camera Roll.png */,
+				EC8B8AE81ACF5527002AD793 /* logo.png */,
 				ECB095881ACCA6EA00802E9F /* backIcon.png */,
 				EC81397D1AC9DA9700985BC5 /* Comment.png */,
 				EC81397E1AC9DA9700985BC5 /* Create.png */,
@@ -259,6 +267,7 @@
 			isa = PBXGroup;
 			children = (
 				EC81399A1ACC5D5400985BC5 /* fonts */,
+				EC8B8AEA1ACF5624002AD793 /* appIcons */,
 				EC81397B1AC9DA5A00985BC5 /* icons */,
 				ECFDDD1B1AB94FF8000F5880 /* clicktoupload.png */,
 				ECFDDD171AB7B9B3000F5880 /* blank.png */,
@@ -410,16 +419,19 @@
 				EC81399C1ACC5D5B00985BC5 /* Raleway in Resources */,
 				EC47B86B1ABFDA0A00ADBCC6 /* back1.png in Resources */,
 				EC81398E1AC9DA9700985BC5 /* Feed_Active.png in Resources */,
+				EC8B8AEB1ACF5624002AD793 /* appIcons in Resources */,
 				EC81398B1AC9DA9700985BC5 /* Camera Roll.png in Resources */,
 				EC9B53C21AA7ED1500348B31 /* Main.storyboard in Resources */,
 				EC4EDD1A1AAFA56E006270F3 /* honey_empty.jpg in Resources */,
 				EC8139931AC9DA9700985BC5 /* Location.png in Resources */,
 				EC8139911AC9DA9700985BC5 /* Like_Selected.png in Resources */,
 				ECFDDD1C1AB94FF8000F5880 /* clicktoupload.png in Resources */,
+				ECCBD1271ACE4E2F005C0495 /* loginScreen.png in Resources */,
 				EC8139951AC9DA9700985BC5 /* Me.png in Resources */,
 				EC9B53C71AA7ED1500348B31 /* LaunchScreen.xib in Resources */,
 				EC8139961AC9DA9700985BC5 /* Photo.png in Resources */,
 				EC81398D1AC9DA9700985BC5 /* Create.png in Resources */,
+				EC8B8AE91ACF5527002AD793 /* logo.png in Resources */,
 				ECAE3B151AB2421500B5AD65 /* loader.gif in Resources */,
 				EC8139941AC9DA9700985BC5 /* Me_Active.png in Resources */,
 				EC4EDD181AAFA53B006270F3 /* honey_full.jpg in Resources */,

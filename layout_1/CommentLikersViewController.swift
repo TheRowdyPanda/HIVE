@@ -194,18 +194,19 @@ class CommentLikersViewController: UIViewController, UITableViewDelegate, UITabl
         cell.userImage?.image = UIImage(data: data!)
         cell.nameLabel.text = theJSON["results"]![indexPath.row]["userName"] as String!
         
-        
+        cell.userImage.layer.cornerRadius = cell.userImage.frame.size.height
         let followTest = theJSON["results"]![indexPath.row]["userFollow"] as String!
         //test if general user is following the presented user
         //cell.followButton.titleLabel?.text = "test"
         
         if(followTest == "yes"){//the user is follow, we give option to change
-            cell.followButton.setTitle("Unfollow", forState: UIControlState.Normal)
+            //cell.followButton.setTitle("Unfollow", forState: UIControlState.Normal)
+            cell.followButton.setImage(UIImage(named: "Unfollow.png"), forState: UIControlState.Normal)
         }
         else{
-            cell.followButton.setTitle("Follow", forState: UIControlState.Normal)
+            // cell.followButton.setTitle("Follow", forState: UIControlState.Normal)
+            cell.followButton.setImage(UIImage(named: "Follow.png"), forState: UIControlState.Normal)
         }
-        
         
         // cell.followButton.addTarget(self, action: "DidPressFollow:", forControlEvents: .TouchUpInside)
         //cell.followButton.tag = indexPath.row

@@ -37,8 +37,8 @@ class user_cell: UITableViewCell {
         //followButton.frame = CGRect(x: followButton.frame.origin.x, y: followButton.frame.origin.y, width: self.frame.width, height: followButton.frame.height)
         followButton.backgroundColor = UIColor.clearColor()
         //followButton.layer.cornerRadius = followButton.frame.width/4
-        followButton.layer.borderWidth = 1
-        followButton.layer.borderColor = UIColor.blackColor().CGColor
+        followButton.layer.borderWidth = 0
+        //followButton.layer.borderColor = UIColor.clearColor().CGColor
         
       
         
@@ -100,7 +100,8 @@ class user_cell: UITableViewCell {
             
             
                     //self.followButton.titleLabel?.text = "done"
-                            self.followButton.setTitle("unfollow", forState: UIControlState.Normal)
+                            //self.followButton.setTitle("unfollow", forState: UIControlState.Normal)
+                            self.followButton.setImage(UIImage(named: "Unfollow.png"), forState: UIControlState.Normal)
                         })
                     }
                     else{
@@ -109,7 +110,8 @@ class user_cell: UITableViewCell {
                             
                             
                             //self.followButton.titleLabel?.text = "done"
-                            self.followButton.setTitle("follow", forState: UIControlState.Normal)
+                            //self.followButton.setTitle("follow", forState: UIControlState.Normal)
+                            self.followButton.setImage(UIImage(named: "Follow.png"), forState: UIControlState.Normal)
                         })
                         
                     }

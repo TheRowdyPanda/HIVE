@@ -29,11 +29,11 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
         self.tableView.rowHeight = tableView.frame.height/8
         
         if(ajaxRequestString == "followers"){
-            titleItem.title = "Followers"
+            //titleItem.title = "Followers"
             get_user_followers()
         }
         else if(ajaxRequestString == "following"){
-            titleItem.title = "Following"
+            //titleItem.title = "Following"
             get_user_following()
         }
         
@@ -93,10 +93,12 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
         //cell.followButton.titleLabel?.text = "test"
         
         if(followTest == "yes"){//the user is follow, we give option to change
-             cell.followButton.setTitle("Unfollow", forState: UIControlState.Normal)
+             //cell.followButton.setTitle("Unfollow", forState: UIControlState.Normal)
+            cell.followButton.setImage(UIImage(named: "Unfollow.png"), forState: UIControlState.Normal)
         }
         else{
-            cell.followButton.setTitle("Follow", forState: UIControlState.Normal)
+           // cell.followButton.setTitle("Follow", forState: UIControlState.Normal)
+            cell.followButton.setImage(UIImage(named: "Follow.png"), forState: UIControlState.Normal)
         }
 
         

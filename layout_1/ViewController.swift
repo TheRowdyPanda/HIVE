@@ -62,7 +62,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         println("Saved ID:\(savedFBID)")
         
         customSC.selectedSegmentIndex = 1
-        let font = UIFont(name: "Arial", size: 22)
+        let font = UIFont(name: "Arial", size: 14)
         let attr = NSDictionary(objects: [font!, UIColor.whiteColor()], forKeys: [NSFontAttributeName, NSForegroundColorAttributeName])
         //let attr = NSDictionary(object: font!, forKey: NSFontAttributeName)
        // customSC.titleForSegmentAtIndex(0) = "skdfK"
@@ -71,6 +71,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         customSC.setTitleTextAttributes(attr, forState: UIControlState.Highlighted)
         //customSC.titleTextAttributesForState(UIControlState.Normal) = attr
         
+      //  customSC.setHe
         tableView.estimatedRowHeight = 500.0
         tableView.rowHeight = UITableViewAutomaticDimension
         
@@ -563,7 +564,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             
             //give a loading gif to UI
-            var urlgif = NSBundle.mainBundle().URLForResource("loader", withExtension: "gif")
+            var urlgif = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
             var imageDatagif = NSData(contentsOfURL: urlgif!)
             
             
@@ -1239,17 +1240,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let screenSize: CGRect = UIScreen.mainScreen().bounds
         
-        let squareSize = screenSize.width * 0.5
-        let xPos = screenSize.width/2 - squareSize/2
-        let yPos = screenSize.height/2 - squareSize/2
+        let w = screenSize.width * 0.8
+        let h = w * 0.283
+        let squareSize = screenSize.width * 0.2
+        let xPos = screenSize.width/2 - w/2
+        let yPos = screenSize.height/2 - h/2
         
-        let holdView = UIView(frame: CGRect(x: xPos, y: yPos, width: squareSize, height: squareSize*1.1))
+        let holdView = UIView(frame: CGRect(x: xPos, y: yPos, width: w, height: h))
         holdView.backgroundColor = UIColor.whiteColor()
         holdView.tag = 999
         
         holdView.layer.borderWidth=1.0
         holdView.layer.masksToBounds = false
-        holdView.layer.borderColor = UIColor.blackColor().CGColor
+        holdView.layer.borderColor = UIColor.clearColor().CGColor
         //profilePic.layer.cornerRadius = 13
         holdView.layer.cornerRadius = holdView.frame.size.height/10
         holdView.clipsToBounds = true
@@ -1264,7 +1267,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         var label = UILabel(frame: CGRectMake(0, 0, holdView.frame.width, holdView.frame.height*0.2))
         label.textAlignment = NSTextAlignment.Center
         label.text = "Loading Comments..."
-        holdView.addSubview(label)
+        //holdView.addSubview(label)
         
         
         
@@ -1278,10 +1281,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let imageView = UIImageView(image: image!)
         
         let smallerSquareSize = squareSize*0.6
-        let gPos = (holdView.frame.width - smallerSquareSize)/2
+        let gPos = (holdView.frame.width*0.2)/2
+        let kPos = (holdView.frame.height*0.2)/2
         
         
-        imageView.frame = CGRect(x: gPos, y: gPos*1.8, width: smallerSquareSize, height: smallerSquareSize)
+        imageView.frame = CGRect(x: gPos, y: kPos, width: w*0.8, height: h*0.8)
         holdView.addSubview(imageView)
         
     }

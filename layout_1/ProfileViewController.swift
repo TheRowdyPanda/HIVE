@@ -38,6 +38,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         @IBOutlet var followersLabel:UILabel!
         @IBOutlet var followingName:UILabel!
         @IBOutlet var followingLabel:UILabel!
+    
+    @IBOutlet var followButton:UIButton!
         
         var imageCache = [String : UIImage]()
         var userImageCache = [String: UIImage]()
@@ -64,7 +66,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             currentUserLocation = myCustomViewController.currentUserLocation
             
-            var url = NSBundle.mainBundle().URLForResource("loader", withExtension: "gif")
+            var url = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
             var imageData = NSData(contentsOfURL: url!)
             
             // Returns an animated UIImage
@@ -109,6 +111,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             followersName.userInteractionEnabled = true
             followersName.addGestureRecognizer(followersTap)
             
+            
+            
+            tableView.estimatedRowHeight = 500.0
+            tableView.rowHeight = UITableViewAutomaticDimension
             
         }
         
@@ -406,6 +412,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as String!
                 cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as String!
                 
+                cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as String!
+                
                 let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
                 
                 let myMutableString2 = NSMutableAttributedString(string: "World", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 8.0)!])
@@ -487,15 +495,15 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 
                 
-                let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-                // 4
-                authorTap.delegate = self
-                cell.author_label?.tag = indexPath.row
-                cell.author_label?.userInteractionEnabled = true
-                cell.author_label?.addGestureRecognizer(authorTap)
-                
-                
-                
+//                let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
+//                // 4
+//                authorTap.delegate = self
+//                cell.author_label?.tag = indexPath.row
+//                cell.author_label?.userInteractionEnabled = true
+//                cell.author_label?.addGestureRecognizer(authorTap)
+//                
+//                
+//                
                 
                 let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
                 likersTap.delegate = self
@@ -576,7 +584,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 
                 //give a loading gif to UI
-                var urlgif = NSBundle.mainBundle().URLForResource("loader", withExtension: "gif")
+                var urlgif = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
                 var imageDatagif = NSData(contentsOfURL: urlgif!)
                 
                 
@@ -650,7 +658,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             
             friendView.ajaxRequestString = "followers"
-            friendView.userFBID = fbid
+            friendView.userFBID = userFBID
             // self.dismissViewControllerAnimated(true, completion: nil)
             
             self.presentViewController(friendView, animated: true, completion: nil)
@@ -668,7 +676,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             
             friendView.ajaxRequestString = "following"
-            friendView.userFBID = fbid
+            friendView.userFBID = userFBID
             // self.dismissViewControllerAnimated(true, completion: nil)
             
             self.presentViewController(friendView, animated: true, completion: nil)
@@ -685,8 +693,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             var session = NSURLSession.sharedSession()
             request.HTTPMethod = "POST"
             
+            let defaults = NSUserDefaults.standardUserDefaults()
+            var fbid = defaults.stringForKey("saved_fb_id") as String!
             
-            var params = ["fb_id":userFBID] as Dictionary<String, String>
+            
+            var params = ["fb_id":userFBID, "gfb_id":fbid] as Dictionary<String, String>
             
             var err: NSError?
             request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
@@ -735,10 +746,18 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                         
                         dispatch_async(dispatch_get_main_queue(), {
                             self.locLable!.text = parseJSON["results"]![0]["lastLoc"] as String! ?? ""
-                            self.timeLabel!.text = ""
+                            self.timeLabel!.text = parseJSON["results"]![0]["lastTime"] as String! ?? ""
                             self.followersLabel!.text = parseJSON["results"]![0]["followers"] as String! ?? ""
                             self.followingLabel!.text = parseJSON["results"]![0]["following"] as String! ?? ""
                             self.numPostLabel!.text = parseJSON["results"]![0]["comments"] as String! ?? ""
+                            
+                            let folCheck = parseJSON["results"]![0]["isFollowing"] as String! ?? ""
+                            if(folCheck == "no"){//user is not following
+                                self.followButton.setImage(UIImage(named: "Follow.png"), forState: UIControlState.Normal)
+                            }
+                            else{
+                                self.followButton.setImage(UIImage(named: "Unfollow.png"), forState: UIControlState.Normal)
+                            }
                             self.removeLoadingScreen()
                             // self.tableView.reloadData()
                         })
@@ -1317,6 +1336,85 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
+    
+    
+    @IBAction func toggle_user_follow(){
+        
+        
+       // self.followButton.titleLabel?.text = "..."
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        
+        
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_toggle_user_follow")
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        var params = ["gUser_fbID":fbid, "iUser_fbID":userFBID] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+            }
+            else {
+                
+                if let parseJSON = json {
+                    
+                    let valTest = parseJSON["results"]![0]["value"] as String!
+                    
+                    if(valTest == "yes"){//user did just follow
+                        dispatch_async(dispatch_get_main_queue(),{
+                            
+                            
+                            //self.followButton.titleLabel?.text = "done"
+                            //self.followButton.setTitle("unfollow", forState: UIControlState.Normal)
+                            self.followButton.setImage(UIImage(named: "Unfollow.png"), forState: UIControlState.Normal)
+                        })
+                    }
+                    else{
+                        //user did just unfollow
+                        dispatch_async(dispatch_get_main_queue(),{
+                            
+                            
+                            //self.followButton.titleLabel?.text = "done"
+                            //self.followButton.setTitle("follow", forState: UIControlState.Normal)
+                            self.followButton.setImage(UIImage(named: "Follow.png"), forState: UIControlState.Normal)
+                        })
+                        
+                    }
+                    
+                }
+                else {
+                    
+                    
+                }
+            }
+        })
+        task.resume()
+        //END AJAX
+        
+    }
+
+    
     
     
 }

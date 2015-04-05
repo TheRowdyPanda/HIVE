@@ -54,7 +54,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         super.viewDidLoad()
         //titleItem.title = "TESTING"
         
-        var url = NSBundle.mainBundle().URLForResource("loader", withExtension: "gif")
+        var url = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
         var imageData = NSData(contentsOfURL: url!)
         
         
@@ -112,6 +112,10 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         followersName.userInteractionEnabled = true
         followersName.addGestureRecognizer(followersTap)
         
+        
+        
+        tableView.estimatedRowHeight = 500.0
+        tableView.rowHeight = UITableViewAutomaticDimension
         
     }
 
@@ -238,6 +242,8 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as String!
             cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as String!
             cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as String!
+            
+            cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as String!
             
             let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
             
@@ -613,7 +619,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             
             
             //give a loading gif to UI
-            var urlgif = NSBundle.mainBundle().URLForResource("loader", withExtension: "gif")
+            var urlgif = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
             var imageDatagif = NSData(contentsOfURL: urlgif!)
             
             
@@ -724,7 +730,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         let defaults = NSUserDefaults.standardUserDefaults()
         let fbid = defaults.stringForKey("saved_fb_id") as String!
         
-        var params = ["fb_id":fbid] as Dictionary<String, String>
+        var params = ["fb_id":fbid, "gfb_id":fbid] as Dictionary<String, String>
         
         var err: NSError?
         request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
@@ -773,7 +779,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
                     
                     dispatch_async(dispatch_get_main_queue(), {
                         self.locLable!.text = parseJSON["results"]![0]["lastLoc"] as String! ?? ""
-                        self.timeLabel!.text = ""
+                        self.timeLabel!.text = parseJSON["results"]![0]["lastTime"] as String! ?? ""
                         self.followersLabel!.text = parseJSON["results"]![0]["followers"] as String! ?? ""
                         self.followingLabel!.text = parseJSON["results"]![0]["following"] as String! ?? ""
                         self.numPostLabel!.text = parseJSON["results"]![0]["comments"] as String! ?? ""
@@ -1132,7 +1138,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         
         // Returns an animated UIImage
-        var url = NSBundle.mainBundle().URLForResource("loader", withExtension: "gif")
+        var url = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
         var imageData = NSData(contentsOfURL: url!)
         
         
@@ -1344,7 +1350,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         for view in self.view.subviews {
             if(view.tag == 999){
-                view.removeFromSuperview()
+                //view.removeFromSuperview()
             }
         }
     }

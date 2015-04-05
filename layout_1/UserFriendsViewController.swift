@@ -19,6 +19,8 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
    @IBOutlet var tableView:UITableView!
     @IBOutlet var titleItem:UINavigationItem!
     
+    
+    
     var theJSON: NSDictionary!
     var hasLoaded:Bool = false
     var numOfCells = 0
@@ -29,11 +31,11 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
         self.tableView.rowHeight = tableView.frame.height/8
         
         if(ajaxRequestString == "followers"){
-            //titleItem.title = "Followers"
+            titleItem.title = "Followers"
             get_user_followers()
         }
         else if(ajaxRequestString == "following"){
-            //titleItem.title = "Following"
+            titleItem.title = "Following"
             get_user_following()
         }
         

@@ -342,6 +342,17 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     
+    @IBAction func did_click_flag(){
+    
+        let alertController = UIAlertController(title: "Flagged!", message:
+            "This post has been flagged for inappropriate content.", preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addAction(UIAlertAction(title: "Okay, cool.", style: UIAlertActionStyle.Default,handler: nil))
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+        
+    }
+    
+    
     
     //    func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem!) {
     //        if(item.tag == 1){

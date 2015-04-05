@@ -59,6 +59,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         savedFBID = defaults.stringForKey("saved_fb_id")!
         
         
+        println("Saved ID:\(savedFBID)")
         
         customSC.selectedSegmentIndex = 1
         let font = UIFont(name: "Arial", size: 22)
@@ -70,7 +71,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         customSC.setTitleTextAttributes(attr, forState: UIControlState.Highlighted)
         //customSC.titleTextAttributesForState(UIControlState.Normal) = attr
         
-        tableView.estimatedRowHeight = 68.0
+        tableView.estimatedRowHeight = 500.0
         tableView.rowHeight = UITableViewAutomaticDimension
         
         
@@ -127,9 +128,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         //self.tableView.separatorStyle
         self.tableView.separatorInset.left = 0
         self.tableView.layoutMargins = UIEdgeInsetsZero
+        
+        //self.tableView.awakeFromNib()
     }
     
     //pragma mark - table view
+    
+//    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+//        return 500.0
+//    }
+    
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         //make sure the json has loaded before we do anything

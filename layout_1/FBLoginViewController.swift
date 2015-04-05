@@ -33,6 +33,10 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate {
         let fbid = defaults.stringForKey("saved_fb_id")
         if(fbid != nil){
             
+            if(fbid == "none"){
+                
+            }
+            else{
             let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
             //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
             let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as UITabBarController
@@ -41,10 +45,12 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate {
             self.dismissViewControllerAnimated(true, completion: nil)
             
             self.presentViewController(fbView, animated: false, completion: nil)
+            }
             
             
             
         }
+
     }
     
     

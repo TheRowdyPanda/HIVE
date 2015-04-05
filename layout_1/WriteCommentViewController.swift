@@ -77,7 +77,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
   
         
         
-        commentView.text = "Enter a comment...."
+        commentView.text = "What's the Buzz?"
         commentView.textColor = UIColor.lightGrayColor()
         commentView.delegate = self
        
@@ -274,14 +274,32 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     }
     
     @IBAction func did_submit_comment(){
-         self.commentView.resignFirstResponder()
-        self.showLoadingScreen()
+        
+        
+        if(commentView.text == "What's the Buzz?"){
+            commentView.text = ""
+        }
         if(hasImage == true){
             
+            self.commentView.resignFirstResponder()
+            self.showLoadingScreen()
             upload_picture()
         }
         else{
-            upload_comment()
+            if(commentView.text == ""){
+                
+                let alertController = UIAlertController(title: "No Content", message:
+                    "Please enter text or a pic to submit", preferredStyle: UIAlertControllerStyle.Alert)
+                alertController.addAction(UIAlertAction(title: "For Sure", style: UIAlertActionStyle.Default,handler: nil))
+                
+                self.presentViewController(alertController, animated: true, completion: nil)
+                
+            }
+            else{
+                self.commentView.resignFirstResponder()
+                self.showLoadingScreen()
+                upload_comment()
+            }
         }
         
     }

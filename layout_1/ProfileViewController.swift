@@ -1120,6 +1120,194 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     
+    func toggleCommentVote(sender:UIGestureRecognizer){
+        //get the attached sender imageview
+        var heartImage = sender.view? as UIImageView
+        //get the main view
+        
+        var indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0))
+        
+        if(indCell?.tag == 100){
+            
+            var cellView = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as custom_cell_no_images
+            
+            var cID = cellView.comment_id
+            
+            
+            
+            
+            
+            let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_toggle_comment_vote")
+            //START AJAX
+            var request = NSMutableURLRequest(URL: url!)
+            var session = NSURLSession.sharedSession()
+            request.HTTPMethod = "POST"
+            
+            let defaults = NSUserDefaults.standardUserDefaults()
+            var fbid = defaults.stringForKey("saved_fb_id") as String!
+            
+            
+            
+            var params = ["fbid":fbid, "comment_id":String(cID)] as Dictionary<String, String>
+            
+            
+            var err: NSError?
+            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+            
+            var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+                println("Response: \(response)")
+                var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Body: \(strData)")
+                var err: NSError?
+                var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+                
+                
+                // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+                if(err != nil) {
+                    println(err!.localizedDescription)
+                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                    println("Error could not parse JSON: '\(jsonStr)'")
+                }
+                else {
+                    // The JSONObjectWithData constructor didn't return an error. But, we should still
+                    
+                    
+                    
+                    // check and make sure that json has a value using optional binding.
+                    if let parseJSON = json {
+                        dispatch_async(dispatch_get_main_queue(),{
+                            //change the heart image
+                            
+                            
+                            
+                            var testVote = parseJSON["results"]![0]["vote"] as String!
+                            
+                            if(testVote == "no"){
+                                heartImage.image = UIImage(named: "honey_empty.jpg")
+                                
+                                //get heart label content as int
+                                var curHVal = cellView.heart_label?.text?.toInt()
+                                //get the heart label
+                                cellView.heart_label?.text = String(curHVal! - 1)
+                            }
+                            else if(testVote == "yes"){
+                                heartImage.image = UIImage(named: "honey_full.jpg")
+                                
+                                //get heart label content as int
+                                var curHVal = cellView.heart_label?.text?.toInt()
+                                //get the heart label
+                                cellView.heart_label?.text = String(curHVal! + 1)
+                            }
+                        })
+                        
+                    }
+                    else {
+                        // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                        
+                    }
+                }
+            })
+            task.resume()
+            
+            
+            
+        }
+        
+        if(indCell?.tag == 200){
+            
+            var cellView = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as custom_cell
+            
+            var cID = cellView.comment_id
+            
+            
+            
+            
+            
+            let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_toggle_comment_vote")
+            //START AJAX
+            var request = NSMutableURLRequest(URL: url!)
+            var session = NSURLSession.sharedSession()
+            request.HTTPMethod = "POST"
+            
+            let defaults = NSUserDefaults.standardUserDefaults()
+            var fbid = defaults.stringForKey("saved_fb_id") as String!
+            
+            
+            
+            var params = ["fbid":fbid, "comment_id":String(cID)] as Dictionary<String, String>
+            
+            var err: NSError?
+            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+            
+            var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+                println("Response: \(response)")
+                var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Body: \(strData)")
+                var err: NSError?
+                var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+                
+                
+                // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+                if(err != nil) {
+                    println(err!.localizedDescription)
+                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                    println("Error could not parse JSON: '\(jsonStr)'")
+                }
+                else {
+                    // The JSONObjectWithData constructor didn't return an error. But, we should still
+                    
+                    
+                    
+                    // check and make sure that json has a value using optional binding.
+                    if let parseJSON = json {
+                        dispatch_async(dispatch_get_main_queue(),{
+                            //change the heart image
+                            
+                            
+                            
+                            var testVote = parseJSON["results"]![0]["vote"] as String!
+                            
+                            if(testVote == "no"){
+                                heartImage.image = UIImage(named: "honey_empty.jpg")
+                                
+                                //get heart label content as int
+                                var curHVal = cellView.heart_label?.text?.toInt()
+                                //get the heart label
+                                cellView.heart_label?.text = String(curHVal! - 1)
+                            }
+                            else if(testVote == "yes"){
+                                heartImage.image = UIImage(named: "honey_full.jpg")
+                                
+                                //get heart label content as int
+                                var curHVal = cellView.heart_label?.text?.toInt()
+                                //get the heart label
+                                cellView.heart_label?.text = String(curHVal! + 1)
+                            }
+                        })
+                        
+                    }
+                    else {
+                        // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                        
+                    }
+                }
+            })
+            task.resume()
+            
+            
+            
+        }
+        
+    }
+    
+    
+    
+
+    
     func removeLoadingScreen(){
         //self.loadingScreen.alpha = 0.0
         

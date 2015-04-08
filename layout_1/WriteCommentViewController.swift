@@ -63,7 +63,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
       //  tracker.send(GAIDictionaryBuilder.createScreenView().build())
         
         var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-        tracker.send(GAIDictionaryBuilder.createEventWithCategory("SolveGame", action: "GameSolved", label: "Solve", value: nil).build())
+        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Show Scene", label: "Showed", value: nil).build())
         
       //  self.commentView.becomeFirstResponder()
 
@@ -97,6 +97,10 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
             textView.text = nil
             textView.textColor = UIColor.blackColor()
         }
+        
+        var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
+        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Start Comment", label: "Did Begin Editing", value: nil).build())
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -271,6 +275,10 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         self.commentView.resignFirstResponder()
         
         self.dismissViewControllerAnimated(true, completion: nil)
+        
+        var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
+        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "End Scene", label: "Canceled", value: nil).build())
+        
     }
     
     @IBAction func did_submit_comment(){
@@ -284,6 +292,8 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
             self.commentView.resignFirstResponder()
             self.showLoadingScreen()
             upload_picture()
+            var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
+            tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Send Comment", label: "Picture", value: nil).build())
         }
         else{
             if(commentView.text == ""){
@@ -299,6 +309,8 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
                 self.commentView.resignFirstResponder()
                 self.showLoadingScreen()
                 upload_comment()
+                var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
+                tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Send Comment", label: "No Picture", value: nil).build())
             }
         }
         
@@ -306,21 +318,24 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     
     
     
+    
     func showLoadingScreen(){
         
         let screenSize: CGRect = UIScreen.mainScreen().bounds
         
-        let squareSize = screenSize.width * 0.5
-        let xPos = screenSize.width/2 - squareSize/2
-        let yPos = screenSize.height/2 - squareSize/2
+        let w = screenSize.width * 0.8
+        let h = w * 0.283
+        let squareSize = screenSize.width * 0.2
+        let xPos = screenSize.width/2 - w/2
+        let yPos = screenSize.height/2 - h/2
         
-        let holdView = UIView(frame: CGRect(x: xPos, y: yPos, width: squareSize, height: squareSize*1.1))
+        let holdView = UIView(frame: CGRect(x: xPos, y: yPos, width: w, height: h))
         holdView.backgroundColor = UIColor.whiteColor()
         holdView.tag = 999
         
         holdView.layer.borderWidth=1.0
         holdView.layer.masksToBounds = false
-        holdView.layer.borderColor = UIColor.blackColor().CGColor
+        holdView.layer.borderColor = UIColor.clearColor().CGColor
         //profilePic.layer.cornerRadius = 13
         holdView.layer.cornerRadius = holdView.frame.size.height/10
         holdView.clipsToBounds = true
@@ -334,8 +349,8 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         
         var label = UILabel(frame: CGRectMake(0, 0, holdView.frame.width, holdView.frame.height*0.2))
         label.textAlignment = NSTextAlignment.Center
-        label.text = "Loading Comments..."
-        holdView.addSubview(label)
+        label.text = "Uploading Comment"
+        //holdView.addSubview(label)
         
         
         
@@ -349,14 +364,16 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         let imageView = UIImageView(image: image!)
         
         let smallerSquareSize = squareSize*0.6
-        let gPos = (holdView.frame.width - smallerSquareSize)/2
+        let gPos = (holdView.frame.width*0.2)/2
+        let kPos = (holdView.frame.height*0.2)/2
         
         
-        imageView.frame = CGRect(x: gPos, y: gPos*1.8, width: smallerSquareSize, height: smallerSquareSize)
+        imageView.frame = CGRect(x: gPos, y: kPos, width: w*0.8, height: h*0.8)
         holdView.addSubview(imageView)
         
     }
     
+
     
     func removeLoadingScreen(){
         //self.loadingScreen.alpha = 0.0

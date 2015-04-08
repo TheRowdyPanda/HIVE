@@ -95,22 +95,26 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         
         let followingTap = UITapGestureRecognizer(target: self, action:Selector("showFollowing"))
-        // 4
         followingTap.delegate = self
         followingLabel.userInteractionEnabled = true
         followingLabel.addGestureRecognizer(followingTap)
+        
+        let followingTap2 = UITapGestureRecognizer(target: self, action:Selector("showFollowing"))
+        followingTap2.delegate = self
         followingName.userInteractionEnabled = true
-        followingName.addGestureRecognizer(followingTap)
+        followingName.addGestureRecognizer(followingTap2)
         
         
         
         let followersTap = UITapGestureRecognizer(target: self, action:Selector("showFollowers"))
-        // 4
         followersTap.delegate = self
         followersLabel.userInteractionEnabled = true
         followersLabel.addGestureRecognizer(followersTap)
+        
+        let followersTap2 = UITapGestureRecognizer(target: self, action:Selector("showFollowers"))
+        followersTap2.delegate = self
         followersName.userInteractionEnabled = true
-        followersName.addGestureRecognizer(followersTap)
+        followersName.addGestureRecognizer(followersTap2)
         
         
         
@@ -327,13 +331,13 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             
             
             
-            
-            let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-            // 4
-            authorTap.delegate = self
-            cell.author_label?.tag = indexPath.row
-            cell.author_label?.userInteractionEnabled = true
-            cell.author_label?.addGestureRecognizer(authorTap)
+//            
+//            let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
+//            // 4
+//            authorTap.delegate = self
+//            cell.author_label?.tag = indexPath.row
+//            cell.author_label?.userInteractionEnabled = true
+//            cell.author_label?.addGestureRecognizer(authorTap)
             
             
             
@@ -422,6 +426,16 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             
             
             
+            
+//            let borFrame = CGRectMake(0, cell.contentView.frame.height*2 - 2, cell.contentView.frame.width, 2)
+//            let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
+//            let botBorder = UIImageView(frame: borFrame)
+//            botBorder.backgroundColor = color
+//            cell.contentView.addSubview(botBorder)
+//            
+            
+            
+            
             return cell
             
             
@@ -448,6 +462,8 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as String!
             cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as String!
             cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as String!
+            cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as String!
+
             
             let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
             
@@ -530,12 +546,12 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             
             
             
-            let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-            // 4
-            authorTap.delegate = self
-            cell.author_label?.tag = indexPath.row
-            cell.author_label?.userInteractionEnabled = true
-            cell.author_label?.addGestureRecognizer(authorTap)
+//            let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
+//            // 4
+//            authorTap.delegate = self
+//            cell.author_label?.tag = indexPath.row
+//            cell.author_label?.userInteractionEnabled = true
+//            cell.author_label?.addGestureRecognizer(authorTap)
             
             
             
@@ -665,7 +681,12 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             
             
             
-            
+//            let borFrame = CGRectMake(0, cell.contentView.frame.height - 1, cell.contentView.frame.width, 1)
+//            let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
+//            let botBorder = UIImageView(frame: borFrame)
+//            botBorder.backgroundColor = color
+//            cell.contentView.addSubview(botBorder)
+//            
             
             return cell
         }
@@ -675,6 +696,45 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        
+        
+        
+        
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+        let repView = mainStoryboard.instantiateViewControllerWithIdentifier("comment_reply_id") as CommentReplyViewController
+        
+        
+        
+        
+        let indCell = tableView.cellForRowAtIndexPath(indexPath)
+        
+        if(indCell?.tag == 100){
+            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell_no_images
+            
+            repView.sentLocation = currentUserLocation
+            repView.commentID = gotCell.comment_id
+            //profView.comment = gotCell.comment_label.text!
+            // profView.userFBID = gotCell.user_id
+            
+            //profView.userName = gotCell.author_label.text!
+        }
+        if(indCell?.tag == 200){
+            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell
+            
+            repView.sentLocation = currentUserLocation
+            repView.commentID = gotCell.comment_id
+            //profView.comment = gotCell.comment_label.text!
+            //profView.userFBID = gotCell.user_id
+            
+            //profView.userName = gotCell.author_label.text!
+        }
+        
+        
+        self.presentViewController(repView, animated: true, completion: nil)
+        
+        
         
      
     }
@@ -1102,22 +1162,23 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
 
-    
     func showLoadingScreen(){
         
         let screenSize: CGRect = UIScreen.mainScreen().bounds
         
-        let squareSize = screenSize.width * 0.5
-        let xPos = screenSize.width/2 - squareSize/2
-        let yPos = screenSize.height/2 - squareSize/2
+        let w = screenSize.width * 0.8
+        let h = w * 0.283
+        let squareSize = screenSize.width * 0.2
+        let xPos = screenSize.width/2 - w/2
+        let yPos = screenSize.height/2 - h/2
         
-        let holdView = UIView(frame: CGRect(x: xPos, y: yPos, width: squareSize, height: squareSize*1.1))
+        let holdView = UIView(frame: CGRect(x: xPos, y: yPos, width: w, height: h))
         holdView.backgroundColor = UIColor.whiteColor()
         holdView.tag = 999
         
         holdView.layer.borderWidth=1.0
         holdView.layer.masksToBounds = false
-        holdView.layer.borderColor = UIColor.blackColor().CGColor
+        holdView.layer.borderColor = UIColor.clearColor().CGColor
         //profilePic.layer.cornerRadius = 13
         holdView.layer.cornerRadius = holdView.frame.size.height/10
         holdView.clipsToBounds = true
@@ -1132,13 +1193,13 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         var label = UILabel(frame: CGRectMake(0, 0, holdView.frame.width, holdView.frame.height*0.2))
         label.textAlignment = NSTextAlignment.Center
         label.text = "Loading Comments..."
-        holdView.addSubview(label)
+        //holdView.addSubview(label)
         
         
         
         
         // Returns an animated UIImage
-        var url = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
+        var url = NSBundle.mainBundle().URLForResource("loader", withExtension: "gif")
         var imageData = NSData(contentsOfURL: url!)
         
         
@@ -1146,13 +1207,16 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         let imageView = UIImageView(image: image!)
         
         let smallerSquareSize = squareSize*0.6
-        let gPos = (holdView.frame.width - smallerSquareSize)/2
+        let gPos = (holdView.frame.width*0.2)/2
+        let kPos = (holdView.frame.height*0.2)/2
         
         
-        imageView.frame = CGRect(x: gPos, y: gPos*1.8, width: smallerSquareSize, height: smallerSquareSize)
+        imageView.frame = CGRect(x: gPos, y: kPos, width: w*0.8, height: h*0.8)
         holdView.addSubview(imageView)
         
     }
+    
+
     
     func toggleCommentVote(sender:UIGestureRecognizer){
         //get the attached sender imageview
@@ -1350,10 +1414,14 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         for view in self.view.subviews {
             if(view.tag == 999){
-                //view.removeFromSuperview()
+                view.removeFromSuperview()
             }
         }
     }
+    
+    
+    
+        
     
     
 }

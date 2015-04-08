@@ -42,6 +42,10 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
 //        self.locationManager.startUpdatingLocation()
 //        
         loadUserComments()
+        
+        var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
+        tracker.send(GAIDictionaryBuilder.createEventWithCategory("User Posts", action: "Show", label: "", value: nil).build())
+        
     }
     
     override func viewDidAppear(animated: Bool) {

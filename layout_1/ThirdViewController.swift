@@ -184,7 +184,7 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
         authorPicture.layer.masksToBounds = false
         authorPicture.layer.borderColor = UIColor.whiteColor().CGColor
         //profilePic.layer.cornerRadius = 13
-        authorPicture.layer.cornerRadius = authorPicture.frame.size.height/2
+        authorPicture.layer.cornerRadius = authorPicture.frame.size.height/4
         authorPicture.clipsToBounds = true
         }
     }

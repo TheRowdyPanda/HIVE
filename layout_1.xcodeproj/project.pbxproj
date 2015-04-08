@@ -38,7 +38,6 @@
 		EC8139971AC9DA9700985BC5 /* Share.png in Resources */ = {isa = PBXBuildFile; fileRef = EC8139881AC9DA9700985BC5 /* Share.png */; };
 		EC8139981AC9DA9700985BC5 /* Time.png in Resources */ = {isa = PBXBuildFile; fileRef = EC8139891AC9DA9700985BC5 /* Time.png */; };
 		EC8139991AC9DA9700985BC5 /* Unfollow.png in Resources */ = {isa = PBXBuildFile; fileRef = EC81398A1AC9DA9700985BC5 /* Unfollow.png */; };
-		EC81399C1ACC5D5B00985BC5 /* Raleway in Resources */ = {isa = PBXBuildFile; fileRef = EC81399B1ACC5D5B00985BC5 /* Raleway */; };
 		EC8B8AE91ACF5527002AD793 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = EC8B8AE81ACF5527002AD793 /* logo.png */; };
 		EC8B8AEB1ACF5624002AD793 /* appIcons in Resources */ = {isa = PBXBuildFile; fileRef = EC8B8AEA1ACF5624002AD793 /* appIcons */; };
 		EC9986971AABE31F00E0583D /* ThirdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9986961AABE31F00E0583D /* ThirdViewController.swift */; };
@@ -64,7 +63,17 @@
 		ECB095891ACCA6EA00802E9F /* backIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = ECB095881ACCA6EA00802E9F /* backIcon.png */; };
 		ECB0958B1ACCEB3400802E9F /* CommentLikersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB0958A1ACCEB3400802E9F /* CommentLikersViewController.swift */; };
 		ECB0958D1ACD0BA300802E9F /* CommentReplyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB0958C1ACD0BA300802E9F /* CommentReplyViewController.swift */; };
+		ECC0B98F1AD3BE6C00B21BD0 /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC0B98E1AD3BE6C00B21BD0 /* NotificationsViewController.swift */; };
 		ECCBD1271ACE4E2F005C0495 /* loginScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = ECCBD1261ACE4E2F005C0495 /* loginScreen.png */; };
+		ECCF393A1AD32D0300F8D6EB /* Raleway-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39311AD32D0300F8D6EB /* Raleway-Bold.ttf */; };
+		ECCF393B1AD32D0300F8D6EB /* Raleway-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39321AD32D0300F8D6EB /* Raleway-ExtraBold.ttf */; };
+		ECCF393C1AD32D0300F8D6EB /* Raleway-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39331AD32D0300F8D6EB /* Raleway-ExtraLight.ttf */; };
+		ECCF393D1AD32D0300F8D6EB /* Raleway-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39341AD32D0300F8D6EB /* Raleway-Heavy.ttf */; };
+		ECCF393E1AD32D0300F8D6EB /* Raleway-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39351AD32D0300F8D6EB /* Raleway-Light.ttf */; };
+		ECCF393F1AD32D0300F8D6EB /* Raleway-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39361AD32D0300F8D6EB /* Raleway-Medium.ttf */; };
+		ECCF39401AD32D0300F8D6EB /* Raleway-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39371AD32D0300F8D6EB /* Raleway-Regular.ttf */; };
+		ECCF39411AD32D0300F8D6EB /* Raleway-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39381AD32D0300F8D6EB /* Raleway-SemiBold.ttf */; };
+		ECCF39421AD32D0300F8D6EB /* Raleway-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39391AD32D0300F8D6EB /* Raleway-Thin.ttf */; };
 		ECFDDD181AB7B9B3000F5880 /* blank.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFDDD171AB7B9B3000F5880 /* blank.png */; };
 		ECFDDD1C1AB94FF8000F5880 /* clicktoupload.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFDDD1B1AB94FF8000F5880 /* clicktoupload.png */; };
 /* End PBXBuildFile section */
@@ -123,7 +132,6 @@
 		EC8139881AC9DA9700985BC5 /* Share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Share.png; sourceTree = "<group>"; };
 		EC8139891AC9DA9700985BC5 /* Time.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Time.png; sourceTree = "<group>"; };
 		EC81398A1AC9DA9700985BC5 /* Unfollow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Unfollow.png; sourceTree = "<group>"; };
-		EC81399B1ACC5D5B00985BC5 /* Raleway */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Raleway; sourceTree = "<group>"; };
 		EC8B8AE81ACF5527002AD793 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		EC8B8AEA1ACF5624002AD793 /* appIcons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = appIcons; sourceTree = "<group>"; };
 		EC9986961AABE31F00E0583D /* ThirdViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = "<group>"; };
@@ -153,7 +161,17 @@
 		ECB095881ACCA6EA00802E9F /* backIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backIcon.png; sourceTree = "<group>"; };
 		ECB0958A1ACCEB3400802E9F /* CommentLikersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentLikersViewController.swift; sourceTree = "<group>"; };
 		ECB0958C1ACD0BA300802E9F /* CommentReplyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentReplyViewController.swift; sourceTree = "<group>"; };
+		ECC0B98E1AD3BE6C00B21BD0 /* NotificationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
 		ECCBD1261ACE4E2F005C0495 /* loginScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loginScreen.png; sourceTree = "<group>"; };
+		ECCF39311AD32D0300F8D6EB /* Raleway-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-Bold.ttf"; path = "layout_1/Raleway/Raleway-Bold.ttf"; sourceTree = "<group>"; };
+		ECCF39321AD32D0300F8D6EB /* Raleway-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-ExtraBold.ttf"; path = "layout_1/Raleway/Raleway-ExtraBold.ttf"; sourceTree = "<group>"; };
+		ECCF39331AD32D0300F8D6EB /* Raleway-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-ExtraLight.ttf"; path = "layout_1/Raleway/Raleway-ExtraLight.ttf"; sourceTree = "<group>"; };
+		ECCF39341AD32D0300F8D6EB /* Raleway-Heavy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-Heavy.ttf"; path = "layout_1/Raleway/Raleway-Heavy.ttf"; sourceTree = "<group>"; };
+		ECCF39351AD32D0300F8D6EB /* Raleway-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-Light.ttf"; path = "layout_1/Raleway/Raleway-Light.ttf"; sourceTree = "<group>"; };
+		ECCF39361AD32D0300F8D6EB /* Raleway-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-Medium.ttf"; path = "layout_1/Raleway/Raleway-Medium.ttf"; sourceTree = "<group>"; };
+		ECCF39371AD32D0300F8D6EB /* Raleway-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-Regular.ttf"; path = "layout_1/Raleway/Raleway-Regular.ttf"; sourceTree = "<group>"; };
+		ECCF39381AD32D0300F8D6EB /* Raleway-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-SemiBold.ttf"; path = "layout_1/Raleway/Raleway-SemiBold.ttf"; sourceTree = "<group>"; };
+		ECCF39391AD32D0300F8D6EB /* Raleway-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-Thin.ttf"; path = "layout_1/Raleway/Raleway-Thin.ttf"; sourceTree = "<group>"; };
 		ECFDDD171AB7B9B3000F5880 /* blank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blank.png; sourceTree = "<group>"; };
 		ECFDDD1B1AB94FF8000F5880 /* clicktoupload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clicktoupload.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -236,7 +254,6 @@
 		EC81399A1ACC5D5400985BC5 /* fonts */ = {
 			isa = PBXGroup;
 			children = (
-				EC81399B1ACC5D5B00985BC5 /* Raleway */,
 			);
 			name = fonts;
 			sourceTree = "<group>";
@@ -244,6 +261,15 @@
 		EC9B53AE1AA7ED1500348B31 = {
 			isa = PBXGroup;
 			children = (
+				ECCF39311AD32D0300F8D6EB /* Raleway-Bold.ttf */,
+				ECCF39321AD32D0300F8D6EB /* Raleway-ExtraBold.ttf */,
+				ECCF39331AD32D0300F8D6EB /* Raleway-ExtraLight.ttf */,
+				ECCF39341AD32D0300F8D6EB /* Raleway-Heavy.ttf */,
+				ECCF39351AD32D0300F8D6EB /* Raleway-Light.ttf */,
+				ECCF39361AD32D0300F8D6EB /* Raleway-Medium.ttf */,
+				ECCF39371AD32D0300F8D6EB /* Raleway-Regular.ttf */,
+				ECCF39381AD32D0300F8D6EB /* Raleway-SemiBold.ttf */,
+				ECCF39391AD32D0300F8D6EB /* Raleway-Thin.ttf */,
 				EC47B8841AC4811C00ADBCC6 /* libsqlite3.dylib */,
 				EC47B8821AC4810E00ADBCC6 /* libz.dylib */,
 				EC47B8801AC480FA00ADBCC6 /* SystemConfiguration.framework */,
@@ -307,6 +333,7 @@
 				ECB095821ACC7C9200802E9F /* CustomTabBarViewController.swift */,
 				ECB0958A1ACCEB3400802E9F /* CommentLikersViewController.swift */,
 				ECB0958C1ACD0BA300802E9F /* CommentReplyViewController.swift */,
+				ECC0B98E1AD3BE6C00B21BD0 /* NotificationsViewController.swift */,
 			);
 			path = layout_1;
 			sourceTree = "<group>";
@@ -417,9 +444,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ECCF393A1AD32D0300F8D6EB /* Raleway-Bold.ttf in Resources */,
+				ECCF393B1AD32D0300F8D6EB /* Raleway-ExtraBold.ttf in Resources */,
+				ECCF393C1AD32D0300F8D6EB /* Raleway-ExtraLight.ttf in Resources */,
+				ECCF393D1AD32D0300F8D6EB /* Raleway-Heavy.ttf in Resources */,
+				ECCF393E1AD32D0300F8D6EB /* Raleway-Light.ttf in Resources */,
+				ECCF393F1AD32D0300F8D6EB /* Raleway-Medium.ttf in Resources */,
+				ECCF39401AD32D0300F8D6EB /* Raleway-Regular.ttf in Resources */,
+				ECCF39411AD32D0300F8D6EB /* Raleway-SemiBold.ttf in Resources */,
+				ECCF39421AD32D0300F8D6EB /* Raleway-Thin.ttf in Resources */,
 				EC8139921AC9DA9700985BC5 /* Like.png in Resources */,
 				EC8139901AC9DA9700985BC5 /* Follow.png in Resources */,
-				EC81399C1ACC5D5B00985BC5 /* Raleway in Resources */,
 				ECA1F2001AD1EE710072DE05 /* loader.gif in Resources */,
 				EC47B86B1ABFDA0A00ADBCC6 /* back1.png in Resources */,
 				EC81398E1AC9DA9700985BC5 /* Feed_Active.png in Resources */,
@@ -482,6 +517,7 @@
 				ECA90EBA1AB54F7800195A75 /* UserPostsViewController.swift in Sources */,
 				ECB0958B1ACCEB3400802E9F /* CommentLikersViewController.swift in Sources */,
 				EC4EDD541AB00CEE006270F3 /* FBLoginViewController.swift in Sources */,
+				ECC0B98F1AD3BE6C00B21BD0 /* NotificationsViewController.swift in Sources */,
 				EC4EDD161AAF76D2006270F3 /* WriteCommentViewController.swift in Sources */,
 				EC4EDD1C1AAFF217006270F3 /* data.swift in Sources */,
 				EC9B53BD1AA7ED1500348B31 /* AppDelegate.swift in Sources */,

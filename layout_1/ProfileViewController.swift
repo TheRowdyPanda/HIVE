@@ -219,6 +219,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as String!
                 cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as String!
                 cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as String!
+                cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as String!
                 
                 let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
                 
@@ -291,12 +292,12 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 
                 
-                let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-                // 4
-                authorTap.delegate = self
-                cell.author_label?.tag = indexPath.row
-                cell.author_label?.userInteractionEnabled = true
-                cell.author_label?.addGestureRecognizer(authorTap)
+//                let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
+//                // 4
+//                authorTap.delegate = self
+//                cell.author_label?.tag = indexPath.row
+//                cell.author_label?.userInteractionEnabled = true
+//                cell.author_label?.addGestureRecognizer(authorTap)
                 
                 
                 
@@ -640,6 +641,45 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         
         func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+            
+            
+            
+            
+            
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+            //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+            let repView = mainStoryboard.instantiateViewControllerWithIdentifier("comment_reply_id") as CommentReplyViewController
+            
+            
+            
+            
+            let indCell = tableView.cellForRowAtIndexPath(indexPath)
+            
+            if(indCell?.tag == 100){
+                let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell_no_images
+                
+                repView.sentLocation = currentUserLocation
+                repView.commentID = gotCell.comment_id
+                //profView.comment = gotCell.comment_label.text!
+                // profView.userFBID = gotCell.user_id
+                
+                //profView.userName = gotCell.author_label.text!
+            }
+            if(indCell?.tag == 200){
+                let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell
+                
+                repView.sentLocation = currentUserLocation
+                repView.commentID = gotCell.comment_id
+                //profView.comment = gotCell.comment_label.text!
+                //profView.userFBID = gotCell.user_id
+                
+                //profView.userName = gotCell.author_label.text!
+            }
+            
+            
+            self.presentViewController(repView, animated: true, completion: nil)
+            
+        
             
             
         }
@@ -1086,22 +1126,23 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
 
     
-    
     func showLoadingScreen(){
         
         let screenSize: CGRect = UIScreen.mainScreen().bounds
         
-        let squareSize = screenSize.width * 0.5
-        let xPos = screenSize.width/2 - squareSize/2
-        let yPos = screenSize.height/2 - squareSize/2
+        let w = screenSize.width * 0.8
+        let h = w * 0.283
+        let squareSize = screenSize.width * 0.2
+        let xPos = screenSize.width/2 - w/2
+        let yPos = screenSize.height/2 - h/2
         
-        let holdView = UIView(frame: CGRect(x: xPos, y: yPos, width: squareSize, height: squareSize*1.1))
+        let holdView = UIView(frame: CGRect(x: xPos, y: yPos, width: w, height: h))
         holdView.backgroundColor = UIColor.whiteColor()
         holdView.tag = 999
         
         holdView.layer.borderWidth=1.0
         holdView.layer.masksToBounds = false
-        holdView.layer.borderColor = UIColor.blackColor().CGColor
+        holdView.layer.borderColor = UIColor.clearColor().CGColor
         //profilePic.layer.cornerRadius = 13
         holdView.layer.cornerRadius = holdView.frame.size.height/10
         holdView.clipsToBounds = true
@@ -1116,7 +1157,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         var label = UILabel(frame: CGRectMake(0, 0, holdView.frame.width, holdView.frame.height*0.2))
         label.textAlignment = NSTextAlignment.Center
         label.text = "Loading Comments..."
-        holdView.addSubview(label)
+        //holdView.addSubview(label)
         
         
         
@@ -1130,10 +1171,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         let imageView = UIImageView(image: image!)
         
         let smallerSquareSize = squareSize*0.6
-        let gPos = (holdView.frame.width - smallerSquareSize)/2
+        let gPos = (holdView.frame.width*0.2)/2
+        let kPos = (holdView.frame.height*0.2)/2
         
         
-        imageView.frame = CGRect(x: gPos, y: gPos*1.8, width: smallerSquareSize, height: smallerSquareSize)
+        imageView.frame = CGRect(x: gPos, y: kPos, width: w*0.8, height: h*0.8)
         holdView.addSubview(imageView)
         
     }

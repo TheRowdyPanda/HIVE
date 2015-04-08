@@ -66,6 +66,13 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
         
         //self.tableView.registerClass(custom_cell.self, forCellReuseIdentifier: "custom_cell")
         
+        let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
+        self.tableView.separatorColor = color
+        // self.tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLineEtched
+        self.tableView.separatorInset.left = 0
+        self.tableView.layoutMargins = UIEdgeInsetsZero
+        
+        
         
         
         // Do any additional setup after loading the view, typically from a nib.
@@ -207,6 +214,25 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
     
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+        let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as ProfileViewController
+        
+        
+        //  var authorLabel = sender.view? as UILabel
+        
+        //   let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
+        
+        
+        let gotCell = tableView.cellForRowAtIndexPath(indexPath) as reply_cell
+        
+        profView.userFBID = gotCell.userFBID
+        profView.userName = gotCell.nameLabel.text!
+        
+        
+        
+        self.presentViewController(profView, animated: true, completion: nil)
         
         
     }

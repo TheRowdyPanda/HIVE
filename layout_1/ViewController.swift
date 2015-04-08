@@ -47,9 +47,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         //UIApplication.sharedApplication().openURL(NSURL(string: "http://www.reddit.com")!)
         self.locationManager.delegate = self
         
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        //self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         
-        self.locationManager.requestWhenInUseAuthorization()
+        //self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.requestAlwaysAuthorization()
         
         self.locationManager.startUpdatingLocation()
         
@@ -61,19 +63,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         println("Saved ID:\(savedFBID)")
         
-        customSC.selectedSegmentIndex = 1
-        let font = UIFont(name: "Arial", size: 14)
+        customSC.selectedSegmentIndex = 0
+        let font = UIFont(name: "Raleway-Bold", size: 16)
         let attr = NSDictionary(objects: [font!, UIColor.whiteColor()], forKeys: [NSFontAttributeName, NSForegroundColorAttributeName])
+        let attr2 = NSDictionary(objects: [font!, UIColor.blackColor()], forKeys: [NSFontAttributeName, NSForegroundColorAttributeName])
         //let attr = NSDictionary(object: font!, forKey: NSFontAttributeName)
        // customSC.titleForSegmentAtIndex(0) = "skdfK"
        // customSC.setTitleTextAttributes = [NSForegroundColorAttributeName: UIColor.blueColor()]
-       customSC.setTitleTextAttributes(attr, forState: UIControlState.Normal)
+       customSC.setTitleTextAttributes(attr2, forState: UIControlState.Normal)
         customSC.setTitleTextAttributes(attr, forState: UIControlState.Highlighted)
         //customSC.titleTextAttributesForState(UIControlState.Normal) = attr
         
+        //let ct1 = customSC.
       //  customSC.setHe
         tableView.estimatedRowHeight = 500.0
         tableView.rowHeight = UITableViewAutomaticDimension
+        
+        let fontFamilyNames = UIFont.familyNames()
+        for familyName in fontFamilyNames {
+            println("------------------------------")
+            println("Font Family Name = [\(familyName)]")
+            let names = UIFont.fontNamesForFamilyName(familyName as String)
+            println("Font Names = [\(names)]")
+        }
         
         
         self.refreshControl = UIRefreshControl()
@@ -105,6 +117,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         
         
+        var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
+        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Main View Scene", action: "View Did Load", label: "", value: nil).build())
+        
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -126,7 +141,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
         self.tableView.separatorColor = color
-        //self.tableView.separatorStyle
+       // self.tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLineEtched
         self.tableView.separatorInset.left = 0
         self.tableView.layoutMargins = UIEdgeInsetsZero
         
@@ -620,25 +635,96 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-//        
+
+        
+        
+        
 //        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-//        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-//        let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as ThirdViewController
+//        let repView = mainStoryboard.instantiateViewControllerWithIdentifier("comment_reply_id") as CommentReplyViewController
+//        let indCell = tableView.cellForRowAtIndexPath(indexPath)
+//        if(indCell?.tag == 100){
+//            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell_no_images
+//            
+//            repView.sentLocation = currentUserLocation
+//            repView.commentID = gotCell.comment_id
+//            //profView.comment = gotCell.comment_label.text!
+//            // profView.userFBID = gotCell.user_id
+//            
+//            //profView.userName = gotCell.author_label.text!
+//        }
+//        if(indCell?.tag == 200){
+//            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell
+//            
+//            repView.sentLocation = currentUserLocation
+//            repView.commentID = gotCell.comment_id
+//            //profView.comment = gotCell.comment_label.text!
+//            //profView.userFBID = gotCell.user_id
+//            
+//            //profView.userName = gotCell.author_label.text!
+//        }
 //        
+//        
+//        self.presentViewController(repView, animated: true, completion: nil)
+        
+        
+        
+        //
+                let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+                let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as ThirdViewController
+        //
+        
+        
         let indCell = tableView.cellForRowAtIndexPath(indexPath)
-//        
+        
         if(indCell?.tag == 100){
             let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell_no_images
-       
             
+            comView.sentLocation = currentUserLocation
+            comView.commentID = gotCell.comment_id
+            comView.imgLink = "none2"
+            comView.comment = gotCell.comment_label.text!
+            comView.author = gotCell.author_label.text!
+            comView.authorFBID = gotCell.user_id
+            //profView.comment = gotCell.comment_label.text!
+             //comView.userFBID = gotCell.user_id
+            
+            //profView.userName = gotCell.author_label.text!
         }
         if(indCell?.tag == 200){
-        let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell
-            let urlString = gotCell.urlLink
+            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell
             
-            UIApplication.sharedApplication().openURL(NSURL(string:urlString)!)
-        
+            comView.sentLocation = currentUserLocation
+            comView.commentID = gotCell.comment_id
+            comView.imgLink = gotCell.imageLink
+            comView.comment = gotCell.comment_label.text!
+            comView.author = gotCell.author_label.text!
+            comView.authorFBID = gotCell.user_id
+            //profView.comment = gotCell.comment_label.text!
+            //profView.userFBID = gotCell.user_id
+           // comView.userFBID = gotCell.user_id
+            
+            //profView.userName = gotCell.author_label.text!
         }
+        
+        
+        
+        self.presentViewController(comView, animated: true, completion: nil)
+        
+        
+//        let indCell = tableView.cellForRowAtIndexPath(indexPath)
+////        
+//        if(indCell?.tag == 100){
+//            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell_no_images
+//       
+//            
+//        }
+//        if(indCell?.tag == 200){
+//        let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell
+//            let urlString = gotCell.urlLink
+//            
+//            UIApplication.sharedApplication().openURL(NSURL(string:urlString)!)
+//        
+//        }
 //        // self.dismissViewControllerAnimated(true, completion: nil)
 //        
 //        self.presentViewController(comView, animated: true, completion: nil)
@@ -1377,11 +1463,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func toggleComments(sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0:
-            loadTopComments()
-        case 1:
             loadNewComments()
-        default:
+        case 1:
             loadTopComments()
+        default:
+            loadNewComments()
         }
     }
     
@@ -1429,14 +1515,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         radValue = 1
         toggleLocButtonLayout()
         
+        var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
+        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Toggle Button", action: "Building", label: "", value: nil).build())
+        
+        
     }
     @IBAction func click150ft(){
         radValue = 2
         toggleLocButtonLayout()
+        
+        var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
+        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Toggle Button", action: "Nearby", label: "", value: nil).build())
+        
     }
     @IBAction func click15min(){
         radValue = 3
         toggleLocButtonLayout()
+        
+        var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
+        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Toggle Button", action: "Campus", label: "", value: nil).build())
+        
     }
     
     func toggleLocButtonLayout(){
@@ -1444,30 +1542,34 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         radButton15ft.backgroundColor = UIColor.clearColor()
         radButton150ft.backgroundColor = UIColor.clearColor()
         radButton15min.backgroundColor = UIColor.clearColor()
-        radButton15ft.titleLabel?.textColor = UIColor.blackColor()
-        radButton150ft.titleLabel?.textColor = UIColor.blackColor()
-        radButton15min.titleLabel?.textColor = UIColor.blackColor()
+        radButton15ft.titleLabel?.textColor = UIColor.whiteColor()
+        radButton150ft.titleLabel?.textColor = UIColor.whiteColor()
+        radButton15min.titleLabel?.textColor = UIColor.whiteColor()
         
+        
+        
+
         if(radValue == 1){
-            radButton15ft.titleLabel?.textColor = UIColor.whiteColor()
-            radButton15ft.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+            radButton15ft.titleLabel?.textColor = UIColor.blackColor()
+            radButton15ft.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
             
         }
         if(radValue == 2){
-             radButton150ft.titleLabel?.textColor = UIColor.whiteColor()
-            radButton150ft.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+             radButton150ft.titleLabel?.textColor = UIColor.blackColor()
+            radButton150ft.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
         }
         if(radValue == 3){
-             radButton15min.titleLabel?.textColor = UIColor.whiteColor()
-            radButton15min.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+             radButton15min.titleLabel?.textColor = UIColor.blackColor()
+            radButton15min.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
         }
         
         
         if(customSC.selectedSegmentIndex == 0){
-            loadTopComments()
+            loadNewComments()
         }
         else if(customSC.selectedSegmentIndex == 1){
-            loadNewComments()
+            
+            loadTopComments()
         }
     }
     
@@ -1475,10 +1577,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func didPullRefresh(sender:AnyObject)
     {
         if(customSC.selectedSegmentIndex == 0){
-            loadTopComments()
+            loadNewComments()
         }
         else if(customSC.selectedSegmentIndex == 1){
-            loadNewComments()
+            
+            loadTopComments()
         }
         
         self.refreshControl.endRefreshing()

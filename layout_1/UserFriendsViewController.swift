@@ -33,11 +33,20 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
         if(ajaxRequestString == "followers"){
             titleItem.title = "Followers"
             get_user_followers()
+            
+            var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
+            tracker.send(GAIDictionaryBuilder.createEventWithCategory("User Friends", action: "Show", label: "Followers", value: nil).build())
+            
         }
         else if(ajaxRequestString == "following"){
             titleItem.title = "Following"
             get_user_following()
+            
+            var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
+            tracker.send(GAIDictionaryBuilder.createEventWithCategory("User Friends", action: "Show", label: "Following", value: nil).build())
         }
+        
+       
         
         
     }

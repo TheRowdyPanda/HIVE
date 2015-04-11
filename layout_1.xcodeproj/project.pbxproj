@@ -74,6 +74,10 @@
 		ECCF39401AD32D0300F8D6EB /* Raleway-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39371AD32D0300F8D6EB /* Raleway-Regular.ttf */; };
 		ECCF39411AD32D0300F8D6EB /* Raleway-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39381AD32D0300F8D6EB /* Raleway-SemiBold.ttf */; };
 		ECCF39421AD32D0300F8D6EB /* Raleway-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39391AD32D0300F8D6EB /* Raleway-Thin.ttf */; };
+		ECF5BDAD1AD581320098DD95 /* comment_tab_button.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF5BDAC1AD581320098DD95 /* comment_tab_button.png */; };
+		ECF5BDAF1AD582F10098DD95 /* Like_tab_button.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF5BDAE1AD582F10098DD95 /* Like_tab_button.png */; };
+		ECF5BDB11AD587D00098DD95 /* notification_cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF5BDB01AD587D00098DD95 /* notification_cell.swift */; };
+		ECF5BDB31AD5F9190098DD95 /* alert_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF5BDB21AD5F9190098DD95 /* alert_icon.png */; };
 		ECFDDD181AB7B9B3000F5880 /* blank.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFDDD171AB7B9B3000F5880 /* blank.png */; };
 		ECFDDD1C1AB94FF8000F5880 /* clicktoupload.png in Resources */ = {isa = PBXBuildFile; fileRef = ECFDDD1B1AB94FF8000F5880 /* clicktoupload.png */; };
 /* End PBXBuildFile section */
@@ -134,7 +138,7 @@
 		EC81398A1AC9DA9700985BC5 /* Unfollow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Unfollow.png; sourceTree = "<group>"; };
 		EC8B8AE81ACF5527002AD793 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		EC8B8AEA1ACF5624002AD793 /* appIcons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = appIcons; sourceTree = "<group>"; };
-		EC9986961AABE31F00E0583D /* ThirdViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = "<group>"; };
+		EC9986961AABE31F00E0583D /* ThirdViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 5; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = "<group>"; };
 		EC99869C1AABECD300E0583D /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		EC9B53B71AA7ED1500348B31 /* layout_1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = layout_1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC9B53BB1AA7ED1500348B31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -172,6 +176,10 @@
 		ECCF39371AD32D0300F8D6EB /* Raleway-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-Regular.ttf"; path = "layout_1/Raleway/Raleway-Regular.ttf"; sourceTree = "<group>"; };
 		ECCF39381AD32D0300F8D6EB /* Raleway-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-SemiBold.ttf"; path = "layout_1/Raleway/Raleway-SemiBold.ttf"; sourceTree = "<group>"; };
 		ECCF39391AD32D0300F8D6EB /* Raleway-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-Thin.ttf"; path = "layout_1/Raleway/Raleway-Thin.ttf"; sourceTree = "<group>"; };
+		ECF5BDAC1AD581320098DD95 /* comment_tab_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = comment_tab_button.png; sourceTree = "<group>"; };
+		ECF5BDAE1AD582F10098DD95 /* Like_tab_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Like_tab_button.png; sourceTree = "<group>"; };
+		ECF5BDB01AD587D00098DD95 /* notification_cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = notification_cell.swift; sourceTree = "<group>"; };
+		ECF5BDB21AD5F9190098DD95 /* alert_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = alert_icon.png; sourceTree = "<group>"; };
 		ECFDDD171AB7B9B3000F5880 /* blank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blank.png; sourceTree = "<group>"; };
 		ECFDDD1B1AB94FF8000F5880 /* clicktoupload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clicktoupload.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -232,12 +240,14 @@
 				ECCBD1261ACE4E2F005C0495 /* loginScreen.png */,
 				EC81397C1AC9DA9700985BC5 /* Camera Roll.png */,
 				EC8B8AE81ACF5527002AD793 /* logo.png */,
+				ECF5BDB21AD5F9190098DD95 /* alert_icon.png */,
 				ECB095881ACCA6EA00802E9F /* backIcon.png */,
 				EC81397D1AC9DA9700985BC5 /* Comment.png */,
 				EC81397E1AC9DA9700985BC5 /* Create.png */,
 				EC81397F1AC9DA9700985BC5 /* Feed_Active.png */,
 				EC8139801AC9DA9700985BC5 /* Feed.png */,
 				EC8139811AC9DA9700985BC5 /* Follow.png */,
+				ECF5BDAC1AD581320098DD95 /* comment_tab_button.png */,
 				EC8139821AC9DA9700985BC5 /* Like_Selected.png */,
 				EC8139831AC9DA9700985BC5 /* Like.png */,
 				EC8139841AC9DA9700985BC5 /* Location.png */,
@@ -247,6 +257,7 @@
 				EC8139881AC9DA9700985BC5 /* Share.png */,
 				EC8139891AC9DA9700985BC5 /* Time.png */,
 				EC81398A1AC9DA9700985BC5 /* Unfollow.png */,
+				ECF5BDAE1AD582F10098DD95 /* Like_tab_button.png */,
 			);
 			name = icons;
 			sourceTree = "<group>";
@@ -312,6 +323,7 @@
 				ECA90EB71AB5445200195A75 /* profile_cell.swift */,
 				ECA90EBD1AB55FFA00195A75 /* user_cell.swift */,
 				EC47B86D1AC135FF00ADBCC6 /* reply_cell.swift */,
+				ECF5BDB01AD587D00098DD95 /* notification_cell.swift */,
 				EC21856F1AAA6D4F00703CF9 /* PMBPostTableViewCell.h */,
 				EC9986961AABE31F00E0583D /* ThirdViewController.swift */,
 				EC9B53C01AA7ED1500348B31 /* Main.storyboard */,
@@ -450,10 +462,12 @@
 				ECCF393D1AD32D0300F8D6EB /* Raleway-Heavy.ttf in Resources */,
 				ECCF393E1AD32D0300F8D6EB /* Raleway-Light.ttf in Resources */,
 				ECCF393F1AD32D0300F8D6EB /* Raleway-Medium.ttf in Resources */,
+				ECF5BDAF1AD582F10098DD95 /* Like_tab_button.png in Resources */,
 				ECCF39401AD32D0300F8D6EB /* Raleway-Regular.ttf in Resources */,
 				ECCF39411AD32D0300F8D6EB /* Raleway-SemiBold.ttf in Resources */,
 				ECCF39421AD32D0300F8D6EB /* Raleway-Thin.ttf in Resources */,
 				EC8139921AC9DA9700985BC5 /* Like.png in Resources */,
+				ECF5BDB31AD5F9190098DD95 /* alert_icon.png in Resources */,
 				EC8139901AC9DA9700985BC5 /* Follow.png in Resources */,
 				ECA1F2001AD1EE710072DE05 /* loader.gif in Resources */,
 				EC47B86B1ABFDA0A00ADBCC6 /* back1.png in Resources */,
@@ -465,6 +479,7 @@
 				EC8139931AC9DA9700985BC5 /* Location.png in Resources */,
 				EC8139911AC9DA9700985BC5 /* Like_Selected.png in Resources */,
 				ECFDDD1C1AB94FF8000F5880 /* clicktoupload.png in Resources */,
+				ECF5BDAD1AD581320098DD95 /* comment_tab_button.png in Resources */,
 				ECCBD1271ACE4E2F005C0495 /* loginScreen.png in Resources */,
 				EC8139951AC9DA9700985BC5 /* Me.png in Resources */,
 				EC9B53C71AA7ED1500348B31 /* LaunchScreen.xib in Resources */,
@@ -516,6 +531,7 @@
 				EC21857D1AAA7E2E00703CF9 /* custom_cell.swift in Sources */,
 				ECA90EBA1AB54F7800195A75 /* UserPostsViewController.swift in Sources */,
 				ECB0958B1ACCEB3400802E9F /* CommentLikersViewController.swift in Sources */,
+				ECF5BDB11AD587D00098DD95 /* notification_cell.swift in Sources */,
 				EC4EDD541AB00CEE006270F3 /* FBLoginViewController.swift in Sources */,
 				ECC0B98F1AD3BE6C00B21BD0 /* NotificationsViewController.swift in Sources */,
 				EC4EDD161AAF76D2006270F3 /* WriteCommentViewController.swift in Sources */,
@@ -649,8 +665,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Rijul Gupta";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rijul Gupta";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/rijulgupta/Documents/FacebookSDK,
@@ -663,7 +679,7 @@
 					/Users/rijulgupta/Downloads/GoogleAnalyticsServicesiOS_3.10,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "379b9acf-67c4-4e8f-abe1-a3c061f4f3a1";
 				SWIFT_OBJC_BRIDGING_HEADER = "layout_1/Bridging-Header.h";
 			};
 			name = Debug;
@@ -672,8 +688,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Rijul Gupta";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Rijul Gupta";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/rijulgupta/Documents/FacebookSDK,
@@ -686,7 +702,7 @@
 					/Users/rijulgupta/Downloads/GoogleAnalyticsServicesiOS_3.10,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "379b9acf-67c4-4e8f-abe1-a3c061f4f3a1";
 				SWIFT_OBJC_BRIDGING_HEADER = "layout_1/Bridging-Header.h";
 			};
 			name = Release;

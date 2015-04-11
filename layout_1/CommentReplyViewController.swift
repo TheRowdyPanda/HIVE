@@ -7,7 +7,7 @@
 //
 import UIKit
 
-class CommentReplyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarDelegate {
+class CommentReplyViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarDelegate, UITextFieldDelegate{
     
     
     // @IBOutlet var commentLabel: UILabel!
@@ -64,6 +64,7 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
         let defaults = NSUserDefaults.standardUserDefaults()
         savedFBID = defaults.stringForKey("saved_fb_id")!
         
+        replyCommentView.delegate = self
         //self.tableView.registerClass(custom_cell.self, forCellReuseIdentifier: "custom_cell")
         
         let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
@@ -141,21 +142,17 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
     
     func updateBottomLayoutConstraintWithNotification(notification: NSNotification) {
         
-        println("S:LKDFJL:SKDFLSDK")
         let userInfo = notification.userInfo!
         
         let animationDuration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as NSNumber).doubleValue
-        let keyboardEndFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue()
-        let convertedKeyboardEndFrame = view.convertRect(keyboardEndFrame, fromView: view.window)
         let rawAnimationCurve = (notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as NSNumber).unsignedIntValue << 16
         
         
-        // let animationCurve = UIViewAnimationOptions.fromRaw(UInt(rawAnimationCurve))!
         
         let animationCurve = UIViewAnimationOptions(UInt(rawAnimationCurve))
-        
-          bottomLayoutConstraint.constant = 0 + CGRectGetMinY(convertedKeyboardEndFrame)/2 + replyHolderView.frame.height + 5
-        
+        var keyboardFrame: CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue()
+
+        bottomLayoutConstraint.constant = keyboardFrame.size.height + 1
            UIView.animateWithDuration(animationDuration, delay: 0.0, options: .BeginFromCurrentState | animationCurve, animations: {
              self.view.layoutIfNeeded()
             }, completion: nil)
@@ -331,10 +328,10 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
                 if let parseJSON = json {
                     
                     
+                    self.finishedReply()
                     
                     
-                    
-                    self.dismissViewControllerAnimated(true, completion: nil)
+                  //  self.dismissViewControllerAnimated(true, completion: nil)
                     
                 }
                 else {
@@ -349,6 +346,27 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
         //     self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    func finishedReply(){
+        dispatch_async(dispatch_get_main_queue(),{
+
+        self.replyCommentView?.resignFirstResponder()
+
+       // UIApplication.sharedApplication().sendAction("resignFirstResponder", to:nil, from:nil, forEvent:nil)
+        self.get_comments()
+            
+            
+            let animationDuration = 0.2
+            self.replyCommentView?.text = ""
+            
+            self.bottomLayoutConstraint.constant = 0.0
+            UIView.animateWithDuration(animationDuration, delay: 0.0, options:nil, animations: {
+                self.view.layoutIfNeeded()
+                }, completion: nil)
+            
+            
+            // self.removeLoadingScreen()
+        })
+    }
     
     func reload_table(){
         

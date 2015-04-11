@@ -139,6 +139,7 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
         let retString = otherUser + " " + action + " " + time
         
         cell.textLabel?.text = retString
+        cell.textLabel?.numberOfLines = 0
         return cell
         
         
@@ -231,22 +232,27 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
         
         if(type == "1"){
             
+//            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+//            let likeView = mainStoryboard.instantiateViewControllerWithIdentifier("comment_likers_id") as CommentLikersViewController
+//            var myCustomViewController: ViewController = ViewController(nibName: nil, bundle: nil)
+//            let currentUserLocation = myCustomViewController.currentUserLocation
+//                likeView.sentLocation = currentUserLocation
+//                likeView.commentID = theJSON["results"]![indexPath.row]["c_id"] as String!
+//            self.presentViewController(likeView, animated: true, completion: nil)
+            
             let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-            //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-            let likeView = mainStoryboard.instantiateViewControllerWithIdentifier("comment_likers_id") as CommentLikersViewController
-            
-            
+            let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as ThirdViewController
             var myCustomViewController: ViewController = ViewController(nibName: nil, bundle: nil)
             
             let currentUserLocation = myCustomViewController.currentUserLocation
+                comView.sentLocation = currentUserLocation
+            comView.sentLocation = currentUserLocation
+            comView.commentID = theJSON["results"]![indexPath.row]["c_id"] as String!
+            comView.focusTableOn = "likers"
+           // comView.imgLink = "none2"
+            self.presentViewController(comView, animated: true, completion: nil)
+        
             
-                likeView.sentLocation = currentUserLocation
-                likeView.commentID = theJSON["results"]![indexPath.row]["c_id"] as String!
-                
-
-            
-            
-            self.presentViewController(likeView, animated: true, completion: nil)
             
         }
         if(type == "2"){
@@ -256,20 +262,17 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
             
             
             let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-            let repView = mainStoryboard.instantiateViewControllerWithIdentifier("comment_reply_id") as CommentReplyViewController
-            
+            let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as ThirdViewController
             var myCustomViewController: ViewController = ViewController(nibName: nil, bundle: nil)
             
             let currentUserLocation = myCustomViewController.currentUserLocation
+            comView.sentLocation = currentUserLocation
+            comView.sentLocation = currentUserLocation
+            comView.commentID = theJSON["results"]![indexPath.row]["c_id"] as String!
+            comView.focusTableOn = "replies"
+            // comView.imgLink = "none2"
+            self.presentViewController(comView, animated: true, completion: nil)
             
-                
-                repView.sentLocation = currentUserLocation
-                repView.commentID =  theJSON["results"]![indexPath.row]["c_id"] as String!
-                //profView.comment = gotCell.comment_label.text!
-                // profView.userFBID = gotCell.user_id
-                
-                //profView.userName = gotCell.author_label.text!
-            self.presentViewController(repView, animated: true, completion: nil)
             
         }
         if(type == "4"){

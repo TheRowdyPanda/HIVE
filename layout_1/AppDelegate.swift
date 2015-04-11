@@ -191,10 +191,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         NSLog("My device token is: %@", deviceToken)
+        
+        let dString = NSString(format: "%@", deviceToken)
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setObject(dString, forKey: "userDeviceToken")
+        
+        
+        
     }
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
         NSLog("Failed to get token %@", error)
+        
+        let dToke = "none"
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.setObject(dToke, forKey: "userDeviceToken")
     }
     // MARK: - Core Data Saving support
     

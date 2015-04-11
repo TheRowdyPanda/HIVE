@@ -30,6 +30,7 @@ class custom_cell_no_images: UITableViewCell{
     @IBOutlet var replyNumLabel: UILabel!
     
     @IBOutlet var likerButtonLabel:UILabel!
+    @IBOutlet var likerButtonHolder:UIView!
     
     @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
     var comment_id = "nil"

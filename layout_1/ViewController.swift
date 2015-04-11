@@ -120,6 +120,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
         tracker.send(GAIDictionaryBuilder.createEventWithCategory("Main View Scene", action: "View Did Load", label: "", value: nil).build())
         
+        
+        
+        
+        //give device token to server for apns
+        throwDeviceToken()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -369,6 +374,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
     
         
+            let voteUp2 = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
+            cell.likerButtonHolder?.userInteractionEnabled = true
+            voteUp2.delegate = self
+            cell.likerButtonHolder?.tag = indexPath.row
+            cell.likerButtonHolder?.addGestureRecognizer(voteUp2)
 
             
             
@@ -578,6 +588,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
             
             
+            let voteUp2 = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
+            cell.likerButtonHolder?.userInteractionEnabled = true
+            voteUp2.delegate = self
+            cell.likerButtonHolder?.tag = indexPath.row
+            cell.likerButtonHolder?.addGestureRecognizer(voteUp2)
+            
             //give a loading gif to UI
             var urlgif = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
             var imageDatagif = NSData(contentsOfURL: urlgif!)
@@ -681,10 +697,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             comView.sentLocation = currentUserLocation
             comView.commentID = gotCell.comment_id
-            comView.imgLink = "none2"
-            comView.comment = gotCell.comment_label.text!
-            comView.author = gotCell.author_label.text!
-            comView.authorFBID = gotCell.user_id
+          //  comView.imgLink = "none2"
+           // comView.comment = gotCell.comment_label.text!
+           // comView.author = gotCell.author_label.text!
+           // comView.authorFBID = gotCell.user_id
+           // comView.locString = gotCell.loc_label.text!
+           // comView.timeString = gotCell.time_label.text!
             //profView.comment = gotCell.comment_label.text!
              //comView.userFBID = gotCell.user_id
             
@@ -695,10 +713,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             comView.sentLocation = currentUserLocation
             comView.commentID = gotCell.comment_id
-            comView.imgLink = gotCell.imageLink
-            comView.comment = gotCell.comment_label.text!
-            comView.author = gotCell.author_label.text!
-            comView.authorFBID = gotCell.user_id
+           // comView.imgLink = gotCell.imageLink
+          //  comView.comment = gotCell.comment_label.text!
+          //  comView.author = gotCell.author_label.text!
+          //  comView.authorFBID = gotCell.user_id
+          //  comView.locString = gotCell.loc_label.text!
+          //  comView.timeString = gotCell.time_label.text!
             //profView.comment = gotCell.comment_label.text!
             //profView.userFBID = gotCell.user_id
            // comView.userFBID = gotCell.user_id
@@ -1144,7 +1164,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func toggleCommentVote(sender:UIGestureRecognizer){
         //get the attached sender imageview
-        var heartImage = sender.view? as UIImageView
+        
+        var heartImage:AnyObject
+        
+        heartImage = sender.view!
+        
+        //var heartImage = sender.view? as UIImageView
         //get the main view
         
         var indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0))
@@ -1201,7 +1226,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             var testVote = parseJSON["results"]![0]["vote"] as String!
                             
                             if(testVote == "no"){
-                            heartImage.image = UIImage(named: "honey_empty.jpg")
+                            cellView.heart_icon?.image = UIImage(named: "honey_empty.jpg")
                             
                             //get heart label content as int
                             var curHVal = cellView.heart_label?.text?.toInt()
@@ -1209,7 +1234,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             cellView.heart_label?.text = String(curHVal! - 1)
                             }
                             else if(testVote == "yes"){
-                                heartImage.image = UIImage(named: "honey_full.jpg")
+                                cellView.heart_icon.image = UIImage(named: "honey_full.jpg")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1283,7 +1308,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             var testVote = parseJSON["results"]![0]["vote"] as String!
                             
                             if(testVote == "no"){
-                                heartImage.image = UIImage(named: "honey_empty.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "honey_empty.jpg")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1291,7 +1316,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                                 cellView.heart_label?.text = String(curHVal! - 1)
                             }
                             else if(testVote == "yes"){
-                                heartImage.image = UIImage(named: "honey_full.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "honey_full.jpg")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1625,5 +1650,82 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         //return "OH YEAH"
     }
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    //Give the device token to server to set up APNS (push notifications)
+    
+    func throwDeviceToken(){
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_update_user_token")
+        
+        
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let dToke = defaults.stringForKey("userDeviceToken")
+        var sToke = "none"
+        
+        if(dToke != nil){
+            sToke = dToke!
+        }
+        
+        println("DEVICE TOKEN:\(sToke)")
+       
+        var params = ["fbid":savedFBID, "token":sToke] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+                
+
+            }
+            else {
+                // The JSONObjectWithData constructor didn't return an error. But, we should still
+                
+                
+                
+                // check and make sure that json has a value using optional binding.
+                if let parseJSON = json {
+                    
+
+                    
+                }
+                else {
+                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                    
+                }
+            }
+        })
+        task.resume()
+        //END AJAX
+        
+
+    }
 
 }

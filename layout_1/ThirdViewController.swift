@@ -23,6 +23,10 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBOutlet var tabBar: UITabBar! //controls tableview
     @IBOutlet var scrollView: UIScrollView!
     
+    @IBOutlet var locLabel:UILabel!
+    var locString = "none"
+    @IBOutlet var timeLabel:UILabel!
+    var timeString = "none"
     @IBOutlet var replyCommentView: UITextField!
 
     @IBOutlet weak var bottomLayoutConstraint: NSLayoutConstraint!
@@ -60,21 +64,16 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       // self.commentLabel.text = comment
-        self.commentView.text = comment
-       // self.commentView.text = "S:DKFJS:KDFJS:KDFJ:SLKJF:LSKDFJ SDF:LKSDJF:KS DFKSDF:LKSDF:LKDF:SDJF:KSLDF:SLDFKJS:LDKFJS:LFDKJS:LDKFS:LDFKJ"
-        self.authorLabel.text = author
-        //var timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("reload_table"), userInfo: nil, repeats: false)
+        self.commentView.text = "wait for it..."
+        self.authorLabel.text = "..."
+        self.locLabel.text = "..."
+        self.timeLabel.text = "..."
         let defaults = NSUserDefaults.standardUserDefaults()
         savedFBID = defaults.stringForKey("saved_fb_id")!
         
-        //self.tableView.registerClass(custom_cell.self, forCellReuseIdentifier: "custom_cell")
+
         
-        
-        
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        tableView.estimatedRowHeight = 168.0
+        tableView.estimatedRowHeight = 108.0
         tableView.rowHeight = UITableViewAutomaticDimension
         
         tabBar.delegate = self
@@ -84,21 +83,14 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let secondItem = tabBar.items![1] as UITabBarItem
         secondItem.tag = 2
         
+        getCommentInfo()
+        
           }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        if(imgLink == "none"){
-        
-        let height2 = commentView.frame.height + tableView.frame.height + tabBar.frame.height + 40
-        scrollView.contentSize = CGSize(width:scrollView.frame.width, height:height2)
-        }
-        else{
-            let height2 = commentView.frame.height + comImage.frame.height + tableView.frame.height + tabBar.frame.height + 80
-            scrollView.contentSize = CGSize(width:scrollView.frame.width, height:height2)
-        }
-        
+     
         
         println(imgLink)
         //START AJAX
@@ -120,58 +112,90 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         
         super.viewWillAppear(animated)
-        let firstItem = tabBar.items![0] as UITabBarItem
-        tabBar.selectedItem = firstItem
-        get_comment_replies()
         
+     
+     if(self.focusTableOn == "likers"){
+        let secondItem = tabBar.items![1] as UITabBarItem
+        tabBar.selectedItem = secondItem
+        get_comment_likers()
+     }
+     else{
+          let firstItem = tabBar.items![0] as UITabBarItem
+          tabBar.selectedItem = firstItem
+          get_comment_replies()
+          
+     }
+     
         
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShowNotification:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHideNotification:", name: UIKeyboardWillHideNotification, object: nil)
         
         
-        if(imgLink == "none2"){
-            //  self.comImage.frame = CGRectMake(0, 0, 1, 1)
-            //  self.view.layoutSubviews()
-            // self.comImageConstraint.secondItem = self.commentView
-            //  self.comImage.removeConstraints(self.comImage.constraints())
-            self.comImage.removeFromSuperview()
-            
-            var fakeCon = NSLayoutConstraint(item: self.commentView,
-                attribute: NSLayoutAttribute.Bottom,
-                relatedBy: NSLayoutRelation.Equal,
-                toItem: self.tabBar,
-                attribute: NSLayoutAttribute.Top,
-                multiplier: 1,
-                constant: -20 )
-            
-            self.view.addConstraint(fakeCon)
-            
-            // self.commentView.addConstraint(fakeCon)
-            self.view.updateConstraints()
-        }
-        else{
-            
-            //give a loading gif to UI
-            var urlgif = NSBundle.mainBundle().URLForResource("loader", withExtension: "gif")
-            var imageDatagif = NSData(contentsOfURL: urlgif!)
-            
-            
-            let imagegif = UIImage.animatedImageWithData(imageDatagif!)
-            
-            comImage.image = imagegif
-            
-            
-            var imgURL:NSURL = NSURL(string: imgLink)!
-            let url = NSURL(string: imgLink)
-            let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
-              comImage.image = UIImage(data: data!)
-            
-        }
+     
 
-        getUserPicture()
+      //  getUserPicture()
         
     }
+     
+     func loadCommentPicture(){
+          
+          if(imgLink == "none" || imgLink == "none2"){
+               
+               let height2 = commentView.frame.height + tableView.frame.height + tabBar.frame.height + 40
+               scrollView.contentSize = CGSize(width:scrollView.frame.width, height:height2)
+          }
+          else{
+               let height2 = commentView.frame.height + comImage.frame.height + tableView.frame.height + tabBar.frame.height + 80
+               scrollView.contentSize = CGSize(width:scrollView.frame.width, height:height2)
+          }
+        
+          
+          if(imgLink == "none2" || imgLink == "none"){
+               self.comImage.removeFromSuperview()
+               
+               var fakeCon = NSLayoutConstraint(item: self.commentView,
+                    attribute: NSLayoutAttribute.LeftMargin,
+                    relatedBy: NSLayoutRelation.Equal,
+                    toItem: self.tabBar,
+                    attribute: NSLayoutAttribute.LeftMargin,
+                    multiplier: 1,
+                    constant: 20 )
+               
+               var fakeCon2 = NSLayoutConstraint(item: self.tabBar,
+                    attribute: NSLayoutAttribute.Width,
+                    relatedBy: NSLayoutRelation.Equal,
+                    toItem: self.commentView,
+                    attribute: NSLayoutAttribute.Width,
+                    multiplier: 1.2,
+                    constant:0)
+               
+               
+               self.view.addConstraint(fakeCon)
+               self.view.addConstraint(fakeCon2)
+               // self.commentView.addConstraint(fakeCon)
+               self.view.updateConstraints()
+          }
+          else{
+               
+               //give a loading gif to UI
+               var urlgif = NSBundle.mainBundle().URLForResource("loader", withExtension: "gif")
+               var imageDatagif = NSData(contentsOfURL: urlgif!)
+               
+               
+               let imagegif = UIImage.animatedImageWithData(imageDatagif!)
+               
+               comImage.image = imagegif
+               
+               
+               var imgURL:NSURL = NSURL(string: imgLink)!
+               let url = NSURL(string: imgLink)
+               let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
+               comImage.image = UIImage(data: data!)
+               
+          }
+          
+     }
     
     func getUserPicture(){
 
@@ -184,7 +208,7 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
         authorPicture.layer.masksToBounds = false
         authorPicture.layer.borderColor = UIColor.whiteColor().CGColor
         //profilePic.layer.cornerRadius = 13
-        authorPicture.layer.cornerRadius = authorPicture.frame.size.height/4
+        authorPicture.layer.cornerRadius = authorPicture.frame.size.height/2
         authorPicture.clipsToBounds = true
         }
     }
@@ -211,30 +235,25 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
    
-
-    
-    func updateBottomLayoutConstraintWithNotification(notification: NSNotification) {
-        
-        //println("S:LKDFJL:SKDFLSDK")
-        let userInfo = notification.userInfo!
-        
-        let animationDuration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as NSNumber).doubleValue
-        let keyboardEndFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue()
-        let convertedKeyboardEndFrame = view.convertRect(keyboardEndFrame, fromView: view.window)
-        let rawAnimationCurve = (notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as NSNumber).unsignedIntValue << 16
-        
-        
-        // let animationCurve = UIViewAnimationOptions.fromRaw(UInt(rawAnimationCurve))!
-        
-        let animationCurve = UIViewAnimationOptions(UInt(rawAnimationCurve))
-
-        bottomLayoutConstraint.constant = 0 - CGRectGetMinY(convertedKeyboardEndFrame)/2 - replyHolderView.frame.height
-        
-        UIView.animateWithDuration(animationDuration, delay: 0.0, options: .BeginFromCurrentState | animationCurve, animations: {
-            self.view.layoutIfNeeded()
-            }, completion: nil)
-    }
-    
+     
+     func updateBottomLayoutConstraintWithNotification(notification: NSNotification) {
+          
+          let userInfo = notification.userInfo!
+          
+          let animationDuration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as NSNumber).doubleValue
+          let rawAnimationCurve = (notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as NSNumber).unsignedIntValue << 16
+          
+          
+          
+          let animationCurve = UIViewAnimationOptions(UInt(rawAnimationCurve))
+          var keyboardFrame: CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue()
+          
+          bottomLayoutConstraint.constant = -1*keyboardFrame.size.height + 1
+          UIView.animateWithDuration(animationDuration, delay: 0.0, options: .BeginFromCurrentState | animationCurve, animations: {
+               self.view.layoutIfNeeded()
+               }, completion: nil)
+     }
+     
     
     
     
@@ -299,13 +318,14 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
             //test if general user is following the presented user
             //cell.followButton.titleLabel?.text = "test"
             
-            if(followTest == "yes"){//the user is follow, we give option to change
-                cell.followButton.setTitle("Unfollow", forState: UIControlState.Normal)
-            }
-            else{
-                cell.followButton.setTitle("Follow", forState: UIControlState.Normal)
-            }
-            
+          if(followTest == "yes"){//the user is follow, we give option to change
+               //cell.followButton.setTitle("Unfollow", forState: UIControlState.Normal)
+               cell.followButton.setImage(UIImage(named: "Unfollow.png"), forState: UIControlState.Normal)
+          }
+          else{
+               // cell.followButton.setTitle("Follow", forState: UIControlState.Normal)
+               cell.followButton.setImage(UIImage(named: "Follow.png"), forState: UIControlState.Normal)
+          }
             
             // cell.followButton.addTarget(self, action: "DidPressFollow:", forControlEvents: .TouchUpInside)
             //cell.followButton.tag = indexPath.row
@@ -324,7 +344,54 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-      
+     if(self.focusTableOn == "replies"){
+     
+     let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+     //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+     let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as ProfileViewController
+     
+     
+     //  var authorLabel = sender.view? as UILabel
+     
+     //   let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
+     
+     
+     let gotCell = tableView.cellForRowAtIndexPath(indexPath) as reply_cell
+      //let indCell = tableView.cellForRowAtIndexPath(indexPath) as user_cell
+     
+     profView.userFBID = gotCell.userFBID
+     profView.userName = gotCell.nameLabel.text!
+     
+     
+     
+     self.presentViewController(profView, animated: true, completion: nil)
+     }
+     else if(self.focusTableOn == "likers"){
+          
+          
+          let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+          //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+          let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as ProfileViewController
+          
+          
+          //  var authorLabel = sender.view? as UILabel
+          
+          //   let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
+          
+          
+          let gotCell = tableView.cellForRowAtIndexPath(indexPath) as user_cell
+          //let indCell = tableView.cellForRowAtIndexPath(indexPath) as user_cell
+          
+          profView.userFBID = gotCell.userFBID
+          profView.userName = gotCell.nameLabel.text!
+          
+          
+          
+          self.presentViewController(profView, animated: true, completion: nil)
+          
+     }
+
+     
     }
     
     func get_comment_replies(){
@@ -478,22 +545,133 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     
                     
                     
+                    self.finishedReply()
                     
                     
-                    self.dismissViewControllerAnimated(true, completion: nil)
+                    //  self.dismissViewControllerAnimated(true, completion: nil)
                     
                 }
                 else {
                     
+               }
+          }
+        })
+     task.resume()
+     
+     
+     // println("SLKDJFLSKDJFSDFLKJS")
+     //     self.dismissViewControllerAnimated(true, completion: nil)
+     }
+     
+     func finishedReply(){
+          dispatch_async(dispatch_get_main_queue(),{
+               
+               self.replyCommentView?.resignFirstResponder()
+               
+               // UIApplication.sharedApplication().sendAction("resignFirstResponder", to:nil, from:nil, forEvent:nil)
+               self.focusTableOn = "replies"
+               self.get_comment_replies()
+               
+               
+               let animationDuration = 0.2
+               self.replyCommentView?.text = ""
+               
+               self.bottomLayoutConstraint.constant = 0.0
+               UIView.animateWithDuration(animationDuration, delay: 0.0, options:nil, animations: {
+                    self.view.layoutIfNeeded()
+                    }, completion: nil)
+               
+               
+               // self.removeLoadingScreen()
+          })
+     }
+     
+     
+    func getCommentInfo(){
+        
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_comment_info")
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        var params = ["c_id":commentID] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            
+            //self.theJSON = NSJSONSerialization.JSONObjectWithData(json, options:.MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+              //  self.removeLoadingScreen()
+                
+            }
+            else {
+                
+                // The JSONObjectWithData constructor didn't return an error. But, we should still
+                
+                
+                
+                // check and make sure that json has a value using optional binding.
+                if let parseJSON = json {
+       // let leftHandItems: [String] = ["","Last Check In", "Posts", "Followers", "Following"]
+
+                    
+                    dispatch_async(dispatch_get_main_queue(), {
+                         
+                         self.commentView.text = parseJSON["results"]![0]["body"] as String!
+                         self.authorLabel.text = parseJSON["results"]![0]["author"] as String!
+                         self.locLabel.text = parseJSON["results"]![0]["location"] as String!
+                         self.timeLabel.text = parseJSON["results"]![0]["time"] as String!
+                        // self.imageLink = parseJSON["results"]![0]["imgLink"] as String!
+                         self.imgLink = parseJSON["results"]![0]["imgLink"] as String!
+                         self.authorFBID = parseJSON["results"]![0]["authorFBID"] as String!
+                         
+                         self.getUserPicture()
+                         self.loadCommentPicture()
+                         
+
+                    })
+                    //
+                    
+                    
+                    //   self.reload_table()
+                    
+                }
+                else {
+                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                    //   self.showErrorScreen("top")
                 }
             }
         })
         task.resume()
+        //END AJAX
         
         
-       // println("SLKDJFLSKDJFSDFLKJS")
-//     self.dismissViewControllerAnimated(true, completion: nil)
+        
     }
+    
+
+    
     
     
     func reload_table(){

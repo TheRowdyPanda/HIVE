@@ -379,7 +379,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                     cell.heart_icon?.addGestureRecognizer(voteUp)
                 }
                 
-                
+                let voteUp2 = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
+                cell.likerButtonHolder?.userInteractionEnabled = true
+                voteUp2.delegate = self
+                cell.likerButtonHolder?.tag = indexPath.row
+                cell.likerButtonHolder?.addGestureRecognizer(voteUp2)
                 
                 
                 
@@ -583,6 +587,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                     cell.heart_icon?.addGestureRecognizer(voteUp)
                 }
                 
+                let voteUp2 = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
+                cell.likerButtonHolder?.userInteractionEnabled = true
+                voteUp2.delegate = self
+                cell.likerButtonHolder?.tag = indexPath.row
+                cell.likerButtonHolder?.addGestureRecognizer(voteUp2)
                 
                 //give a loading gif to UI
                 var urlgif = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
@@ -644,13 +653,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             
             
-            
-            
+            //
             let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-            //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-            let repView = mainStoryboard.instantiateViewControllerWithIdentifier("comment_reply_id") as CommentReplyViewController
-            
-            
+            let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as ThirdViewController
+            //
             
             
             let indCell = tableView.cellForRowAtIndexPath(indexPath)
@@ -658,28 +664,19 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             if(indCell?.tag == 100){
                 let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell_no_images
                 
-                repView.sentLocation = currentUserLocation
-                repView.commentID = gotCell.comment_id
-                //profView.comment = gotCell.comment_label.text!
-                // profView.userFBID = gotCell.user_id
-                
-                //profView.userName = gotCell.author_label.text!
+                comView.sentLocation = currentUserLocation
+                comView.commentID = gotCell.comment_id
             }
             if(indCell?.tag == 200){
                 let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell
                 
-                repView.sentLocation = currentUserLocation
-                repView.commentID = gotCell.comment_id
-                //profView.comment = gotCell.comment_label.text!
-                //profView.userFBID = gotCell.user_id
-                
-                //profView.userName = gotCell.author_label.text!
+                comView.sentLocation = currentUserLocation
+                comView.commentID = gotCell.comment_id
             }
             
             
-            self.presentViewController(repView, animated: true, completion: nil)
             
-        
+            self.presentViewController(comView, animated: true, completion: nil)
             
             
         }
@@ -1182,9 +1179,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     
     func toggleCommentVote(sender:UIGestureRecognizer){
-        //get the attached sender imageview
-        var heartImage = sender.view? as UIImageView
-        //get the main view
+        var heartImage:AnyObject
+        
+        heartImage = sender.view!
         
         var indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0))
         
@@ -1246,7 +1243,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                             var testVote = parseJSON["results"]![0]["vote"] as String!
                             
                             if(testVote == "no"){
-                                heartImage.image = UIImage(named: "honey_empty.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "honey_empty.jpg")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1254,7 +1251,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 cellView.heart_label?.text = String(curHVal! - 1)
                             }
                             else if(testVote == "yes"){
-                                heartImage.image = UIImage(named: "honey_full.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "honey_full.jpg")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1333,7 +1330,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                             var testVote = parseJSON["results"]![0]["vote"] as String!
                             
                             if(testVote == "no"){
-                                heartImage.image = UIImage(named: "honey_empty.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "honey_empty.jpg")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1341,7 +1338,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 cellView.heart_label?.text = String(curHVal! - 1)
                             }
                             else if(testVote == "yes"){
-                                heartImage.image = UIImage(named: "honey_full.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "honey_full.jpg")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()

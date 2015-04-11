@@ -20,6 +20,7 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet var titleItem:UINavigationItem!
     
     
+    var userImageCache = [String: UIImage]()
     
     var theJSON: NSDictionary!
     var hasLoaded:Bool = false
@@ -90,12 +91,51 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
     
         var fbid = theJSON["results"]![indexPath.row]["userID"] as String!
 
+        let testUserImg = "http://graph.facebook.com/\(fbid)/picture?width=40&height=40"
         
-        let url = NSURL(string: "http://graph.facebook.com/\(fbid)/picture?width=50&height=50")
-        let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
+        //let url = NSURL(string: "http://graph.facebook.com/\(fbid)/picture?width=50&height=50")
+       // let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
+        
+        var upimage = self.userImageCache[testUserImg]
+        if( upimage == nil ) {
+            // If the image does not exist, we need to download it
+            
+            var imgURL: NSURL = NSURL(string: testUserImg)!
+            
+            // Download an NSData representation of the image at the URL
+            let request: NSURLRequest = NSURLRequest(URL: imgURL)
+            NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
+                if error == nil {
+                    upimage = UIImage(data: data)
+                    
+                    // Store the image in to our cache
+                    self.userImageCache[testUserImg] = upimage
+                    dispatch_async(dispatch_get_main_queue(), {
+                        if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? user_cell {
+                            cellToUpdate.userImage?.image = upimage
+                        }
+                    })
+                }
+                else {
+                    println("Error: \(error.localizedDescription)")
+                }
+            })
+            
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), {
+                if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? user_cell {
+                    cellToUpdate.userImage?.image = upimage
+                }
+            })
+        }
+        
+
         
         
-        cell.userImage?.image = UIImage(data: data!)
+        
+        
+       // cell.userImage?.image = UIImage(data: data!)
         cell.nameLabel.text = theJSON["results"]![indexPath.row]["userName"] as String!
 
         
@@ -282,7 +322,7 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
     
     func reload_table(){
         let delayTime = dispatch_time(DISPATCH_TIME_NOW,
-            Int64(0.3 * Double(NSEC_PER_SEC)))
+            Int64(0.1 * Double(NSEC_PER_SEC)))
         
         dispatch_after(delayTime, dispatch_get_main_queue()) {
             

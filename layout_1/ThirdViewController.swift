@@ -50,7 +50,7 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBOutlet var comImage: UIImageView!
     
     var sentLocation = "none"
-    
+    var isLoading = false
     
     var hasLoaded = false
     var theJSON: NSDictionary!
@@ -78,9 +78,9 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         tabBar.delegate = self
         
-        let firstItem = tabBar.items![0] as UITabBarItem
+        let firstItem = tabBar.items![0] as! UITabBarItem
         firstItem.tag = 1
-        let secondItem = tabBar.items![1] as UITabBarItem
+        let secondItem = tabBar.items![1] as! UITabBarItem
         secondItem.tag = 2
         
         getCommentInfo()
@@ -115,12 +115,12 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
      
      if(self.focusTableOn == "likers"){
-        let secondItem = tabBar.items![1] as UITabBarItem
+        let secondItem = tabBar.items![1] as! UITabBarItem
         tabBar.selectedItem = secondItem
         get_comment_likers()
      }
      else{
-          let firstItem = tabBar.items![0] as UITabBarItem
+          let firstItem = tabBar.items![0] as! UITabBarItem
           tabBar.selectedItem = firstItem
           get_comment_replies()
           
@@ -240,13 +240,13 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
           
           let userInfo = notification.userInfo!
           
-          let animationDuration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as NSNumber).doubleValue
-          let rawAnimationCurve = (notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as NSNumber).unsignedIntValue << 16
+          let animationDuration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+          let rawAnimationCurve = (notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).unsignedIntValue << 16
           
           
           
           let animationCurve = UIViewAnimationOptions(UInt(rawAnimationCurve))
-          var keyboardFrame: CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue()
+          var keyboardFrame: CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
           
           bottomLayoutConstraint.constant = -1*keyboardFrame.size.height + 1
           UIView.animateWithDuration(animationDuration, delay: 0.0, options: .BeginFromCurrentState | animationCurve, animations: {
@@ -280,10 +280,10 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
     {
         
         if(self.focusTableOn == "replies"){
-        var cell = tableView.dequeueReusableCellWithIdentifier("reply_cell") as reply_cell
+        var cell = tableView.dequeueReusableCellWithIdentifier("reply_cell") as! reply_cell
         
         
-        var fbid = theJSON["results"]![indexPath.row]["user_id"] as String!
+        var fbid = theJSON["results"]![indexPath.row]["user_id"] as! String!
         
         
         let url = NSURL(string: "http://graph.facebook.com/\(fbid)/picture?width=50&height=50")
@@ -291,19 +291,19 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         
         cell.userImage?.image = UIImage(data: data!)
-        cell.nameLabel.text = theJSON["results"]![indexPath.row]["author"] as String!
+        cell.nameLabel.text = theJSON["results"]![indexPath.row]["author"] as! String!
         
-        cell.replyLabel.text = theJSON["results"]![indexPath.row]["comments"] as String!
+        cell.replyLabel.text = theJSON["results"]![indexPath.row]["comments"] as! String!
 //cell.replyLabel.text = "SLKFJSLKJF"
         cell.userFBID = fbid
         
         return cell
         }
         else{
-            var cell = tableView.dequeueReusableCellWithIdentifier("user_cell") as user_cell
+            var cell = tableView.dequeueReusableCellWithIdentifier("user_cell") as! user_cell
             
             
-            var fbid = theJSON["results"]![indexPath.row]["userID"] as String!
+            var fbid = theJSON["results"]![indexPath.row]["userID"] as! String!
             
             
             let url = NSURL(string: "http://graph.facebook.com/\(fbid)/picture?width=50&height=50")
@@ -311,10 +311,10 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
             
             
             cell.userImage?.image = UIImage(data: data!)
-            cell.nameLabel.text = theJSON["results"]![indexPath.row]["userName"] as String!
+            cell.nameLabel.text = theJSON["results"]![indexPath.row]["userName"] as! String!
             
             
-            let followTest = theJSON["results"]![indexPath.row]["userFollow"] as String!
+            let followTest = theJSON["results"]![indexPath.row]["userFollow"] as! String!
             //test if general user is following the presented user
             //cell.followButton.titleLabel?.text = "test"
             
@@ -348,7 +348,7 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
      
      let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
      //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-     let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as ProfileViewController
+     let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as! ProfileViewController
      
      
      //  var authorLabel = sender.view? as UILabel
@@ -356,7 +356,7 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
      //   let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
      
      
-     let gotCell = tableView.cellForRowAtIndexPath(indexPath) as reply_cell
+     let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! reply_cell
       //let indCell = tableView.cellForRowAtIndexPath(indexPath) as user_cell
      
      profView.userFBID = gotCell.userFBID
@@ -371,7 +371,7 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
           
           let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
           //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-          let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as ProfileViewController
+          let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as! ProfileViewController
           
           
           //  var authorLabel = sender.view? as UILabel
@@ -379,7 +379,7 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
           //   let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
           
           
-          let gotCell = tableView.cellForRowAtIndexPath(indexPath) as user_cell
+          let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! user_cell
           //let indCell = tableView.cellForRowAtIndexPath(indexPath) as user_cell
           
           profView.userFBID = gotCell.userFBID
@@ -506,7 +506,10 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     @IBAction func did_hit_reply(){
     //func did_hit_reply(){
-        
+     
+     if(isLoading == false){
+          isLoading = true
+     
         println("Data is: \(self.replyCommentView.text)")
         
         let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_reply_to_comment")
@@ -557,6 +560,8 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
           }
         })
      task.resume()
+          
+          }
      
      
      // println("SLKDJFLSKDJFSDFLKJS")
@@ -566,6 +571,7 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
      func finishedReply(){
           dispatch_async(dispatch_get_main_queue(),{
                
+               self.isLoading = false
                self.replyCommentView?.resignFirstResponder()
                
                // UIApplication.sharedApplication().sendAction("resignFirstResponder", to:nil, from:nil, forEvent:nil)
@@ -638,13 +644,13 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     
                     dispatch_async(dispatch_get_main_queue(), {
                          
-                         self.commentView.text = parseJSON["results"]![0]["body"] as String!
-                         self.authorLabel.text = parseJSON["results"]![0]["author"] as String!
-                         self.locLabel.text = parseJSON["results"]![0]["location"] as String!
-                         self.timeLabel.text = parseJSON["results"]![0]["time"] as String!
+                         self.commentView.text = parseJSON["results"]![0]["body"] as! String!
+                         self.authorLabel.text = parseJSON["results"]![0]["author"] as! String!
+                         self.locLabel.text = parseJSON["results"]![0]["location"] as! String!
+                         self.timeLabel.text = parseJSON["results"]![0]["time"] as! String!
                         // self.imageLink = parseJSON["results"]![0]["imgLink"] as String!
-                         self.imgLink = parseJSON["results"]![0]["imgLink"] as String!
-                         self.authorFBID = parseJSON["results"]![0]["authorFBID"] as String!
+                         self.imgLink = parseJSON["results"]![0]["imgLink"] as! String!
+                         self.authorFBID = parseJSON["results"]![0]["authorFBID"] as! String!
                          
                          self.getUserPicture()
                          self.loadCommentPicture()

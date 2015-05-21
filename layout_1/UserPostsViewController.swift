@@ -44,7 +44,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
         loadUserComments()
         
         var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-        tracker.send(GAIDictionaryBuilder.createEventWithCategory("User Posts", action: "Show", label: "", value: nil).build())
+        tracker.send(GAIDictionaryBuilder.createEventWithCategory("User Posts", action: "Show", label: "", value: nil).build() as [NSObject : AnyObject])
         
     }
     
@@ -83,20 +83,20 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
-        let testImage = theJSON["results"]![indexPath.row]["image"] as String!
+        let testImage = theJSON["results"]![indexPath.row]["image"] as! String!
         //var cell:AnyObject
         
         if(testImage == "none"){
-            var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell_no_images", forIndexPath: indexPath) as custom_cell_no_images
+            var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell_no_images", forIndexPath: indexPath) as! custom_cell_no_images
             cell.tag = 100
             
-            cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as String!
+            cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as! String!
             //cell.comment_label?.text = "\U0001f31d"
-            cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as String!
-            cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as String!
-            cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as String!
-            cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as String!
-            cell.user_id = theJSON["results"]![indexPath.row]["user_id"] as String!
+            cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
+            cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
+            cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
+            cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as! String!
+            cell.user_id = theJSON["results"]![indexPath.row]["user_id"] as! String!
             
             
             
@@ -110,7 +110,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
             
             
             //find out if the user has liked the comment or not
-            var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as String!
+            var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as! String!
             
             if(hasLiked == "yes"){
                 cell.heart_icon?.userInteractionEnabled = true
@@ -139,17 +139,17 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
             return cell
         }
         else{
-            var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell", forIndexPath: indexPath) as custom_cell
+            var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell", forIndexPath: indexPath) as! custom_cell
             
             cell.tag = 200
             
-            cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as String!
+            cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as! String!
             //cell.comment_label?.text = "\U0001f31d"
-            cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as String!
-            cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as String!
-            cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as String!
-            cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as String!
-            cell.user_id = theJSON["results"]![indexPath.row]["user_id"] as String!
+            cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
+            cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
+            cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
+            cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as! String!
+            cell.user_id = theJSON["results"]![indexPath.row]["user_id"] as! String!
             cell.imageLink = testImage
             if(testImage == "none"){
                 
@@ -221,7 +221,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
             
             
             //find out if the user has liked the comment or not
-            var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as String!
+            var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as! String!
             
             if(hasLiked == "yes"){
                 cell.heart_icon?.userInteractionEnabled = true
@@ -291,12 +291,12 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
         
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
         //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-        let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as ThirdViewController
+        let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
         
         let gotCell = tableView.cellForRowAtIndexPath(indexPath)
         
         if(gotCell?.tag == 100){
-            let gotCell2 = tableView.cellForRowAtIndexPath(indexPath) as custom_cell_no_images
+            let gotCell2 = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell_no_images
             comView.comment = gotCell2.comment_label.text!
             comView.author = gotCell2.author_label.text!
             comView.imgLink = "none2"
@@ -304,7 +304,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
             comView.authorFBID = gotCell2.user_id
         }
         else if(gotCell?.tag == 200){
-            let gotCell2 = tableView.cellForRowAtIndexPath(indexPath) as custom_cell
+            let gotCell2 = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell
             comView.comment = gotCell2.comment_label.text!
             comView.author = gotCell2.author_label.text!
             comView.imgLink = gotCell2.imageLink
@@ -313,7 +313,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
             
         }
         
-        let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("main_view_scene_id") as ViewController
+        let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("main_view_scene_id") as! ViewController
         //comView.sentLocation = self.currentUserLocation
         
         comView.sentLocation = mainView.currentUserLocation
@@ -393,7 +393,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func toggleCommentVote(sender: UIGestureRecognizer){
         //get the attached sender imageview
-        var heartImage = sender.view? as UIImageView
+        var heartImage = sender.view as! UIImageView
         //get the main view
         
         //var cellView = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as custom_cell
@@ -406,11 +406,11 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
         var cID:String = "none"
         
         if(gotCell?.tag == 100){
-            let gotCell2 = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as custom_cell_no_images
+            let gotCell2 = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell_no_images
             cID = gotCell2.comment_id
         }
         else if(gotCell?.tag == 200){
-            let gotCell2 = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as custom_cell
+            let gotCell2 = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell
             cID = gotCell2.comment_id
             
         }
@@ -462,7 +462,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
                     dispatch_async(dispatch_get_main_queue(),{
                         //change the heart image
                         
-                        let voteIsNow = parseJSON["results"]![0]["vote"] as String!
+                        let voteIsNow = parseJSON["results"]![0]["vote"] as! String!
                         
                         if(voteIsNow == "no")
                         {
@@ -470,7 +470,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
                             heartImage.image = UIImage(named: "honey_empty.jpg")
                             
                             if(gotCell?.tag == 100){
-                                let gotCell2 = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as custom_cell_no_images
+                                let gotCell2 = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell_no_images
                                 
                                 //get heart label content as int
                                 var curHVal = gotCell2.heart_label?.text?.toInt()
@@ -478,7 +478,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
                                 gotCell2.heart_label?.text = String(curHVal! - 1)
                             }
                             else if(gotCell?.tag == 200){
-                                let gotCell2 = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as custom_cell
+                                let gotCell2 = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell
                                 
                                 //get heart label content as int
                                 var curHVal = gotCell2.heart_label?.text?.toInt()
@@ -495,7 +495,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
                             heartImage.image = UIImage(named: "honey_full.jpg")
                             
                             if(gotCell?.tag == 100){
-                                let gotCell2 = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as custom_cell_no_images
+                                let gotCell2 = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell_no_images
                                 
                                 //get heart label content as int
                                 var curHVal = gotCell2.heart_label?.text?.toInt()
@@ -503,7 +503,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
                                 gotCell2.heart_label?.text = String(curHVal! + 1)
                             }
                             else if(gotCell?.tag == 200){
-                                let gotCell2 = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as custom_cell
+                                let gotCell2 = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell
                                 
                                 //get heart label content as int
                                 var curHVal = gotCell2.heart_label?.text?.toInt()
@@ -532,10 +532,10 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
     func showUserProfile(sender: UIGestureRecognizer){
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
         //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-        let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as ProfileViewController
+        let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as! ProfileViewController
         
         
-        var authorLabel = sender.view? as UILabel
+        var authorLabel = sender.view as! UILabel
         
         let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
         
@@ -543,12 +543,12 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
         // let gotCell = tableView.cellForRowAtIndexPath(indexPath)
         
         if(gotCell?.tag == 100){
-            let gotCell2 = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as custom_cell_no_images
+            let gotCell2 = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
             profView.userFBID = gotCell2.user_id
             profView.userName = gotCell2.author_label.text!
         }
         else if(gotCell?.tag == 200){
-            let gotCell2 = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as custom_cell
+            let gotCell2 = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
             profView.userFBID = gotCell2.user_id
             profView.userName = gotCell2.author_label.text!
             

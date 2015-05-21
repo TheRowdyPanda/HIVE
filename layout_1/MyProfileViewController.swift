@@ -151,7 +151,10 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         let url = NSURL(string: "http://graph.facebook.com/\(fbid)/picture?width=200&height=200")
        // let url = NSURL(string: "http://graph.facebook.com/1382309155407327/picture?width=200&height=200")
         let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
-        profilePic.image = UIImage(data: data!)
+        
+        if(data != nil){
+            profilePic.image = UIImage(data: data!)
+        }
         
 
 //        
@@ -184,7 +187,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        let karmaView = mainStoryboard.instantiateViewControllerWithIdentifier("karma_scene_id") as KarmaViewController
+        let karmaView = mainStoryboard.instantiateViewControllerWithIdentifier("karma_scene_id") as! KarmaViewController
         
 
         self.presentViewController(karmaView, animated: true, completion: nil)
@@ -201,7 +204,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
         //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-        let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("fb_login_scene_id") as UIViewController
+        let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("fb_login_scene_id") as! UIViewController
         
         
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -224,10 +227,10 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
-        let testImage = theJSON["results"]![indexPath.row]["image"] as String!
+        let testImage = theJSON["results"]![indexPath.row]["image"] as! String!
         
         if(testImage == "none"){
-            var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell_no_images") as custom_cell_no_images
+            var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell_no_images") as! custom_cell_no_images
             
             
             cell.selectionStyle = UITableViewCellSelectionStyle.None
@@ -240,14 +243,14 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             
             
             //set the cell contents with the ajax data
-            cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as String!
-            cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as String!
-            cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as String!
-            cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as String!
-            cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as String!
-            cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as String!
+            cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as! String!
+            cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
+            cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
+            cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
+            cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as! String!
+            cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as! String!
             
-            cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as String!
+            cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as! String!
             
             let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
             
@@ -272,11 +275,11 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             }
             else{
                 println("LAST TIME BuDDY:\(gotURL.last)")
-                cell.urlLink = gotURL.last!
+                cell.urlLink = gotURL.last! as String!
             }
             
             
-            let userFBID = theJSON["results"]![indexPath.row]["user_id"] as String!
+            let userFBID = theJSON["results"]![indexPath.row]["user_id"] as! String!
             cell.user_id = userFBID
             
             // cell.userImage.frame = CGRectMake(20, 20, 20, 20)
@@ -394,7 +397,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             //
             
             //find out if the user has liked the comment or not
-            var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as String!
+            var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as! String!
             
             if(hasLiked == "yes"){
                 cell.heart_icon?.userInteractionEnabled = true
@@ -447,7 +450,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         else{
             //image
-            var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell") as custom_cell
+            var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell") as! custom_cell
             
             
             cell.selectionStyle = UITableViewCellSelectionStyle.None
@@ -460,13 +463,13 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             
             
             //set the cell contents with the ajax data
-            cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as String!
-            cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as String!
-            cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as String!
-            cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as String!
-            cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as String!
-            cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as String!
-            cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as String!
+            cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as! String!
+            cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
+            cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
+            cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
+            cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as! String!
+            cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as! String!
+            cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as! String!
 
             
             let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
@@ -492,11 +495,11 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             }
             else{
                 println("LAST TIME BuDDY:\(gotURL.last)")
-                cell.urlLink = gotURL.last!
+                cell.urlLink = gotURL.last! as String!
             }
             
             
-            let userFBID = theJSON["results"]![indexPath.row]["user_id"] as String!
+            let userFBID = theJSON["results"]![indexPath.row]["user_id"] as! String!
             cell.user_id = userFBID
             let testUserImg = "http://graph.facebook.com/\(userFBID)/picture?type=small"
             //     let imageLink = "http://graph.facebook.com/\(userFBID)/picture?type=small"
@@ -612,7 +615,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             //
             
             //find out if the user has liked the comment or not
-            var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as String!
+            var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as! String!
             
             if(hasLiked == "yes"){
                 cell.heart_icon?.userInteractionEnabled = true
@@ -713,23 +716,23 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         //
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as ThirdViewController
+        let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
         //
         
         
         let indCell = tableView.cellForRowAtIndexPath(indexPath)
         
         if(indCell?.tag == 100){
-            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell_no_images
+            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell_no_images
             
-            comView.sentLocation = currentUserLocation
-            comView.commentID = gotCell.comment_id
+            comView.sentLocation = currentUserLocation;
+            comView.commentID = gotCell.comment_id;
         }
         if(indCell?.tag == 200){
-            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell
+            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell
             
-            comView.sentLocation = currentUserLocation
-            comView.commentID = gotCell.comment_id
+            comView.sentLocation = currentUserLocation;
+            comView.commentID = gotCell.comment_id;
         }
         
         
@@ -746,7 +749,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func showFollowers(){
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        let friendView = mainStoryboard.instantiateViewControllerWithIdentifier("user_friends_scene_id") as UserFriendsViewController
+        let friendView = mainStoryboard.instantiateViewControllerWithIdentifier("user_friends_scene_id")as! UserFriendsViewController
         
         
         let defaults = NSUserDefaults.standardUserDefaults()
@@ -764,7 +767,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         println("SLDKFJLS:DKFJLS:DKFSDF")
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        let friendView = mainStoryboard.instantiateViewControllerWithIdentifier("user_friends_scene_id") as UserFriendsViewController
+        let friendView = mainStoryboard.instantiateViewControllerWithIdentifier("user_friends_scene_id") as! UserFriendsViewController
         
         
         let defaults = NSUserDefaults.standardUserDefaults()
@@ -830,20 +833,20 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
                     
 //                    self.rightHandItems[1] = ""
                     // let leftHandItems: [String] = ["","Last Check In", "Posts", "Followers", "Following"]
-                    self.rightHandItems[1] = parseJSON["results"]![0]["lastLoc"] as String! ?? ""
-                    self.rightHandItems[2] = parseJSON["results"]![0]["comments"] as String! ?? ""
-                    self.rightHandItems[3] = parseJSON["results"]![0]["followers"] as String! ?? ""
-                    self.rightHandItems[4] = parseJSON["results"]![0]["following"] as String! ?? ""
+                    self.rightHandItems[1] = parseJSON["results"]![0]["lastLoc"] as! String! ?? ""
+                    self.rightHandItems[2] = parseJSON["results"]![0]["comments"] as! String! ?? ""
+                    self.rightHandItems[3] = parseJSON["results"]![0]["followers"] as! String! ?? ""
+                    self.rightHandItems[4] = parseJSON["results"]![0]["following"] as! String! ?? ""
            
                    
    
                     
                     dispatch_async(dispatch_get_main_queue(), {
-                        self.locLable!.text = parseJSON["results"]![0]["lastLoc"] as String! ?? ""
-                        self.timeLabel!.text = parseJSON["results"]![0]["lastTime"] as String! ?? ""
-                        self.followersLabel!.text = parseJSON["results"]![0]["followers"] as String! ?? ""
-                        self.followingLabel!.text = parseJSON["results"]![0]["following"] as String! ?? ""
-                        self.numPostLabel!.text = parseJSON["results"]![0]["comments"] as String! ?? ""
+                        self.locLable!.text = parseJSON["results"]![0]["lastLoc"] as! String! ?? ""
+                        self.timeLabel!.text = parseJSON["results"]![0]["lastTime"] as! String! ?? ""
+                        self.followersLabel!.text = parseJSON["results"]![0]["followers"] as! String! ?? ""
+                        self.followingLabel!.text = parseJSON["results"]![0]["following"] as! String! ?? ""
+                        self.numPostLabel!.text = parseJSON["results"]![0]["comments"] as! String! ?? ""
                         self.removeLoadingScreen()
                        // self.tableView.reloadData()
                     })
@@ -893,15 +896,17 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func parseHTMLString(daString:NSString) -> [NSString]{
         
+        let daString2 = daString as! String
         
         println("DA STRING:\(daString)")
         let detector = NSDataDetector(types: NSTextCheckingType.Link.rawValue, error: nil)
         
         let fakejf = String(daString)
-        let length = fakejf.utf16Count
+        //let length = fakejf.utf16Count
+        let length = count(fakejf.utf16)
         // let links = detector?.matchesInString(daString, options: NSMatchingOptions.ReportCompletion, range: NSMakeRange(0, length)).map {$0 as NSTextCheckingResult}
         
-        let links = detector?.matchesInString(daString, options: NSMatchingOptions.ReportCompletion, range: NSMakeRange(0, length)).map {$0 as NSTextCheckingResult}
+        let links = detector?.matchesInString(daString2, options: NSMatchingOptions.ReportCompletion, range: NSMakeRange(0, length)).map {$0 as! NSTextCheckingResult}
         
         //        var d = daString as StringE
         //        if (d.containsString("Http://") == true){
@@ -1035,12 +1040,27 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag, inSection: 0))
         
         if(indCell?.tag == 100){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag!, inSection: 0)) as custom_cell_no_images
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag!, inSection: 0)) as! custom_cell_no_images
+            
             
             let shareCom = gotCell.comment_label.text as String!
+            let shareAuth = gotCell.author_label.text as String!
             
-            let objectsToShare = [shareCom]
+            let giveMess = "'\(shareCom)'  @\(shareAuth) \n\n @SoLoCoHive (http://apple.co/1yTV9Fj)"
+            
+            
+            
+            
+            let objectsToShare = [giveMess]
+            
             let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+             activityVC.popoverPresentationController?.sourceView = self.view
+            //New Excluded Activities Code
+            activityVC.excludedActivityTypes = [UIActivityTypeAirDrop,
+                UIActivityTypeAddToReadingList,
+                UIActivityTypePostToTencentWeibo,
+                UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMail,UIActivityTypePostToFlickr,UIActivityTypePostToVimeo,UIActivityTypePostToWeibo,UIActivityTypePrint]
+            //
             
             self.presentViewController(activityVC, animated: true, completion: nil)
             
@@ -1048,18 +1068,21 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             
         }
         if(indCell?.tag == 200){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag!, inSection: 0)) as custom_cell
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag!, inSection: 0)) as! custom_cell
             
             
             let shareCom = gotCell.comment_label.text as String!
-            let hiveSite = NSURL(string: "http://www.yalehive.com/")
+            let shareAuth = gotCell.author_label.text as String!
+            
+            let giveMess = "'\(shareCom)'  @\(shareAuth) \n\n @SoLoCoHive (http://apple.co/1yTV9Fj)"
+            let hiveSite = NSURL(string: "http://apple.co/1yTV9Fj")
             
             let shareImage = gotCell.comImage?.image as UIImage!
             
-            let objectsToShare = [shareCom, hiveSite!, shareImage]
+            let objectsToShare = [giveMess, shareImage]
             
             let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
-            
+             activityVC.popoverPresentationController?.sourceView = self.view
             //New Excluded Activities Code
             activityVC.excludedActivityTypes = [UIActivityTypeAirDrop,
                 UIActivityTypeAddToReadingList,
@@ -1078,6 +1101,8 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         
     }
+
+    
     
     func showLikers(sender: UIGestureRecognizer){
         
@@ -1085,7 +1110,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
         //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-        let likeView = mainStoryboard.instantiateViewControllerWithIdentifier("comment_likers_id") as CommentLikersViewController
+        let likeView = mainStoryboard.instantiateViewControllerWithIdentifier("comment_likers_id") as! CommentLikersViewController
         
         var authorLabel:AnyObject
         
@@ -1095,7 +1120,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
         
         if(indCell?.tag == 100){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as custom_cell_no_images
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
             
             likeView.sentLocation = currentUserLocation
             likeView.commentID = gotCell.comment_id
@@ -1106,7 +1131,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             //profView.userName = gotCell.author_label.text!
         }
         if(indCell?.tag == 200){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as custom_cell
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
             
             likeView.sentLocation = currentUserLocation
             likeView.commentID = gotCell.comment_id
@@ -1127,7 +1152,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
         //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-        let repView = mainStoryboard.instantiateViewControllerWithIdentifier("comment_reply_id") as CommentReplyViewController
+        let repView = mainStoryboard.instantiateViewControllerWithIdentifier("comment_reply_id") as! CommentReplyViewController
         
         var authorLabel:AnyObject
         
@@ -1137,7 +1162,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
         
         if(indCell?.tag == 100){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as custom_cell_no_images
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
             
             repView.sentLocation = currentUserLocation
             repView.commentID = gotCell.comment_id
@@ -1147,7 +1172,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             //profView.userName = gotCell.author_label.text!
         }
         if(indCell?.tag == 200){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as custom_cell
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
             
             repView.sentLocation = currentUserLocation
             repView.commentID = gotCell.comment_id
@@ -1230,7 +1255,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         if(indCell?.tag == 100){
             
-            var cellView = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as custom_cell_no_images
+            var cellView = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell_no_images
             
             var cID = cellView.comment_id
             
@@ -1282,7 +1307,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
                             
                             
                             
-                            var testVote = parseJSON["results"]![0]["vote"] as String!
+                            var testVote = parseJSON["results"]![0]["vote"] as! String!
                             
                             if(testVote == "no"){
                                 cellView.heart_icon?.image = UIImage(named: "honey_empty.jpg")
@@ -1317,7 +1342,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
         
         if(indCell?.tag == 200){
             
-            var cellView = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as custom_cell
+            var cellView = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell
             
             var cID = cellView.comment_id
             
@@ -1372,7 +1397,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
                             
                             
                             
-                            var testVote = parseJSON["results"]![0]["vote"] as String!
+                            var testVote = parseJSON["results"]![0]["vote"] as! String!
                             
                             if(testVote == "no"){
                                 cellView.heart_icon?.image = UIImage(named: "honey_empty.jpg")

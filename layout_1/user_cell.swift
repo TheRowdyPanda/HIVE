@@ -93,7 +93,7 @@ class user_cell: UITableViewCell {
                 
                 if let parseJSON = json {
                     
-                    let valTest = parseJSON["results"]![0]["value"] as String!
+                    let valTest = parseJSON["results"]![0]["value"] as! String!
                     
                     if(valTest == "yes"){//user did just follow
                         dispatch_async(dispatch_get_main_queue(),{

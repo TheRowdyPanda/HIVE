@@ -20,7 +20,7 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
     //    @IBOutlet var comImage: UIImageView!
     
     var sentLocation = "none"
-    
+     var userImageCache = [String: UIImage]()
     
     var hasLoaded = false
     var theJSON: NSDictionary!
@@ -106,14 +106,22 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
         
         println("DID SHOW CELL")
         
-        var cell = UITableViewCell()
+        //var cell = UITableViewCell()
         
-        let otherUser = theJSON["results"]![indexPath.row]["u2Name"] as String!
-        let time = theJSON["results"]![indexPath.row]["time"] as String!
+        var cell = tableView.dequeueReusableCellWithIdentifier("notification_cell") as! notification_cell
         
-        let type = theJSON["results"]![indexPath.row]["type"] as String!
+        cell.selectionStyle = UITableViewCellSelectionStyle.None
+        
+        cell.separatorInset.left = -10
+        cell.layoutMargins = UIEdgeInsetsZero
+        
+        
+        let otherUser = theJSON["results"]![indexPath.row]["u2Name"] as! String!
+        let time = theJSON["results"]![indexPath.row]["time"] as! String!
+        
+        let type = theJSON["results"]![indexPath.row]["type"] as! String!
         var action = ""
-        
+        var imTit = "blank.png"
         
 //        1 is liking a comment
 //        2 is liking a reply
@@ -121,25 +129,82 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
 //        4 is following user
         if(type == "1"){
             action = "liked your comment"
-            cell.tag = (theJSON["results"]![indexPath.row]["c_id"] as String!).toInt()!
+            cell.tag = (theJSON["results"]![indexPath.row]["c_id"] as! String!).toInt()!
+            imTit = "Like.png"
         }
         if(type == "2"){
             action = "liked your reply"
-            cell.tag = (theJSON["results"]![indexPath.row]["c_id"] as String!).toInt()!
+            cell.tag = (theJSON["results"]![indexPath.row]["c_id"] as! String!).toInt()!
+            imTit = "Like.png"
         }
         if(type == "3"){
             action = "replied to your comment"
-            cell.tag = (theJSON["results"]![indexPath.row]["c_id"] as String!).toInt()!
+            cell.tag = (theJSON["results"]![indexPath.row]["c_id"] as! String!).toInt()!
+            imTit = "Comment.png"
         }
         if(type == "4"){
             action = "followed you"
-            cell.tag = (theJSON["results"]![indexPath.row]["u2Id"] as String!).toInt()!
+            cell.tag = (theJSON["results"]![indexPath.row]["u2Id"] as! String!).toInt()!
+            imTit = "Follow.png"
         }
         
-        let retString = otherUser + " " + action + " " + time
+        //let retString = otherUser + " " + action + " " + time
+        let retString = action
+       // cell.textLabel?.text = retString
+       // cell.textLabel?.numberOfLines = 0
+        cell.actionLabel.text = retString
+        cell.actionLabel.numberOfLines = 0
+        cell.user2NameLabel.text = otherUser
+        cell.timeLabel.text = time
         
-        cell.textLabel?.text = retString
-        cell.textLabel?.numberOfLines = 0
+        cell.typeImage.image = UIImage(named: imTit)
+        
+        
+        var fbid = theJSON["results"]![indexPath.row]["u2FBID"] as! String!
+        
+        let testUserImg = "http://graph.facebook.com/\(fbid)/picture?width=30&height=30"
+        
+        //let url = NSURL(string: "http://graph.facebook.com/\(fbid)/picture?width=50&height=50")
+        // let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
+        
+        var upimage = self.userImageCache[testUserImg]
+        if( upimage == nil ) {
+            // If the image does not exist, we need to download it
+            
+            var imgURL: NSURL = NSURL(string: testUserImg)!
+            
+            // Download an NSData representation of the image at the URL
+            let request: NSURLRequest = NSURLRequest(URL: imgURL)
+            NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
+                if error == nil {
+                    upimage = UIImage(data: data)
+                    
+                    // Store the image in to our cache
+                    self.userImageCache[testUserImg] = upimage
+                    dispatch_async(dispatch_get_main_queue(), {
+                        if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? notification_cell {
+                            cellToUpdate.user2Image?.image = upimage
+                        }
+                    })
+                }
+                else {
+                    println("Error: \(error.localizedDescription)")
+                }
+            })
+            
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), {
+                if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? notification_cell {
+                    cellToUpdate.user2Image?.image = upimage
+                }
+            })
+        }
+        
+
+        
+        
+        
         return cell
         
         
@@ -155,7 +220,7 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
     func loadNotifications(){
         
         
-        // showLoadingScreen()
+         showLoadingScreen()
         let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_user_notifications")
         //START AJAX
         var request = NSMutableURLRequest(URL: url!)
@@ -180,7 +245,7 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
             println("Body: \(strData)")
             var err: NSError?
             var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
-            
+            self.removeLoadingScreen()
             
             // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
             if(err != nil) {
@@ -223,7 +288,7 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         
-        let type = theJSON["results"]![indexPath.row]["type"] as String!
+        let type = theJSON["results"]![indexPath.row]["type"] as! String!
         
         //        1 is liking a comment
         //        2 is liking a reply
@@ -241,13 +306,13 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
 //            self.presentViewController(likeView, animated: true, completion: nil)
             
             let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-            let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as ThirdViewController
+            let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
             var myCustomViewController: ViewController = ViewController(nibName: nil, bundle: nil)
             
             let currentUserLocation = myCustomViewController.currentUserLocation
                 comView.sentLocation = currentUserLocation
             comView.sentLocation = currentUserLocation
-            comView.commentID = theJSON["results"]![indexPath.row]["c_id"] as String!
+            comView.commentID = theJSON["results"]![indexPath.row]["c_id"] as! String!
             comView.focusTableOn = "likers"
            // comView.imgLink = "none2"
             self.presentViewController(comView, animated: true, completion: nil)
@@ -262,13 +327,13 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
             
             
             let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-            let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as ThirdViewController
+            let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
             var myCustomViewController: ViewController = ViewController(nibName: nil, bundle: nil)
             
             let currentUserLocation = myCustomViewController.currentUserLocation
             comView.sentLocation = currentUserLocation
             comView.sentLocation = currentUserLocation
-            comView.commentID = theJSON["results"]![indexPath.row]["c_id"] as String!
+            comView.commentID = theJSON["results"]![indexPath.row]["c_id"] as! String!
             comView.focusTableOn = "replies"
             // comView.imgLink = "none2"
             self.presentViewController(comView, animated: true, completion: nil)
@@ -278,10 +343,10 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
         if(type == "4"){
             
             let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-            let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as ProfileViewController
+            let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as! ProfileViewController
             
-            let newUserName = theJSON["results"]![indexPath.row]["u2Name"] as String!
-            let newUserId = theJSON["results"]![indexPath.row]["u2FBID"] as String!
+            let newUserName = theJSON["results"]![indexPath.row]["u2Name"] as! String!
+            let newUserId = theJSON["results"]![indexPath.row]["u2FBID"] as! String!
             profView.userFBID = newUserId
             profView.userName = newUserName
             self.presentViewController(profView, animated: true, completion: nil)
@@ -290,6 +355,77 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
             
         }
     }
+    
+    
+    
+    func showLoadingScreen(){
+        
+        let screenSize: CGRect = UIScreen.mainScreen().bounds
+        
+        let w = screenSize.width * 0.8
+        let h = w * 0.283
+        let squareSize = screenSize.width * 0.2
+        let xPos = screenSize.width/2 - w/2
+        let yPos = screenSize.height/2 - h/2
+        
+        let holdView = UIView(frame: CGRect(x: xPos, y: yPos, width: w, height: h))
+        holdView.backgroundColor = UIColor.whiteColor()
+        holdView.tag = 999
+        
+        holdView.layer.borderWidth=1.0
+        holdView.layer.masksToBounds = false
+        holdView.layer.borderColor = UIColor.clearColor().CGColor
+        //profilePic.layer.cornerRadius = 13
+        holdView.layer.cornerRadius = holdView.frame.size.height/10
+        holdView.clipsToBounds = true
+        
+        view.addSubview(holdView)
+        
+        
+        
+        
+        
+        
+        var label = UILabel(frame: CGRectMake(0, 0, holdView.frame.width, holdView.frame.height*0.2))
+        label.textAlignment = NSTextAlignment.Center
+        label.text = "Loading Comments..."
+        //holdView.addSubview(label)
+        
+        
+        
+        
+        // Returns an animated UIImage
+        var url = NSBundle.mainBundle().URLForResource("loader", withExtension: "gif")
+        var imageData = NSData(contentsOfURL: url!)
+        
+        
+        let image = UIImage.animatedImageWithData(imageData!)//UIImage(named: imageName)
+        let imageView = UIImageView(image: image!)
+        
+        let smallerSquareSize = squareSize*0.6
+        let gPos = (holdView.frame.width*0.2)/2
+        let kPos = (holdView.frame.height*0.2)/2
+        
+        
+        imageView.frame = CGRect(x: gPos, y: kPos, width: w*0.8, height: h*0.8)
+        holdView.addSubview(imageView)
+        
+    }
+    
+    
+    func removeLoadingScreen(){
+        //self.loadingScreen.alpha = 0.0
+        
+        for view in self.view.subviews {
+            if(view.tag == 999){
+                view.removeFromSuperview()
+            }
+        }
+    }
+
+    
+    
+    
     
        func reload_table(){
         

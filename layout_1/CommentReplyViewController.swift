@@ -42,6 +42,7 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
     //    @IBOutlet var comImage: UIImageView!
     
     var sentLocation = "none"
+    var isLoading = false
     
     
     var hasLoaded = false
@@ -144,13 +145,13 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
         
         let userInfo = notification.userInfo!
         
-        let animationDuration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as NSNumber).doubleValue
-        let rawAnimationCurve = (notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as NSNumber).unsignedIntValue << 16
+        let animationDuration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+        let rawAnimationCurve = (notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).unsignedIntValue << 16
         
         
         
         let animationCurve = UIViewAnimationOptions(UInt(rawAnimationCurve))
-        var keyboardFrame: CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue()
+        var keyboardFrame: CGRect = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
 
         bottomLayoutConstraint.constant = keyboardFrame.size.height + 1
            UIView.animateWithDuration(animationDuration, delay: 0.0, options: .BeginFromCurrentState | animationCurve, animations: {
@@ -183,10 +184,10 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
     {
         println("DID SHOW CELL")
         
-        var cell = tableView.dequeueReusableCellWithIdentifier("reply_cell") as reply_cell
+        var cell = tableView.dequeueReusableCellWithIdentifier("reply_cell") as! reply_cell
         
         
-        var fbid = theJSON["results"]![indexPath.row]["user_id"] as String!
+        var fbid = theJSON["results"]![indexPath.row]["user_id"] as! String!
         
         
         let url = NSURL(string: "http://graph.facebook.com/\(fbid)/picture?width=50&height=50")
@@ -194,9 +195,9 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
         
         
         cell.userImage?.image = UIImage(data: data!)
-        cell.nameLabel.text = theJSON["results"]![indexPath.row]["author"] as String!
+        cell.nameLabel.text = theJSON["results"]![indexPath.row]["author"] as! String!
         
-        cell.replyLabel.text = theJSON["results"]![indexPath.row]["comments"] as String!
+        cell.replyLabel.text = theJSON["results"]![indexPath.row]["comments"] as! String!
         //cell.replyLabel.text = "SLKFJSLKJF"
         cell.userFBID = fbid
         
@@ -214,7 +215,7 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
         
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
         //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-        let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as ProfileViewController
+        let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as! ProfileViewController
         
         
         //  var authorLabel = sender.view? as UILabel
@@ -222,7 +223,7 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
         //   let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
         
         
-        let gotCell = tableView.cellForRowAtIndexPath(indexPath) as reply_cell
+        let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! reply_cell
         
         profView.userFBID = gotCell.userFBID
         profView.userName = gotCell.nameLabel.text!
@@ -291,6 +292,8 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
     @IBAction func did_hit_reply(){
         //func did_hit_reply(){
         
+        if(isLoading == false){
+            isLoading = true
         println("Data is: \(self.replyCommentView.text)")
         
         let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_reply_to_comment")
@@ -340,7 +343,7 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
             }
         })
         task.resume()
-        
+        }
         
         // println("SLKDJFLSKDJFSDFLKJS")
         //     self.dismissViewControllerAnimated(true, completion: nil)
@@ -349,6 +352,7 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
     func finishedReply(){
         dispatch_async(dispatch_get_main_queue(),{
 
+            self.isLoading = false
         self.replyCommentView?.resignFirstResponder()
 
        // UIApplication.sharedApplication().sendAction("resignFirstResponder", to:nil, from:nil, forEvent:nil)

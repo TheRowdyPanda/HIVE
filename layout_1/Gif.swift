@@ -20,32 +20,31 @@ extension UIImage {
     class func delayForImageAtIndex(index: UInt, source: CGImageSourceRef)
         -> Double {
             var delay = 0.1
-            
-            // Get dictionaries
-            let cfProperties = CGImageSourceCopyPropertiesAtIndex(source, index,
-                nil)
-            let gifProperties: CFDictionaryRef = unsafeBitCast(
-                CFDictionaryGetValue(cfProperties,
-                    unsafeAddressOf(kCGImagePropertyGIFDictionary)),
-                CFDictionary.self)
-            
-            // Get delay time
-            var delayObject: AnyObject = unsafeBitCast(
-                CFDictionaryGetValue(gifProperties,
-                    unsafeAddressOf(kCGImagePropertyGIFUnclampedDelayTime)),
-                AnyObject.self)
-            if delayObject.doubleValue == 0 {
-                delayObject = unsafeBitCast(CFDictionaryGetValue(gifProperties,
-                    unsafeAddressOf(kCGImagePropertyGIFDelayTime)), AnyObject.self)
-            }
-            
-            delay = delayObject as Double
-            
-            if delay < 0.1 {
-                delay = 0.1 // Make sure they're not too fast
-            }
-            
-            
+//            
+//            // Get dictionaries
+//            let cfProperties = CGImageSourceCopyPropertiesAtIndex(source, index,
+//                nil)
+//            let gifProperties: CFDictionaryRef = unsafeBitCast(
+//                CFDictionaryGetValue(cfProperties,
+//                    unsafeAddressOf(kCGImagePropertyGIFDictionary)),
+//                CFDictionary.self)
+//            
+//            // Get delay time
+//            var delayObject: AnyObject = unsafeBitCast(
+//                CFDictionaryGetValue(gifProperties,
+//                    unsafeAddressOf(kCGImagePropertyGIFUnclampedDelayTime)),
+//                AnyObject.self)
+//            if delayObject.doubleValue == 0 {
+//                delayObject = unsafeBitCast(CFDictionaryGetValue(gifProperties,
+//                    unsafeAddressOf(kCGImagePropertyGIFDelayTime)), AnyObject.self)
+//            }
+//            
+//            delay = delayObject as! Double
+//            
+//            if delay < 0.1 {
+//                delay = 0.1 // Make sure they're not too fast
+//            }
+//            
             return delay
     }
     

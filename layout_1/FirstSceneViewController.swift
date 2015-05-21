@@ -32,7 +32,7 @@ class FirstSceneViewController: UIViewController{
             if(fbid == "none"){
                 let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
                 //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-                let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("fb_login_scene_id") as UIViewController
+                let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("fb_login_scene_id") as! UIViewController
                 
                 
                 self.dismissViewControllerAnimated(true, completion: nil)
@@ -42,7 +42,7 @@ class FirstSceneViewController: UIViewController{
             else{
             let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
             //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-            let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as UITabBarController
+            let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as! UITabBarController
             
             
             self.dismissViewControllerAnimated(true, completion: nil)
@@ -55,7 +55,7 @@ class FirstSceneViewController: UIViewController{
         else{
             let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
             //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-            let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("fb_login_scene_id") as UIViewController
+            let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("fb_login_scene_id") as! UIViewController
             
             
             self.dismissViewControllerAnimated(true, completion: nil)

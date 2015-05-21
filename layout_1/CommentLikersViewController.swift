@@ -149,10 +149,10 @@ class CommentLikersViewController: UIViewController, UITableViewDelegate, UITabl
         //println("S:LKDFJL:SKDFLSDK")
         let userInfo = notification.userInfo!
         
-        let animationDuration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as NSNumber).doubleValue
-        let keyboardEndFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue()
+        let animationDuration = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+        let keyboardEndFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
         let convertedKeyboardEndFrame = view.convertRect(keyboardEndFrame, fromView: view.window)
-        let rawAnimationCurve = (notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as NSNumber).unsignedIntValue << 16
+        let rawAnimationCurve = (notification.userInfo![UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).unsignedIntValue << 16
         
         
         // let animationCurve = UIViewAnimationOptions.fromRaw(UInt(rawAnimationCurve))!
@@ -191,10 +191,10 @@ class CommentLikersViewController: UIViewController, UITableViewDelegate, UITabl
     {
         println("DID SHOW CELL")
 
-        var cell = tableView.dequeueReusableCellWithIdentifier("user_cell") as user_cell
+        var cell = tableView.dequeueReusableCellWithIdentifier("user_cell") as! user_cell
         
         
-        var fbid = theJSON["results"]![indexPath.row]["userID"] as String!
+        var fbid = theJSON["results"]![indexPath.row]["userID"] as! String!
         
         
         let url = NSURL(string: "http://graph.facebook.com/\(fbid)/picture?width=50&height=50")
@@ -202,10 +202,10 @@ class CommentLikersViewController: UIViewController, UITableViewDelegate, UITabl
         
         
         cell.userImage?.image = UIImage(data: data!)
-        cell.nameLabel.text = theJSON["results"]![indexPath.row]["userName"] as String!
+        cell.nameLabel.text = theJSON["results"]![indexPath.row]["userName"] as! String!
         
         cell.userImage.layer.cornerRadius = cell.userImage.frame.size.height
-        let followTest = theJSON["results"]![indexPath.row]["userFollow"] as String!
+        let followTest = theJSON["results"]![indexPath.row]["userFollow"] as! String!
         //test if general user is following the presented user
         //cell.followButton.titleLabel?.text = "test"
         
@@ -236,7 +236,7 @@ class CommentLikersViewController: UIViewController, UITableViewDelegate, UITabl
         
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
         //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-        let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as ProfileViewController
+        let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as! ProfileViewController
         
         
         //  var authorLabel = sender.view? as UILabel
@@ -244,7 +244,7 @@ class CommentLikersViewController: UIViewController, UITableViewDelegate, UITabl
         //   let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
         
         
-        let gotCell = tableView.cellForRowAtIndexPath(indexPath) as user_cell
+        let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! user_cell
         
         profView.userFBID = gotCell.userFBID
         profView.userName = gotCell.nameLabel.text!

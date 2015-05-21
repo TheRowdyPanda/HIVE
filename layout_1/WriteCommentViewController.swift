@@ -9,6 +9,7 @@
 
 import UIKit
 import MobileCoreServices
+import CoreLocation
 
 class SweetView: UIImageView {
     override func intrinsicContentSize() -> CGSize {
@@ -16,8 +17,9 @@ class SweetView: UIImageView {
     }
 }
 
-class WriteCommentViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate, UIGestureRecognizerDelegate {
+class WriteCommentViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate{
     
+    let locationManager = CLLocationManager()
     
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var commentLabel: UILabel!
@@ -58,12 +60,26 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
+        
+        self.locationManager.delegate = self
+        
+        //self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        
+        //self.locationManager.requestWhenInUseAuthorization()
+        self.locationManager.requestAlwaysAuthorization()
+        
+        self.locationManager.startUpdatingLocation()
+        self.locationManager.distanceFilter = 3
+        
+        
       //  let tracker = GAI.sharedInstance().defaultTracker
       //  tracker.set(kGAIScreenName, value: "/index")
       //  tracker.send(GAIDictionaryBuilder.createScreenView().build())
         
         var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Show Scene", label: "Showed", value: nil).build())
+        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Show Scene", label: "Showed", value: nil).build() as [NSObject : AnyObject])
         
       //  self.commentView.becomeFirstResponder()
 
@@ -99,7 +115,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         }
         
         var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Start Comment", label: "Did Begin Editing", value: nil).build())
+        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Start Comment", label: "Did Begin Editing", value: nil).build() as [NSObject : AnyObject])
         
     }
     
@@ -146,7 +162,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         let image = info[UIImagePickerControllerEditedImage] as? UIImage
         
         
-        savedImage = imageWithImage(image!, scaledToSize: CGSizeMake(500, 500))
+        savedImage = imageWithImage(image!, scaledToSize: CGSizeMake(400, 400))
 
         oimageView.image = savedImage
         hasImage = true
@@ -277,7 +293,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         self.dismissViewControllerAnimated(true, completion: nil)
         
         var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "End Scene", label: "Canceled", value: nil).build())
+        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "End Scene", label: "Canceled", value: nil).build() as [NSObject : AnyObject])
         
     }
     
@@ -289,14 +305,21 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         }
         if(hasImage == true){
             
+            dispatch_async(dispatch_get_main_queue(),{
+                
+                
             self.commentView.resignFirstResponder()
             self.showLoadingScreen()
-            upload_picture()
+            self.upload_picture()
             var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-            tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Send Comment", label: "Picture", value: nil).build())
+            tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Send Comment", label: "Picture", value: nil).build() as [NSObject : AnyObject])
+                
+            })
         }
         else{
-            if(commentView.text == ""){
+            dispatch_async(dispatch_get_main_queue(),{
+            if(self.commentView.text == ""){
+                
                 
                 let alertController = UIAlertController(title: "No Content", message:
                     "Please enter text or a pic to submit", preferredStyle: UIAlertControllerStyle.Alert)
@@ -308,10 +331,12 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
             else{
                 self.commentView.resignFirstResponder()
                 self.showLoadingScreen()
-                upload_comment()
+                self.upload_comment()
                 var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-                tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Send Comment", label: "No Picture", value: nil).build())
+                tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Send Comment", label: "No Picture", value: nil).build() as [NSObject : AnyObject])
             }
+                
+            })
         }
         
     }
@@ -408,7 +433,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         //var image : UIImage = UIImage(named:"laptop-classroom-1.jpg")!
         //let image = info[UIImagePickerControllerOriginalImage] as? UIImage
         let image = self.savedImage// self.sendImg
-        var imageData: NSData = UIImageJPEGRepresentation(image, 0.66)
+        var imageData: NSData = UIImageJPEGRepresentation(image, 0.57)
         
         var requestBody: NSMutableData = NSMutableData()
         
@@ -567,7 +592,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     
     func keyboardWasShown(notification: NSNotification) {
         var info = notification.userInfo!
-        var keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as NSValue).CGRectValue()
+        var keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
         
         UIView.animateWithDuration(0.1, animations: { () -> Void in
             //commentView.bottomConstraint.constant = keyboardFrame.size.height + 20
@@ -582,6 +607,38 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         
     }
     
+    
+    
+    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
+        CLGeocoder().reverseGeocodeLocation(manager.location, completionHandler: { (placemarks, error) -> Void in
+            
+            if (error != nil) {
+                println("Error:" + error.localizedDescription)
+                return
+                
+            }
+            
+            if placemarks.count > 0 {
+                let pm = placemarks[0] as! CLPlacemark
+                //self.displayLocationInfo(pm)
+                
+                self.sentLocation = String("\(pm.location.coordinate.latitude), \(pm.location.coordinate.longitude)")
+                //print(pm.location.coordinate.latitude)
+                //print(pm.location.coordinate.longitude)
+                
+                println(self.sentLocation)
+                self.locationManager.stopUpdatingLocation()
+                
+            }else {
+                println("Error with data")
+                
+            }
+            
+            
+        })
+    }
+    
+
     
    
     

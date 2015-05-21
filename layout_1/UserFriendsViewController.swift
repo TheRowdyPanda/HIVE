@@ -36,7 +36,7 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
             get_user_followers()
             
             var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-            tracker.send(GAIDictionaryBuilder.createEventWithCategory("User Friends", action: "Show", label: "Followers", value: nil).build())
+            tracker.send(GAIDictionaryBuilder.createEventWithCategory("User Friends", action: "Show", label: "Followers", value: nil).build() as [NSObject : AnyObject])
             
         }
         else if(ajaxRequestString == "following"){
@@ -44,7 +44,7 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
             get_user_following()
             
             var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-            tracker.send(GAIDictionaryBuilder.createEventWithCategory("User Friends", action: "Show", label: "Following", value: nil).build())
+            tracker.send(GAIDictionaryBuilder.createEventWithCategory("User Friends", action: "Show", label: "Following", value: nil).build() as [NSObject : AnyObject])
         }
         
        
@@ -86,10 +86,10 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
-        var cell = tableView.dequeueReusableCellWithIdentifier("user_cell") as user_cell
+        var cell = tableView.dequeueReusableCellWithIdentifier("user_cell") as! user_cell
         
     
-        var fbid = theJSON["results"]![indexPath.row]["userID"] as String!
+        var fbid = theJSON["results"]![indexPath.row]["userID"] as! String!
 
         let testUserImg = "http://graph.facebook.com/\(fbid)/picture?width=40&height=40"
         
@@ -136,10 +136,10 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
         
         
        // cell.userImage?.image = UIImage(data: data!)
-        cell.nameLabel.text = theJSON["results"]![indexPath.row]["userName"] as String!
+        cell.nameLabel.text = theJSON["results"]![indexPath.row]["userName"] as! String!
 
         
-        let followTest = theJSON["results"]![indexPath.row]["userFollow"] as String!
+        let followTest = theJSON["results"]![indexPath.row]["userFollow"] as! String!
         //test if general user is following the presented user
         //cell.followButton.titleLabel?.text = "test"
         
@@ -173,7 +173,7 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
         
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
         //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-        let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as ProfileViewController
+        let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as! ProfileViewController
         
         
       //  var authorLabel = sender.view? as UILabel
@@ -181,7 +181,7 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
      //   let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
         
         
-         let gotCell = tableView.cellForRowAtIndexPath(indexPath) as user_cell
+         let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! user_cell
 
             profView.userFBID = gotCell.userFBID
             profView.userName = gotCell.nameLabel.text!

@@ -37,21 +37,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //registering for sending user various kinds of notifications
 
-        let notificationType = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound
-        let settings = UIUserNotificationSettings(forTypes: notificationType, categories: nil)
-        application.registerUserNotificationSettings(settings)
+        
+        // not for iOS 7
+       // let notificationType = UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound
+       // let settings = UIUserNotificationSettings(forTypes: notificationType, categories: nil)
+       // application.registerUserNotificationSettings(settings)
         
         return true
     }
 
     //FB Method handles what happens after authentication
-    func application (application:UIApplication, openURL url:NSURL, sourceApplication:NSString?, annotation:AnyObject) -> Bool {
-        //test var
+//    func application (application:UIApplication, openURL url:NSURL, sourceApplication:NSString?, annotation:AnyObject) -> Bool {
+//        //test var
+//        var wasHandled:Bool = FBAppCall.handleOpenURL(url, sourceApplication: sourceApplication)
+//        // attempt to extract a token from the url
+//        return wasHandled
+//        
+//    }
+    
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
         var wasHandled:Bool = FBAppCall.handleOpenURL(url, sourceApplication: sourceApplication)
-        // attempt to extract a token from the url
-        return wasHandled
         
+        return wasHandled
     }
+    
     
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -87,7 +96,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
         
-        return urls[urls.count-1] as NSURL
+        return urls[urls.count-1] as! NSURL
         
         }()
     
@@ -135,7 +144,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
            // error = NSError.errorWithDomain("YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
             
-            error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
+            error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict as [NSObject : AnyObject])
             // Replace this with code to handle the error appropriately.
             
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.

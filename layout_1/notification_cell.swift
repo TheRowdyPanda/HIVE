@@ -17,6 +17,8 @@ class notification_cell: UITableViewCell {
     @IBOutlet var user2NameLabel: UILabel!
     
     @IBOutlet var actionLabel: UILabel!
+    @IBOutlet var typeImage:UIImageView!
+    @IBOutlet var timeLabel:UILabel!
     //@IBOutlet var followButton: UIButton!
     //@IBOutlet var valueLabel: UILabel!
     
@@ -33,7 +35,7 @@ class notification_cell: UITableViewCell {
         user2Image.layer.masksToBounds = false
         //userImage.layer.borderColor = UIColor.whiteColor().CGColor
         //profilePic.layer.cornerRadius = 13
-        user2Image.layer.cornerRadius = user2Image.frame.size.height
+        user2Image.layer.cornerRadius = user2Image.frame.size.height/2
         user2Image.clipsToBounds = true
         
         

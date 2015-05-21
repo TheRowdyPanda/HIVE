@@ -39,7 +39,7 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate {
             else{
             let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
             //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-            let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as UITabBarController
+            let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as! UITabBarController
             
             
             self.dismissViewControllerAnimated(true, completion: nil)
@@ -68,7 +68,7 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate {
         println("This is where you perform a segue.")
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
         //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-        let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as UITabBarController
+        let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as! UITabBarController
         
         
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -78,7 +78,7 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate {
     
     func loginViewFetchedUserInfo(loginView : FBLoginView!, user: FBGraphUser){
         println("User Name: \(user.name)")
-        var userID = user.objectForKey("id") as String
+        var userID = user.objectForKey("id") as! String
         println("user id: \(userID)")
         
         let defaults = NSUserDefaults.standardUserDefaults()

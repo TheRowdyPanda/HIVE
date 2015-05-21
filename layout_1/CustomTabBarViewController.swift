@@ -12,7 +12,51 @@ class CustomTabBarViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.tabBar.tintColor = UIColor.blackColor()
+        self.tabBar.selectedImageTintColor = UIColor.whiteColor()
+        
 
+//        //feed item
+//        var tb1 = self.tabBar.items![0] as! UITabBarItem
+//        let im1a = UIImage(named: "Feed.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+//        let im1b = imageWithImage(im1a!, scaledToSize: CGSizeMake(self.view.frame.width/12, self.view.frame.width/12))
+//        tb1.image = im1b
+//        let im1c = UIImage(named: "Feed.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+//        let im1d = imageWithImage(im1c!, scaledToSize: CGSizeMake(self.view.frame.width/12, self.view.frame.width/12))
+//        tb1.selectedImage = im1d
+//        
+//        
+//        //profile item
+//        var tb2 = self.tabBar.items![1] as! UITabBarItem
+//        let im2a = UIImage(named: "Me.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+//        let im2b = imageWithImage(im1a!, scaledToSize: CGSizeMake(self.view.frame.width/12, self.view.frame.width/12))
+//        tb2.image = im2b
+//        let im2c = UIImage(named: "Me.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+//        let im2d = imageWithImage(im1c!, scaledToSize: CGSizeMake(self.view.frame.width/12, self.view.frame.width/12))
+//        tb2.selectedImage = im2d
+//        
+//        
+//        //notifications item
+//        var tb3 = self.tabBar.items![2] as! UITabBarItem
+//        let im3a = UIImage(named: "Me.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+//        let im3b = imageWithImage(im1a!, scaledToSize: CGSizeMake(self.view.frame.width/12, self.view.frame.width/12))
+//        tb3.image = im3b
+//        let im3c = UIImage(named: "Me.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+//        let im3d = imageWithImage(im1c!, scaledToSize: CGSizeMake(self.view.frame.width/12, self.view.frame.width/12))
+//        tb3.selectedImage = im3d
+//        
+//        //following item
+//        var tb4 = self.tabBar.items![3] as! UITabBarItem
+//        let im4a = UIImage(named: "Me.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+//        let im4b = imageWithImage(im1a!, scaledToSize: CGSizeMake(self.view.frame.width/12, self.view.frame.width/12))
+//        tb4.image = im4b
+//        let im4c = UIImage(named: "Me.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+//        let im4d = imageWithImage(im1c!, scaledToSize: CGSizeMake(self.view.frame.width/12, self.view.frame.width/12))
+//        tb4.selectedImage = im4d
+//
+        
+        
         //var myTabBarItem = CustomTabBarViewController.tabBar.items[0] as UITabBarItem
        // myTabBarItem.image = UIImage(named: "PickleTabIcon").imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         
@@ -24,10 +68,18 @@ class CustomTabBarViewController: UITabBarController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func tabBar(tabBar: UITabBar, didSelectItem item: UITabBarItem!) {
-       // item.image = UIImage(named: "Me.png")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-    }
 
+
+    
+    func imageWithImage(image:UIImage, scaledToSize newSize:CGSize) -> UIImage{
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0);
+        image.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
+        var newImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
+    }
+    
+    
     
     // MARK: - Navigation
 

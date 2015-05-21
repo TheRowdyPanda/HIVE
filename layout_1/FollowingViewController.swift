@@ -1,177 +1,51 @@
 //
-//  ViewController.swift
+//  FollowingViewController.swift
 //  layout_1
 //
-//  Created by Rijul Gupta on 3/14/15.
+//  Created by Rijul Gupta on 4/15/15.
 //  Copyright (c) 2015 Rijul Gupta. All rights reserved.
 //
 
-//The methods defined in this swift file and what they do
-//loadTopComments
-//loadNewComments
-//reload_table
-//showUserProfile
-//showLikers
-
 import UIKit
-import CoreLocation
 
+class FollowingViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate, CLLocationManagerDelegate{
-    
-    let locationManager = CLLocationManager()
+    @IBOutlet var tableView: UITableView!
     
     var imageCache = [String : UIImage]()
     var userImageCache = [String: UIImage]()
     var refreshControl:UIRefreshControl!
     
-    @IBOutlet var tableView: UITableView!
-    @IBOutlet var customSC: UISegmentedControl!
-    
-    var navCont: UINavigationController!
-    @IBOutlet var navBar: UINavigationBar!
-    @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
-    var isBounce:Bool! = false
-    
-    @IBOutlet var radButton15ft: UIButton!
-    @IBOutlet var radButton150ft: UIButton!
-    @IBOutlet var radButton15min: UIButton!
     
     var hasLoaded = false
     var theJSON: NSDictionary!
     var savedFBID = "none"
     var numOfCells = 0
     var oldScrollPost:CGFloat = 0.0
-    var radValue = 1
-    
-    
-    var currentUserLocation = "none"
+    //var radValue = 1
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //UIApplication.sharedApplication().openURL(NSURL(string: "http://www.reddit.com")!)
-        self.locationManager.delegate = self
-        
-        //self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        self.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-        
-        //self.locationManager.requestWhenInUseAuthorization()
-        self.locationManager.requestAlwaysAuthorization()
-        
-        self.locationManager.startUpdatingLocation()
-        self.locationManager.distanceFilter = 3
-        
-        
-        //get the user facebook id. This is used to identify the user in all ajax requests
+
         let defaults = NSUserDefaults.standardUserDefaults()
-        savedFBID = defaults.stringForKey("saved_fb_id")!
+        savedFBID =
+            defaults.stringForKey("saved_fb_id")!
         
         
-        println("Saved ID:\(savedFBID)")
-        
-        customSC.selectedSegmentIndex = 0
-        let font = UIFont(name: "Raleway-Bold", size: 16)
-        let attr = NSDictionary(objects: [font!, UIColor.whiteColor()], forKeys: [NSFontAttributeName, NSForegroundColorAttributeName])
-        let attr2 = NSDictionary(objects: [font!, UIColor.blackColor()], forKeys: [NSFontAttributeName, NSForegroundColorAttributeName])
-        //let attr = NSDictionary(object: font!, forKey: NSFontAttributeName)
-       // customSC.titleForSegmentAtIndex(0) = "skdfK"
-       // customSC.setTitleTextAttributes = [NSForegroundColorAttributeName: UIColor.blueColor()]
-       customSC.setTitleTextAttributes(attr2 as [NSObject : AnyObject], forState: UIControlState.Normal)
-        customSC.setTitleTextAttributes(attr as [NSObject : AnyObject], forState: UIControlState.Highlighted)
-        //customSC.titleTextAttributesForState(UIControlState.Normal) = attr
-        
-        //let ct1 = customSC.
-      //  customSC.setHe
         tableView.estimatedRowHeight = 500.0
         tableView.rowHeight = UITableViewAutomaticDimension
         
-        let fontFamilyNames = UIFont.familyNames()
-        for familyName in fontFamilyNames {
-            println("------------------------------")
-            println("Font Family Name = [\(familyName)]")
-            let names = UIFont.fontNamesForFamilyName(familyName as! String)
-            println("Font Names = [\(names)]")
-        }
-        
-        
-        self.refreshControl = UIRefreshControl()
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        self.refreshControl.addTarget(self, action: "didPullRefresh:", forControlEvents: UIControlEvents.ValueChanged)
-        self.tableView.addSubview(refreshControl)
-        
-        
-        //get the top comments in the "THEJSON" var, then reload the table
-        //loadTopComments()
-        
-     //   showLoadingScreen()
-        
-        //set up the segmented control action
-        customSC.addTarget(self, action: "toggleComments:", forControlEvents: .ValueChanged)
-        
-        
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
-            Int64(0.9 * Double(NSEC_PER_SEC)))
-        
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
-            
-            dispatch_async(dispatch_get_main_queue(),{
-               // self.tableView.reloadData()
-                //self.removeLoadingScreen()
-                self.click15min()
-            })
-            
-        }
-        
-        
-        var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Main View Scene", action: "View Did Load", label: "", value: nil).build() as [NSObject : AnyObject])
-        
-        
-        
-        
-        //give device token to server for apns
-        throwDeviceToken()
-        
-        
-        
-        //show instructions screen for first time users
-        
-       // showInstructionsScreen()
+        // Do any additional setup after loading the view.
     }
-    
-    override func viewDidAppear(animated: Bool) {
-        
-    }
-    
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    
-    
-    
-    
-    
-    override func viewDidLayoutSubviews() {
-        
-        let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
-        self.tableView.separatorColor = color
-       // self.tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLineEtched
-        self.tableView.separatorInset.left = 0
-        self.tableView.layoutMargins = UIEdgeInsetsZero
-        
-        //self.tableView.awakeFromNib()
+    override func viewDidAppear(animated: Bool) {
+        loadUserComments()
     }
-    
-    //pragma mark - table view
-    
-//    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-//        return 500.0
-//    }
-    
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -209,12 +83,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as! String!
             cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as! String!
             cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as! String!
-//            let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
-//            
-//            let myMutableString2 = NSMutableAttributedString(string: "World", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 8.0)!])
-//            
-//            myMutableString.appendAttributedString(myMutableString2)
-//            
+            let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
+            
+            let myMutableString2 = NSMutableAttributedString(string: "World", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 8.0)!])
+            
+            myMutableString.appendAttributedString(myMutableString2)
+            
             
             //     cell.comment_label?.attributedText = myMutableString
             
@@ -233,29 +107,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             else{
                 println("LAST TIME BuDDY:\(gotURL.last)")
                 cell.urlLink = gotURL.last! as! String
-                
-                let linkTap = UITapGestureRecognizer(target: self, action:Selector("clickComLink:"))
-                // 4
-                linkTap.delegate = self
-                cell.comment_label?.tag = indexPath.row
-                cell.comment_label?.userInteractionEnabled = true
-                cell.comment_label?.addGestureRecognizer(linkTap)
-
             }
-            
             
             
             let userFBID = theJSON["results"]![indexPath.row]["user_id"] as! String!
             cell.user_id = userFBID
             
-           // cell.userImage.frame = CGRectMake(20, 20, 20, 20)
+            // cell.userImage.frame = CGRectMake(20, 20, 20, 20)
             let testUserImg = "http://graph.facebook.com/\(userFBID)/picture?type=small"
             //     let imageLink = "http://graph.facebook.com/\(userFBID)/picture?type=small"
-                //let url = NSURL(string: imageLink)
-              // let data2 = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
-                       // comImage.image = UIImage(data: data!)
+            //let url = NSURL(string: imageLink)
+            // let data2 = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
+            // comImage.image = UIImage(data: data!)
             
-           //  cell.userImage.image = UIImage(data:data2!)
+            //  cell.userImage.image = UIImage(data:data2!)
             
             
             
@@ -394,53 +259,53 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 cell.heart_icon?.addGestureRecognizer(voteUp)
             }
             
-    
-        
+            
+            
             let voteUp2 = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
             cell.likerButtonHolder?.userInteractionEnabled = true
             voteUp2.delegate = self
             cell.likerButtonHolder?.tag = indexPath.row
             cell.likerButtonHolder?.addGestureRecognizer(voteUp2)
-
+            
             
             
             
             
             return cell
-
+            
             
             
         }
         else{
-        //image
-        var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell") as! custom_cell
-        
+            //image
+            var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell") as! custom_cell
+            
             
             cell.selectionStyle = UITableViewCellSelectionStyle.None
             
             cell.separatorInset.left = -10
             cell.layoutMargins = UIEdgeInsetsZero
-        cell.imageLink = testImage
-          cell.tag = 200
+            cell.imageLink = testImage
+            cell.tag = 200
             
-
             
-        //set the cell contents with the ajax data
-        cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as! String!
-        cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
-        cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
-        cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
-        cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as! String!
+            
+            //set the cell contents with the ajax data
+            cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as! String!
+            cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
+            cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
+            cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
+            cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as! String!
             cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as! String!
             cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as! String!
             let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
             
-             let myMutableString2 = NSMutableAttributedString(string: "World", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 8.0)!])
+            let myMutableString2 = NSMutableAttributedString(string: "World", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 8.0)!])
             
             myMutableString.appendAttributedString(myMutableString2)
             
             
-       //     cell.comment_label?.attributedText = myMutableString
+            //     cell.comment_label?.attributedText = myMutableString
             
             //var doit: NSAttributedString! = self.parseHTMLString(cell.comment_label?.text!)
             
@@ -457,26 +322,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             else{
                 println("LAST TIME BuDDY:\(gotURL.last)")
                 cell.urlLink = gotURL.last! as! String
-                
-                let linkTap = UITapGestureRecognizer(target: self, action:Selector("clickComLink:"))
-                // 4
-                linkTap.delegate = self
-                cell.comment_label?.tag = indexPath.row
-                cell.comment_label?.userInteractionEnabled = true
-                cell.comment_label?.addGestureRecognizer(linkTap)
-                
             }
             
+            
             let userFBID = theJSON["results"]![indexPath.row]["user_id"] as! String!
-        cell.user_id = userFBID
+            cell.user_id = userFBID
             let testUserImg = "http://graph.facebook.com/\(userFBID)/picture?type=small"
-       //     let imageLink = "http://graph.facebook.com/\(userFBID)/picture?type=small"
-        //    let url = NSURL(string: imageLink)
-         //   let data2 = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
+            //     let imageLink = "http://graph.facebook.com/\(userFBID)/picture?type=small"
+            //    let url = NSURL(string: imageLink)
+            //   let data2 = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
             //            comImage.image = UIImage(data: data!)
             
-           // cell.userImage.image = UIImage(data:data2!)
-        
+            // cell.userImage.image = UIImage(data:data2!)
+            
             
             
             //GET TEH USER IMAGE
@@ -513,7 +371,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     }
                 })
             }
-
             
             
             
@@ -521,13 +378,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             
             
-        let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-        // 4
-        authorTap.delegate = self
-        cell.author_label?.tag = indexPath.row
-        cell.author_label?.userInteractionEnabled = true
-        cell.author_label?.addGestureRecognizer(authorTap)
-        
+            
+            let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
+            // 4
+            authorTap.delegate = self
+            cell.author_label?.tag = indexPath.row
+            cell.author_label?.userInteractionEnabled = true
+            cell.author_label?.addGestureRecognizer(authorTap)
+            
             
             
             let authorTap2 = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
@@ -536,7 +394,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             cell.userImage?.tag = indexPath.row
             cell.userImage?.userInteractionEnabled = true
             cell.userImage?.addGestureRecognizer(authorTap2)
-         
+            
             
             
             let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
@@ -570,51 +428,51 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             
             
-//            
+            //
             
-//
-//            
+            //
+            //
             let shareTap = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
             shareTap.delegate = self
             cell.shareLabel?.tag = indexPath.row
             cell.shareLabel?.userInteractionEnabled = true
             cell.shareLabel?.addGestureRecognizer(shareTap)
-           // cell.bringSubviewToFront(cell.shareLabel)
-           // cell.contentView.bringSubviewToFront(cell.shareLabel)
+            // cell.bringSubviewToFront(cell.shareLabel)
+            // cell.contentView.bringSubviewToFront(cell.shareLabel)
             
             let shareTap2 = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
             shareTap2.delegate = self
             cell.shareButton?.tag = indexPath.row
             cell.shareButton?.userInteractionEnabled = true
             cell.shareButton?.addGestureRecognizer(shareTap2)
-           // cell.bringSubviewToFront(cell.shareButton)
-//
+            // cell.bringSubviewToFront(cell.shareButton)
+            //
             
-        //find out if the user has liked the comment or not
-        var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as! String!
-        
-        if(hasLiked == "yes"){
-            cell.heart_icon?.userInteractionEnabled = true
-            cell.heart_icon?.image = UIImage(named: "honey_full.jpg")
+            //find out if the user has liked the comment or not
+            var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as! String!
             
-            let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
-            // 4
-            voteDown.delegate = self
-            cell.heart_icon?.tag = indexPath.row
-            cell.heart_icon?.addGestureRecognizer(voteDown)
-            
-            
-        }
-        else if(hasLiked == "no"){
-            cell.heart_icon?.userInteractionEnabled = true
-            cell.heart_icon?.image = UIImage(named: "honey_empty.jpg")
-            
-            let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
-            // 4
-            voteUp.delegate = self
-            cell.heart_icon?.tag = indexPath.row
-            cell.heart_icon?.addGestureRecognizer(voteUp)
-        }
+            if(hasLiked == "yes"){
+                cell.heart_icon?.userInteractionEnabled = true
+                cell.heart_icon?.image = UIImage(named: "honey_full.jpg")
+                
+                let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
+                // 4
+                voteDown.delegate = self
+                cell.heart_icon?.tag = indexPath.row
+                cell.heart_icon?.addGestureRecognizer(voteDown)
+                
+                
+            }
+            else if(hasLiked == "no"){
+                cell.heart_icon?.userInteractionEnabled = true
+                cell.heart_icon?.image = UIImage(named: "honey_empty.jpg")
+                
+                let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
+                // 4
+                voteUp.delegate = self
+                cell.heart_icon?.tag = indexPath.row
+                cell.heart_icon?.addGestureRecognizer(voteUp)
+            }
             
             
             let voteUp2 = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
@@ -667,12 +525,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     }
                 })
             }
-     
             
             
             
-        
-        return cell
+            
+            
+            return cell
         }
     }
     
@@ -680,176 +538,97 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-
         
-        
-        
-//        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-//        let repView = mainStoryboard.instantiateViewControllerWithIdentifier("comment_reply_id") as CommentReplyViewController
-//        let indCell = tableView.cellForRowAtIndexPath(indexPath)
-//        if(indCell?.tag == 100){
-//            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell_no_images
-//            
-//            repView.sentLocation = currentUserLocation
-//            repView.commentID = gotCell.comment_id
-//            //profView.comment = gotCell.comment_label.text!
-//            // profView.userFBID = gotCell.user_id
-//            
-//            //profView.userName = gotCell.author_label.text!
-//        }
-//        if(indCell?.tag == 200){
-//            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell
-//            
-//            repView.sentLocation = currentUserLocation
-//            repView.commentID = gotCell.comment_id
-//            //profView.comment = gotCell.comment_label.text!
-//            //profView.userFBID = gotCell.user_id
-//            
-//            //profView.userName = gotCell.author_label.text!
-//        }
-//        
-//        
-//        self.presentViewController(repView, animated: true, completion: nil)
-        
-        
-        
-        //
-                let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-                let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
+       
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
         //
         
         
         let indCell = tableView.cellForRowAtIndexPath(indexPath)
         
+        let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("main_view_scene_id") as! ViewController
+        
         if(indCell?.tag == 100){
             let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell_no_images
             
-            comView.sentLocation = currentUserLocation
+            comView.sentLocation = mainView.currentUserLocation
             comView.commentID = gotCell.comment_id
-          //  comView.imgLink = "none2"
-           // comView.comment = gotCell.comment_label.text!
-           // comView.author = gotCell.author_label.text!
-           // comView.authorFBID = gotCell.user_id
-           // comView.locString = gotCell.loc_label.text!
-           // comView.timeString = gotCell.time_label.text!
-            //profView.comment = gotCell.comment_label.text!
-             //comView.userFBID = gotCell.user_id
-            
-            //profView.userName = gotCell.author_label.text!
+   
         }
         if(indCell?.tag == 200){
             let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell
             
-            comView.sentLocation = currentUserLocation
+            comView.sentLocation = mainView.currentUserLocation
             comView.commentID = gotCell.comment_id
-           // comView.imgLink = gotCell.imageLink
-          //  comView.comment = gotCell.comment_label.text!
-          //  comView.author = gotCell.author_label.text!
-          //  comView.authorFBID = gotCell.user_id
-          //  comView.locString = gotCell.loc_label.text!
-          //  comView.timeString = gotCell.time_label.text!
-            //profView.comment = gotCell.comment_label.text!
-            //profView.userFBID = gotCell.user_id
-           // comView.userFBID = gotCell.user_id
-            
-            //profView.userName = gotCell.author_label.text!
+
         }
         
         
         
         self.presentViewController(comView, animated: true, completion: nil)
-        
-        
-//        let indCell = tableView.cellForRowAtIndexPath(indexPath)
-////        
-//        if(indCell?.tag == 100){
-//            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell_no_images
-//       
-//            
-//        }
-//        if(indCell?.tag == 200){
-//        let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell
-//            let urlString = gotCell.urlLink
-//            
-//            UIApplication.sharedApplication().openURL(NSURL(string:urlString)!)
-//        
-//        }
-//        // self.dismissViewControllerAnimated(true, completion: nil)
-//        
-//        self.presentViewController(comView, animated: true, completion: nil)
-        
-    }
+            }
     
-    func scrollViewDidScrollToTop(scrollView: UIScrollView) {
-        isBounce = true
-    }
+
     
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        
-        var currentOffset = scrollView.contentOffset.y;
-        
-        var test = self.oldScrollPost - currentOffset
-        
-        println("SCROLL:\(currentOffset)")
-        println("SIZE:\(scrollView.contentSize.height)")
-        println("FRAME:\(scrollView.frame.height)")
-        if(test >= 0 ){
-            //  animateBarDown()
-        }
-        else{
-            //    animateBarUp()
-            
-        }
+    func parseHTMLString(daString:NSString) -> [NSString]{
         
         
-        self.oldScrollPost = currentOffset
+        println("DA STRING:\(daString)")
+        let detector = NSDataDetector(types: NSTextCheckingType.Link.rawValue, error: nil)
         
-        if(currentOffset > 20 && currentOffset < (scrollView.contentSize.height - scrollView.frame.height - 100)){
-            animateBar(test)
-        }
+        let fakejf = String(daString)
+        //let length = fakejf.utf16Count
+        let length = count(fakejf.utf16)
+        let daString2 = daString as! String
+        // let links = detector?.matchesInString(daString, options: NSMatchingOptions.ReportCompletion, range: NSMakeRange(0, length)).map {$0 as NSTextCheckingResult}
         
-    }
-    
-    func animateBar(byNum: CGFloat){
+        let links = detector?.matchesInString(daString2, options: NSMatchingOptions.ReportCompletion, range: NSMakeRange(0, length)).map {$0 as! NSTextCheckingResult}
         
-        let initVal:CGFloat = -20
-        let maxVal = 0 - self.navBar.frame.height - self.radButton150ft.frame.height*1.8
+        //        var d = daString as StringE
+        //        if (d.containsString("Http://") == true){
+        //            println(daString)
+        //            println("YEAH BUDDY")
+        //        }
         
+        var retString = NSString(string: "none")
+        //
         
-        if(byNum > 0){
-            byNum*2.5
+        return links!.filter { link in
+            return link.URL != nil
+            }.map { link -> NSString in
+                //let urString = String(contentsOfURL: link.URL!)
+                let urString = link.URL!.absoluteString
+                println("DA STRING:\(urString)")
+                retString = urString!
+                return urString!
         }
         
-        topLayoutConstraint.constant = topLayoutConstraint.constant + byNum
-        
-        if(topLayoutConstraint.constant < maxVal){
-            topLayoutConstraint.constant = maxVal
-        }
-        else if(topLayoutConstraint.constant > initVal){
-            topLayoutConstraint.constant = initVal
-        }
-        
-        UIView.animateWithDuration(0.2, delay: 0.0, options: .BeginFromCurrentState, animations: {
-            self.view.layoutIfNeeded()
-            }, completion: nil)
-        
+        // var newString = retString
+        //
+        return [retString]
+        //return "OH YEAH"
     }
 
     
     
     
-    //pragma mark - ajax
-    func loadTopComments(){
+    
+    func loadUserComments(){
         
-        showLoadingScreen()
-        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get2_top_comments")
+        
+         showLoadingScreen()
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_following_comments")
         //START AJAX
         var request = NSMutableURLRequest(URL: url!)
         var session = NSURLSession.sharedSession()
         request.HTTPMethod = "POST"
         
-        var params = ["fbid":savedFBID, "recentLocation":currentUserLocation, "radiusValue":String(radValue)] as Dictionary<String, String>
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = defaults.stringForKey("saved_fb_id") as String!
+    
+        var params = ["gfbid":fbid] as Dictionary<String, String>
         
         var err: NSError?
         request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
@@ -864,25 +643,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
             
             
+            self.removeLoadingScreen()
             // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
             if(err != nil) {
                 println(err!.localizedDescription)
                 let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
                 println("Error could not parse JSON: '\(jsonStr)'")
-                
-                dispatch_async(dispatch_get_main_queue(),{
-                    
-                    
-                    if(self.currentUserLocation == "none"){
-                        self.showErrorMessage("We're having trouble getting your location.", targetString: "loadTopComments")
-                    }
-                    else{
-                        self.showErrorMessage("We're having trouble top comments.", targetString: "loadTopComments")
-                    }
-                    
-                })
-                
-                
             }
             else {
                 // The JSONObjectWithData constructor didn't return an error. But, we should still
@@ -911,80 +677,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         
     }
-    
-    func loadNewComments(){
-        
-        
-        showLoadingScreen()
-        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get2_new_comments")
-        //START AJAX
-        var request = NSMutableURLRequest(URL: url!)
-        var session = NSURLSession.sharedSession()
-        request.HTTPMethod = "POST"
-        
-        var params = ["fbid":savedFBID, "recentLocation":currentUserLocation, "radiusValue":String(radValue)] as Dictionary<String, String>
-        
-        var err: NSError?
-        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
-            println("Response: \(response)")
-            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
-            println("Body: \(strData)")
-            var err: NSError?
-            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
-            
-            
-            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
-            if(err != nil) {
-                println(err!.localizedDescription)
-                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
-                println("Error could not parse JSON: '\(jsonStr)'")
-                
-                dispatch_async(dispatch_get_main_queue(),{
-
-                
-                if(self.currentUserLocation == "none"){
-                    self.showErrorMessage("We're having trouble getting your location.", targetString: "loadNewComments")
-                }
-                else{
-                    self.showErrorMessage("We're having trouble getting new comments.", targetString: "loadNewComments")
-                }
-                    
-            })
-                
-            }
-                    
-            else {
-                // The JSONObjectWithData constructor didn't return an error. But, we should still
-                
-                
-                
-                // check and make sure that json has a value using optional binding.
-                if let parseJSON = json {
-                    
-                    self.theJSON = json
-                    self.hasLoaded = true
-                    self.numOfCells = parseJSON["results"]!.count
-                    
-                    self.reload_table()
-                    
-                }
-                else {
-                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
-                    
-                }
-            }
-        })
-        task.resume()
-        //END AJAX
-        
-        
-        
-    }
-    
     
     
     
@@ -996,7 +688,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             dispatch_async(dispatch_get_main_queue(),{
                 self.tableView.reloadData()
-                self.removeLoadingScreen()
+                // self.removeLoadingScreen()
             })
             
         }
@@ -1004,6 +696,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
+
     
     func showUserProfile(sender: UIGestureRecognizer){
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
@@ -1056,10 +749,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
         
+        let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("main_view_scene_id") as! ViewController
+        
         if(indCell?.tag == 100){
             let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
             
-            likeView.sentLocation = currentUserLocation
+            likeView.sentLocation = mainView.currentUserLocation
             likeView.commentID = gotCell.comment_id
             
             //profView.comment = gotCell.comment_label.text!
@@ -1070,7 +765,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if(indCell?.tag == 200){
             let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
             
-            likeView.sentLocation = currentUserLocation
+            likeView.sentLocation = mainView.currentUserLocation
             likeView.commentID = gotCell.comment_id
             //profView.comment = gotCell.comment_label.text!
             //profView.userFBID = gotCell.user_id
@@ -1092,26 +787,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let repView = mainStoryboard.instantiateViewControllerWithIdentifier("comment_reply_id") as! CommentReplyViewController
         
         var authorLabel:AnyObject
-
+        
         authorLabel = sender.view!
         
         
         let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
         
+        let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("main_view_scene_id") as! ViewController
+        
+        
         if(indCell?.tag == 100){
             let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
             
-            repView.sentLocation = currentUserLocation
+            repView.sentLocation = mainView.currentUserLocation
             repView.commentID = gotCell.comment_id
             //profView.comment = gotCell.comment_label.text!
-           // profView.userFBID = gotCell.user_id
+            // profView.userFBID = gotCell.user_id
             
             //profView.userName = gotCell.author_label.text!
         }
         if(indCell?.tag == 200){
             let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
             
-            repView.sentLocation = currentUserLocation
+            repView.sentLocation = mainView.currentUserLocation
             repView.commentID = gotCell.comment_id
             //profView.comment = gotCell.comment_label.text!
             //profView.userFBID = gotCell.user_id
@@ -1124,58 +822,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
     }
     
-
     
-    func clickComLink(sender: UIGestureRecognizer){
+    func shareComment(sender: UIGestureRecognizer){
+        
+        
+        println("DID PRESS SHARE")
         var sharedButton:AnyObject
+        //        if(sender.view? == UIImageView()){
+        //
+        //          sharedButton = sender.view? as UIImageView
+        //
+        //        }
+        //        else{
+        //            sharedButton = sender.view? as UILabel
+        //        }
         
         sharedButton = sender.view!
         
         
-        let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag, inSection: 0))
-        
-        if(indCell?.tag == 100){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag!, inSection: 0)) as! custom_cell_no_images
-
-            let link = gotCell.urlLink
-
-            UIApplication.sharedApplication().openURL(NSURL(string:link)!)
-        }
-        if(indCell?.tag == 200){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag!, inSection: 0)) as! custom_cell
-            
-            let link = gotCell.urlLink
-            
-            UIApplication.sharedApplication().openURL(NSURL(string:link)!)
-
-        }
-        
-        
-        
-        
-        
-
-        
-    }
-    
-    
-    func shareComment(sender: UIGestureRecognizer){
-
-        
-        println("DID PRESS SHARE")
-        var sharedButton:AnyObject
-//        if(sender.view? == UIImageView()){
-//            
-//          sharedButton = sender.view? as UIImageView
-//            
-//        }
-//        else{
-//            sharedButton = sender.view? as UILabel
-//        }
-        
-       sharedButton = sender.view!
-    
-
         
         let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag, inSection: 0))
         
@@ -1187,14 +851,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             let shareAuth = gotCell.author_label.text as String!
             
             let giveMess = "'\(shareCom)'  @\(shareAuth) \n\n @SoLoCoHive (http://apple.co/1yTV9Fj)"
-
+            
             
             
             
             let objectsToShare = [giveMess]
             
             let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
-            activityVC.popoverPresentationController?.sourceView = self.view
+             activityVC.popoverPresentationController?.sourceView = self.view
             
             //New Excluded Activities Code
             activityVC.excludedActivityTypes = [UIActivityTypeAirDrop,
@@ -1210,7 +874,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         if(indCell?.tag == 200){
             let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag!, inSection: 0)) as! custom_cell
-
+            
             
             let shareCom = gotCell.comment_label.text as String!
             let shareAuth = gotCell.author_label.text as String!
@@ -1220,15 +884,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             let shareImage = gotCell.comImage?.image as UIImage!
             
-                let objectsToShare = [giveMess, shareImage]
+            let objectsToShare = [giveMess, shareImage]
             
             let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
              activityVC.popoverPresentationController?.sourceView = self.view
+            
             //New Excluded Activities Code
             activityVC.excludedActivityTypes = [UIActivityTypeAirDrop,
-                                                    UIActivityTypeAddToReadingList,
-                                                    UIActivityTypePostToTencentWeibo,
-                                                    UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMail,UIActivityTypePostToFlickr,UIActivityTypePostToVimeo,UIActivityTypePostToWeibo,UIActivityTypePrint]
+                UIActivityTypeAddToReadingList,
+                UIActivityTypePostToTencentWeibo,
+                UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMail,UIActivityTypePostToFlickr,UIActivityTypePostToVimeo,UIActivityTypePostToWeibo,UIActivityTypePrint]
             //
             
             self.presentViewController(activityVC, animated: true, completion: nil)
@@ -1238,7 +903,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         
         
-
+        
         
         
     }
@@ -1308,12 +973,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             var testVote = parseJSON["results"]![0]["vote"] as! String!
                             
                             if(testVote == "no"){
-                            cellView.heart_icon?.image = UIImage(named: "honey_empty.jpg")
-                            
-                            //get heart label content as int
-                            var curHVal = cellView.heart_label?.text?.toInt()
-                            //get the heart label
-                            cellView.heart_label?.text = String(curHVal! - 1)
+                                cellView.heart_icon?.image = UIImage(named: "honey_empty.jpg")
+                                
+                                //get heart label content as int
+                                var curHVal = cellView.heart_label?.text?.toInt()
+                                //get the heart label
+                                cellView.heart_label?.text = String(curHVal! - 1)
                             }
                             else if(testVote == "yes"){
                                 cellView.heart_icon.image = UIImage(named: "honey_full.jpg")
@@ -1333,7 +998,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 }
             })
             task.resume()
-
+            
             
             
         }
@@ -1421,100 +1086,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         
     }
-  
     
     
     
     
-    
-    // pragma mark - layout
-
-    func showInstructionsScreen(){
-        let screenSize: CGRect = UIScreen.mainScreen().bounds
-        
-        let color: UIColor = UIColor( red: CGFloat(217.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(217.0/255.0), alpha: CGFloat(0.6) )
-        
-        let w = screenSize.width * 1.0
-        let h = screenSize.height * 1.0
-        
-        let xPos = screenSize.width/2 - w/2
-        let yPos = screenSize.height/2 - h/2
-        
-        let holdView = UIView(frame: CGRect(x: xPos, y: yPos, width: w, height: h))
-        holdView.backgroundColor = color
-        holdView.tag = 2000
-        
-        
-        
-        
-        //holdView.layer.borderWidth=1.0
-        holdView.layer.masksToBounds = false
-       // holdView.layer.borderColor = color
-        //profilePic.layer.cornerRadius = 13
-      //  holdView.layer.cornerRadius = holdView.frame.size.height/10
-        holdView.clipsToBounds = true
-        
-        view.addSubview(holdView)
-        
-        let w2 = w * 0.8
-        let h2 = w2*(4/3)
-        
-        
-        let ins1 = UIImageView(frame: CGRect(x: w/2 - w2/2, y: h/2 - h2/2, width: w2, height: h2))
-        
-        ins1.backgroundColor = UIColor.yellowColor()
-        let removeSelf1 = UITapGestureRecognizer(target: self, action:Selector("removeInsSlide:"))
-        ins1.userInteractionEnabled = true
-        removeSelf1.delegate = self
-        //ins1.tag = indexPath.row
-        ins1.addGestureRecognizer(removeSelf1)
-        
-        
-        
-        
-        
-        let ins2 = UIImageView(frame: CGRect(x: w/2 - w2/2, y: h/2 - h2/2, width: w2, height: h2))
-        
-        ins2.backgroundColor = UIColor.orangeColor()
-        let removeSelf2 = UITapGestureRecognizer(target: self, action:Selector("removeInsSlide:"))
-        ins2.userInteractionEnabled = true
-        removeSelf2.delegate = self
-        //ins1.tag = indexPath.row
-        ins2.addGestureRecognizer(removeSelf2)
-        
-        
-        
-        let ins3 = UIImageView(frame: CGRect(x: w/2 - w2/2, y: h/2 - h2/2, width: w2, height: h2))
-        
-        ins3.backgroundColor = UIColor.redColor()
-        let removeSelf3 = UITapGestureRecognizer(target: self, action:Selector("removeInsSlide:"))
-        ins3.userInteractionEnabled = true
-        removeSelf3.delegate = self
-        ins3.tag = 101
-        ins3.addGestureRecognizer(removeSelf3)
-        
-        
-        holdView.addSubview(ins3)
-        holdView.addSubview(ins2)
-        holdView.addSubview(ins1)
-    }
-    
-    func removeInsSlide(sender: UIGestureRecognizer){
-        var authorLabel:AnyObject
-        
-        authorLabel = sender.view!
-        
-        if(authorLabel.tag == 101){
-            //authorLabel.superviewremoveFromSuperview()
-            authorLabel.superview??.removeFromSuperview()
-        }
-        else{
-            authorLabel.removeFromSuperview()
-        }
-        
-        
-    
-    }
     
     func showLoadingScreen(){
         
@@ -1580,323 +1155,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
         }
     }
-    
-    func showErrorMessage(errorString: NSString, targetString: NSString){
-        
-        removeLoadingScreen()
-        let screenSize: CGRect = UIScreen.mainScreen().bounds
-        
-        let squareSize = screenSize.width * 0.5
-        let xPos = screenSize.width/2 - squareSize/2
-        let yPos = screenSize.height/2 - squareSize/2
-        
-        let holdView = UIView(frame: CGRect(x: xPos, y: yPos, width: squareSize, height: squareSize*1.1))
-        holdView.backgroundColor = UIColor.whiteColor()
-        holdView.tag = 998
-        
-        holdView.layer.borderWidth=1.0
-        holdView.layer.masksToBounds = false
-        holdView.layer.borderColor = UIColor.blackColor().CGColor
-        //profilePic.layer.cornerRadius = 13
-        holdView.layer.cornerRadius = holdView.frame.size.height/10
-        holdView.clipsToBounds = true
-        
-        view.addSubview(holdView)
-        
-        
-        
-        
-        
-        
-        var label = UILabel(frame: CGRectMake(holdView.frame.width*0.1, -0.2*holdView.frame.height, holdView.frame.width*0.8, holdView.frame.height*0.8))
-        label.textAlignment = NSTextAlignment.Center
-        label.text = errorString as? String
-        label.numberOfLines = 0
-        holdView.addSubview(label)
-        
-        
-        let button   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
-        button.frame = CGRectMake(0, holdView.frame.height*0.6, holdView.frame.width, holdView.frame.height*0.2)
-        //button.backgroundColor = UIColor.greenColor()
-        button.setTitle("RETRY", forState: UIControlState.Normal)
-        let s = NSSelectorFromString(targetString as! String)
-        let s2 = NSSelectorFromString("removeErrorScreen")
-        button.addTarget(self, action:s, forControlEvents: UIControlEvents.TouchUpInside)
-        button.addTarget(self, action:s2, forControlEvents: UIControlEvents.TouchUpInside)
-        holdView.addSubview(button)
-   
-    }
+
     
 
-    func removeErrorScreen(){
-       
-        for view in self.view.subviews {
-            if(view.tag == 998){
-                view.removeFromSuperview()
-            }
-        }
-        
-    }
-    
-    @IBAction func showWriteViewController(){
-        
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-        let writeView = mainStoryboard.instantiateViewControllerWithIdentifier("write_comment_scene_id") as! WriteCommentViewController
-        
-        writeView.sentLocation = currentUserLocation
-        
-        
-        // self.dismissViewControllerAnimated(true, completion: nil)
-        
-        self.presentViewController(writeView, animated: true, completion: nil)
-        
-    }
-    
-    
-    func toggleComments(sender: UISegmentedControl) {
-        switch sender.selectedSegmentIndex {
-        case 0:
-            loadNewComments()
-        case 1:
-            loadTopComments()
-        default:
-            loadNewComments()
-        }
-    }
     
     
     
     
     
-    
-    //pragma mark - core location
-    
-    
-    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
-        CLGeocoder().reverseGeocodeLocation(manager.location, completionHandler: { (placemarks, error) -> Void in
-            
-            if (error != nil) {
-                println("Error:" + error.localizedDescription)
-                return
-                
-            }
-            
-            if placemarks.count > 0 {
-                let pm = placemarks[0] as! CLPlacemark
-                //self.displayLocationInfo(pm)
-                
-                self.currentUserLocation = String("\(pm.location.coordinate.latitude), \(pm.location.coordinate.longitude)")
-                //print(pm.location.coordinate.latitude)
-                //print(pm.location.coordinate.longitude)
-                
-                println(self.currentUserLocation)
-                
-            }else {
-                println("Error with data")
-                
-            }
-            
-            
-        })
-    }
-    
-    
-    
-    //pragma mark - location specificying buttons
-    
-    @IBAction func click15ft(){
-        radValue = 1
-        toggleLocButtonLayout()
-        
-        var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Toggle Button", action: "Building", label: "", value: nil).build() as [NSObject : AnyObject])
-        
-        
-    }
-    @IBAction func click150ft(){
-        radValue = 2
-        toggleLocButtonLayout()
-        
-        var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Toggle Button", action: "Nearby", label: "", value: nil).build() as [NSObject : AnyObject])
-        
-    }
-    @IBAction func click15min(){
-        radValue = 3
-        toggleLocButtonLayout()
-        
-        var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Toggle Button", action: "Campus", label: "", value: nil).build() as [NSObject : AnyObject])
-        
-    }
-    
-    func toggleLocButtonLayout(){
-        
-        radButton15ft.backgroundColor = UIColor.clearColor()
-        radButton150ft.backgroundColor = UIColor.clearColor()
-        radButton15min.backgroundColor = UIColor.clearColor()
-        radButton15ft.titleLabel?.textColor = UIColor.whiteColor()
-        radButton150ft.titleLabel?.textColor = UIColor.whiteColor()
-        radButton15min.titleLabel?.textColor = UIColor.whiteColor()
-        
-        
-        
-
-        if(radValue == 1){
-            radButton15ft.titleLabel?.textColor = UIColor.blackColor()
-            radButton15ft.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-            
-        }
-        if(radValue == 2){
-             radButton150ft.titleLabel?.textColor = UIColor.blackColor()
-            radButton150ft.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        }
-        if(radValue == 3){
-             radButton15min.titleLabel?.textColor = UIColor.blackColor()
-            radButton15min.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        }
-        
-        
-        if(customSC.selectedSegmentIndex == 0){
-            loadNewComments()
-        }
-        else if(customSC.selectedSegmentIndex == 1){
-            
-            loadTopComments()
-        }
-    }
-    
-
-    func didPullRefresh(sender:AnyObject)
-    {
-        if(customSC.selectedSegmentIndex == 0){
-            loadNewComments()
-        }
-        else if(customSC.selectedSegmentIndex == 1){
-            
-            loadTopComments()
-        }
-        
-        self.refreshControl.endRefreshing()
-    }
-    
-    
-    func parseHTMLString(daString:NSString) -> [NSString]{
-        
-        
-        println("DA STRING:\(daString)")
-        let detector = NSDataDetector(types: NSTextCheckingType.Link.rawValue, error: nil)
-        
-        let fakejf = String(daString)
-        //let length = fakejf.utf16Count
-        let length = count(fakejf.utf16)
-        let daString2 = daString as! String
-       // let links = detector?.matchesInString(daString, options: NSMatchingOptions.ReportCompletion, range: NSMakeRange(0, length)).map {$0 as NSTextCheckingResult}
-        
-        let links = detector?.matchesInString(daString2, options: NSMatchingOptions.ReportCompletion, range: NSMakeRange(0, length)).map {$0 as! NSTextCheckingResult}
-        
-//        var d = daString as StringE
-//        if (d.containsString("Http://") == true){
-//            println(daString)
-//            println("YEAH BUDDY")
-//        }
-        
-        var retString = NSString(string: "none")
-//        
-
-        return links!.filter { link in
-            return link.URL != nil
-            }.map { link -> NSString in
-                //let urString = String(contentsOfURL: link.URL!)
-                let urString = link.URL!.absoluteString
-                println("DA STRING:\(urString)")
-                retString = urString!
-                return urString!
-        }
-        
-       // var newString = retString
-//        
-        return [retString]
-        //return "OH YEAH"
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    //Give the device token to server to set up APNS (push notifications)
-    
-    func throwDeviceToken(){
-        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_update_user_token")
-        
-        
-        //START AJAX
-        var request = NSMutableURLRequest(URL: url!)
-        var session = NSURLSession.sharedSession()
-        request.HTTPMethod = "POST"
-        
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let dToke = defaults.stringForKey("userDeviceToken")
-        var sToke = "none"
-        
-        if(dToke != nil){
-            sToke = dToke!
-        }
-        
-        println("DEVICE TOKEN:\(sToke)")
-       
-        var params = ["fbid":savedFBID, "token":sToke] as Dictionary<String, String>
-        
-        var err: NSError?
-        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
-            println("Response: \(response)")
-            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
-            println("Body: \(strData)")
-            var err: NSError?
-            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
-            
-            
-            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
-            if(err != nil) {
-                println(err!.localizedDescription)
-                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
-                println("Error could not parse JSON: '\(jsonStr)'")
-                
-
-            }
-            else {
-                // The JSONObjectWithData constructor didn't return an error. But, we should still
-                
-                
-                
-                // check and make sure that json has a value using optional binding.
-                if let parseJSON = json {
-                    
-
-                    
-                }
-                else {
-                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
-                    
-                }
-            }
-        })
-        task.resume()
-        //END AJAX
-        
-
-    }
 
 }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EC0798CD1B14107700507D7F /* LocationPeakViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0798CC1B14107700507D7F /* LocationPeakViewController.swift */; };
+		EC0798CF1B14122800507D7F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC0798CE1B14122800507D7F /* MapKit.framework */; };
 		EC21857D1AAA7E2E00703CF9 /* custom_cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC21857C1AAA7E2E00703CF9 /* custom_cell.swift */; };
 		EC47B86B1ABFDA0A00ADBCC6 /* back1.png in Resources */ = {isa = PBXBuildFile; fileRef = EC47B8691ABFDA0A00ADBCC6 /* back1.png */; };
 		EC47B86C1ABFDA0A00ADBCC6 /* back2.png in Resources */ = {isa = PBXBuildFile; fileRef = EC47B86A1ABFDA0A00ADBCC6 /* back2.png */; };
@@ -46,6 +48,7 @@
 		EC96CF821AE1F083002A3133 /* following.png in Resources */ = {isa = PBXBuildFile; fileRef = EC96CF811AE1F083002A3133 /* following.png */; };
 		EC9986971AABE31F00E0583D /* ThirdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9986961AABE31F00E0583D /* ThirdViewController.swift */; };
 		EC99869D1AABECD300E0583D /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC99869C1AABECD300E0583D /* ProfileViewController.swift */; };
+		EC99A7831B11022F002CED89 /* custom_cell_location.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC99A7821B11022F002CED89 /* custom_cell_location.swift */; };
 		EC9B53BD1AA7ED1500348B31 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9B53BC1AA7ED1500348B31 /* AppDelegate.swift */; };
 		EC9B53C21AA7ED1500348B31 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC9B53C01AA7ED1500348B31 /* Main.storyboard */; };
 		EC9B53C41AA7ED1500348B31 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC9B53C31AA7ED1500348B31 /* Images.xcassets */; };
@@ -97,6 +100,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EC0798CC1B14107700507D7F /* LocationPeakViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPeakViewController.swift; sourceTree = "<group>"; };
+		EC0798CE1B14122800507D7F /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		EC21856F1AAA6D4F00703CF9 /* PMBPostTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PMBPostTableViewCell.h; sourceTree = "<group>"; };
 		EC21857C1AAA7E2E00703CF9 /* custom_cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = custom_cell.swift; sourceTree = "<group>"; };
 		EC47B8691ABFDA0A00ADBCC6 /* back1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = back1.png; sourceTree = "<group>"; };
@@ -148,6 +153,7 @@
 		EC96CF811AE1F083002A3133 /* following.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = following.png; sourceTree = "<group>"; };
 		EC9986961AABE31F00E0583D /* ThirdViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 5; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = "<group>"; };
 		EC99869C1AABECD300E0583D /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		EC99A7821B11022F002CED89 /* custom_cell_location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = custom_cell_location.swift; sourceTree = "<group>"; };
 		EC9B53B71AA7ED1500348B31 /* layout_1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = layout_1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC9B53BB1AA7ED1500348B31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EC9B53BC1AA7ED1500348B31 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -197,6 +203,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC0798CF1B14122800507D7F /* MapKit.framework in Frameworks */,
 				EC47B8851AC4811C00ADBCC6 /* libsqlite3.dylib in Frameworks */,
 				EC47B8831AC4810E00ADBCC6 /* libz.dylib in Frameworks */,
 				EC47B8811AC480FA00ADBCC6 /* SystemConfiguration.framework in Frameworks */,
@@ -283,6 +290,7 @@
 		EC9B53AE1AA7ED1500348B31 = {
 			isa = PBXGroup;
 			children = (
+				EC0798CE1B14122800507D7F /* MapKit.framework */,
 				ECCF39311AD32D0300F8D6EB /* Raleway-Bold.ttf */,
 				ECCF39321AD32D0300F8D6EB /* Raleway-ExtraBold.ttf */,
 				ECCF39331AD32D0300F8D6EB /* Raleway-ExtraLight.ttf */,
@@ -330,6 +338,7 @@
 				EC47B86A1ABFDA0A00ADBCC6 /* back2.png */,
 				EC9B53BC1AA7ED1500348B31 /* AppDelegate.swift */,
 				EC21857C1AAA7E2E00703CF9 /* custom_cell.swift */,
+				EC99A7821B11022F002CED89 /* custom_cell_location.swift */,
 				ECA628C71ABCBE0900B538DA /* custom_cell_no_images.swift */,
 				ECA90EB71AB5445200195A75 /* profile_cell.swift */,
 				ECA90EBD1AB55FFA00195A75 /* user_cell.swift */,
@@ -337,6 +346,7 @@
 				ECF5BDB01AD587D00098DD95 /* notification_cell.swift */,
 				EC21856F1AAA6D4F00703CF9 /* PMBPostTableViewCell.h */,
 				EC9986961AABE31F00E0583D /* ThirdViewController.swift */,
+				EC0798CC1B14107700507D7F /* LocationPeakViewController.swift */,
 				EC9B53C01AA7ED1500348B31 /* Main.storyboard */,
 				EC9B53C31AA7ED1500348B31 /* Images.xcassets */,
 				EC9B53C51AA7ED1500348B31 /* LaunchScreen.xib */,
@@ -533,6 +543,7 @@
 				ECAE3B131AB188F500B5AD65 /* MyProfileViewController.swift in Sources */,
 				EC9C209B1AC4FF2F00811DB7 /* ViewController.swift in Sources */,
 				EC4EDD501AAFF32D006270F3 /* layout_1.xcdatamodeld in Sources */,
+				EC0798CD1B14107700507D7F /* LocationPeakViewController.swift in Sources */,
 				EC9986971AABE31F00E0583D /* ThirdViewController.swift in Sources */,
 				ECA90EB81AB5445200195A75 /* profile_cell.swift in Sources */,
 				ECAE3B171AB2433A00B5AD65 /* Gif.swift in Sources */,
@@ -553,6 +564,7 @@
 				EC4EDD161AAF76D2006270F3 /* WriteCommentViewController.swift in Sources */,
 				EC4EDD1C1AAFF217006270F3 /* data.swift in Sources */,
 				EC9B53BD1AA7ED1500348B31 /* AppDelegate.swift in Sources */,
+				EC99A7831B11022F002CED89 /* custom_cell_location.swift in Sources */,
 				ECA90EBC1AB551B800195A75 /* UserFriendsViewController.swift in Sources */,
 				EC47B86E1AC1360000ADBCC6 /* reply_cell.swift in Sources */,
 			);

@@ -26,16 +26,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var refreshControl:UIRefreshControl!
     
     @IBOutlet var tableView: UITableView!
-    @IBOutlet var customSC: UISegmentedControl!
     
     var navCont: UINavigationController!
     @IBOutlet var navBar: UINavigationBar!
     @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
     var isBounce:Bool! = false
     
-    @IBOutlet var radButton15ft: UIButton!
-    @IBOutlet var radButton150ft: UIButton!
-    @IBOutlet var radButton15min: UIButton!
+
     
     var hasLoaded = false
     var theJSON: NSDictionary!
@@ -70,19 +67,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         println("Saved ID:\(savedFBID)")
         
-        customSC.selectedSegmentIndex = 0
         let font = UIFont(name: "Raleway-Bold", size: 16)
         let attr = NSDictionary(objects: [font!, UIColor.whiteColor()], forKeys: [NSFontAttributeName, NSForegroundColorAttributeName])
         let attr2 = NSDictionary(objects: [font!, UIColor.blackColor()], forKeys: [NSFontAttributeName, NSForegroundColorAttributeName])
-        //let attr = NSDictionary(object: font!, forKey: NSFontAttributeName)
-       // customSC.titleForSegmentAtIndex(0) = "skdfK"
-       // customSC.setTitleTextAttributes = [NSForegroundColorAttributeName: UIColor.blueColor()]
-       customSC.setTitleTextAttributes(attr2 as [NSObject : AnyObject], forState: UIControlState.Normal)
-        customSC.setTitleTextAttributes(attr as [NSObject : AnyObject], forState: UIControlState.Highlighted)
-        //customSC.titleTextAttributesForState(UIControlState.Normal) = attr
-        
-        //let ct1 = customSC.
-      //  customSC.setHe
+
         tableView.estimatedRowHeight = 500.0
         tableView.rowHeight = UITableViewAutomaticDimension
         
@@ -99,16 +87,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         self.refreshControl.addTarget(self, action: "didPullRefresh:", forControlEvents: UIControlEvents.ValueChanged)
         self.tableView.addSubview(refreshControl)
-        
-        
-        //get the top comments in the "THEJSON" var, then reload the table
-        //loadTopComments()
-        
-     //   showLoadingScreen()
-        
-        //set up the segmented control action
-        customSC.addTarget(self, action: "toggleComments:", forControlEvents: .ValueChanged)
-        
+
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW,
             Int64(0.9 * Double(NSEC_PER_SEC)))
@@ -118,7 +97,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             dispatch_async(dispatch_get_main_queue(),{
                // self.tableView.reloadData()
                 //self.removeLoadingScreen()
-                self.click15min()
             })
             
         }
@@ -133,7 +111,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         //give device token to server for apns
         throwDeviceToken()
         
-        
+        loadFakePlaces()
         
         //show instructions screen for first time users
         
@@ -188,7 +166,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     {
         let testImage = theJSON["results"]![indexPath.row]["image"] as! String!
         
-        if(testImage == "none"){
+        let testType = theJSON["results"]![indexPath.row]["type"] as! String!
+        //1 is comment with no image
+        //2 is comment with image
+        //3 islocation summary
+        
+        if(testType == "1"){
             var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell_no_images") as! custom_cell_no_images
             
             
@@ -411,7 +394,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             
         }
-        else{
+        else if(testType == "2"){
         //image
         var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell") as! custom_cell
         
@@ -674,6 +657,83 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         return cell
         }
+        else{
+            var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell_location") as! custom_cell_location
+            
+            
+            
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            
+            cell.separatorInset.left = -10
+            cell.layoutMargins = UIEdgeInsetsZero
+            cell.tag = 300
+            
+            
+            
+//            @IBOutlet var locationLabel: UILabel!
+//            
+//            @IBOutlet var user1NameLabel: UILabel!
+//            @IBOutlet var user2NameLabel: UILabel!
+//            @IBOutlet var user3NameLabel: UILabel!
+//            @IBOutlet var user1Pic:UIImageView!
+//            @IBOutlet var user2Pic:UIImageView!
+//            @IBOutlet var user3Pic:UIImageView!
+//            
+//            
+//            @IBOutlet var locPic1:UIImageView!
+//            @IBOutlet var locPic2:UIImageView!
+//            @IBOutlet var locPic3:UIImageView!
+//            @IBOutlet var locPic4:UIImageView!
+            
+            cell.latLon = theJSON["results"]![indexPath.row]["location"] as! String!
+            cell.locationLabel?.text = theJSON["results"]![indexPath.row]["locationAddress"] as! String!
+            
+            
+            cell.user1NameLabel?.text = theJSON["results"]![indexPath.row]["user1Name"] as! String!
+            let user1FBID = theJSON["results"]![indexPath.row]["user1fb"] as! String!
+            let testUser1Img = "http://graph.facebook.com/\(user1FBID)/picture?type=small"
+            let url1 = NSURL(string: testUser1Img)
+            let data1 = NSData(contentsOfURL: url1!) //make sure your image in this url
+            cell.user1Pic.image = UIImage(data:data1!)
+            
+            
+            cell.user2NameLabel?.text = theJSON["results"]![indexPath.row]["user2Name"] as! String!
+            let user2FBID = theJSON["results"]![indexPath.row]["user2fb"] as! String!
+            let testUser2Img = "http://graph.facebook.com/\(user2FBID)/picture?type=small"
+            let url2 = NSURL(string: testUser2Img)
+            let data2 = NSData(contentsOfURL: url2!) //make sure your image in this url
+            cell.user2Pic.image = UIImage(data:data2!)
+            
+            
+            cell.user3NameLabel?.text = theJSON["results"]![indexPath.row]["user3Name"] as! String!
+            let user3FBID = theJSON["results"]![indexPath.row]["user3fb"] as! String!
+            let testUser3Img = "http://graph.facebook.com/\(user3FBID)/picture?type=small"
+            let url3 = NSURL(string: testUser3Img)
+            let data3 = NSData(contentsOfURL: url3!) //make sure your image in this url
+            cell.user3Pic.image = UIImage(data:data3!)
+            
+            let picLink1 = theJSON["results"]![indexPath.row]["pic1Link"] as! String!
+            let picURL1 = NSURL(string: picLink1)
+            let picData1 = NSData(contentsOfURL: picURL1!)
+            cell.locPic1.image = UIImage(data:picData1!)
+            
+            let picLink2 = theJSON["results"]![indexPath.row]["pic2Link"] as! String!
+            let picURL2 = NSURL(string: picLink2)
+            let picData2 = NSData(contentsOfURL: picURL2!)
+            cell.locPic2.image = UIImage(data:picData2!)
+            
+            let picLink3 = theJSON["results"]![indexPath.row]["pic3Link"] as! String!
+            let picURL3 = NSURL(string: picLink3)
+            let picData3 = NSData(contentsOfURL: picURL3!)
+            cell.locPic3.image = UIImage(data:picData3!)
+            
+            let picLink4 = theJSON["results"]![indexPath.row]["pic4Link"] as! String!
+            let picURL4 = NSURL(string: picLink4)
+            let picData4 = NSData(contentsOfURL: picURL4!)
+            cell.locPic4.image = UIImage(data:picData4!)
+            
+            return cell
+        }
     }
     
     
@@ -714,14 +774,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         
         //
-                let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-                let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
+        
         //
         
         
         let indCell = tableView.cellForRowAtIndexPath(indexPath)
         
         if(indCell?.tag == 100){
+            
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+            let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
+            
             let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell_no_images
             
             comView.sentLocation = currentUserLocation
@@ -736,8 +799,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
              //comView.userFBID = gotCell.user_id
             
             //profView.userName = gotCell.author_label.text!
+            
+            self.presentViewController(comView, animated: true, completion: nil)
         }
         if(indCell?.tag == 200){
+            
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+            let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
+            
             let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell
             
             comView.sentLocation = currentUserLocation
@@ -753,11 +822,28 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
            // comView.userFBID = gotCell.user_id
             
             //profView.userName = gotCell.author_label.text!
+            
+            self.presentViewController(comView, animated: true, completion: nil)
+        }
+        if(indCell?.tag == 300){
+            
+            
+            
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+            let comView = mainStoryboard.instantiateViewControllerWithIdentifier("LocationPeakViewControllerID") as! LocationPeakViewController
+            
+            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell_location
+
+            
+            comView.locationName = gotCell.locationLabel.text!
+            comView.latLon = gotCell.latLon
+            self.presentViewController(comView, animated: true, completion: nil)
         }
         
         
         
-        self.presentViewController(comView, animated: true, completion: nil)
+        
+        
         
         
 //        let indCell = tableView.cellForRowAtIndexPath(indexPath)
@@ -814,7 +900,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func animateBar(byNum: CGFloat){
         
         let initVal:CGFloat = -20
-        let maxVal = 0 - self.navBar.frame.height - self.radButton150ft.frame.height*1.8
+        let maxVal = 0 - self.navBar.frame.height
         
         
         if(byNum > 0){
@@ -840,16 +926,88 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
     //pragma mark - ajax
-    func loadTopComments(){
+    
+    func loadFakePlaces(){
         
-        showLoadingScreen()
-        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get2_top_comments")
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_throw_fake_places")
         //START AJAX
         var request = NSMutableURLRequest(URL: url!)
         var session = NSURLSession.sharedSession()
         request.HTTPMethod = "POST"
         
-        var params = ["fbid":savedFBID, "recentLocation":currentUserLocation, "radiusValue":String(radValue)] as Dictionary<String, String>
+        var params = ["fbid":savedFBID, "recentLocation":currentUserLocation] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+                
+//                dispatch_async(dispatch_get_main_queue(),{
+//                    
+//                    
+//                    if(self.currentUserLocation == "none"){
+//                        self.showErrorMessage("We're having trouble getting your location.", targetString: "loadNewComments")
+//                    }
+//                    else{
+//                        self.showErrorMessage("We're having trouble getting new comments.", targetString: "loadNewComments")
+//                    }
+//                    
+//                })
+                
+            }
+                
+            else {
+                // The JSONObjectWithData constructor didn't return an error. But, we should still
+                
+                
+                
+                // check and make sure that json has a value using optional binding.
+                if let parseJSON = json {
+                    
+                    self.theJSON = json
+                    self.hasLoaded = true
+                    self.numOfCells = parseJSON["results"]!.count
+                    
+                    self.reload_table()
+                    
+                }
+                else {
+                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                    
+                }
+            }
+        })
+        task.resume()
+        //END AJAX
+        
+
+        
+    }
+    func loadAllInfo(){
+        
+        
+        showLoadingScreen()
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_the_feed")
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        var params = ["fbid":savedFBID, "recentLocation":currentUserLocation] as Dictionary<String, String>
         
         var err: NSError?
         request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
@@ -874,16 +1032,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     
                     
                     if(self.currentUserLocation == "none"){
-                        self.showErrorMessage("We're having trouble getting your location.", targetString: "loadTopComments")
+                        self.showErrorMessage("We're having trouble getting your location.", targetString: "loadNewComments")
                     }
                     else{
-                        self.showErrorMessage("We're having trouble top comments.", targetString: "loadTopComments")
+                        self.showErrorMessage("We're having trouble getting new comments.", targetString: "loadNewComments")
                     }
                     
                 })
                 
-                
             }
+                
             else {
                 // The JSONObjectWithData constructor didn't return an error. But, we should still
                 
@@ -911,6 +1069,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         
     }
+    
+    
+
+    
+    
     
     func loadNewComments(){
         
@@ -1654,17 +1817,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
-    func toggleComments(sender: UISegmentedControl) {
-        switch sender.selectedSegmentIndex {
-        case 0:
-            loadNewComments()
-        case 1:
-            loadTopComments()
-        default:
-            loadNewComments()
-        }
-    }
-    
+
     
     
     
@@ -1701,83 +1854,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         })
     }
     
-    
-    
-    //pragma mark - location specificying buttons
-    
-    @IBAction func click15ft(){
-        radValue = 1
-        toggleLocButtonLayout()
-        
-        var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Toggle Button", action: "Building", label: "", value: nil).build() as [NSObject : AnyObject])
-        
-        
-    }
-    @IBAction func click150ft(){
-        radValue = 2
-        toggleLocButtonLayout()
-        
-        var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Toggle Button", action: "Nearby", label: "", value: nil).build() as [NSObject : AnyObject])
-        
-    }
-    @IBAction func click15min(){
-        radValue = 3
-        toggleLocButtonLayout()
-        
-        var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-        tracker.send(GAIDictionaryBuilder.createEventWithCategory("Toggle Button", action: "Campus", label: "", value: nil).build() as [NSObject : AnyObject])
-        
-    }
-    
-    func toggleLocButtonLayout(){
-        
-        radButton15ft.backgroundColor = UIColor.clearColor()
-        radButton150ft.backgroundColor = UIColor.clearColor()
-        radButton15min.backgroundColor = UIColor.clearColor()
-        radButton15ft.titleLabel?.textColor = UIColor.whiteColor()
-        radButton150ft.titleLabel?.textColor = UIColor.whiteColor()
-        radButton15min.titleLabel?.textColor = UIColor.whiteColor()
-        
-        
-        
 
-        if(radValue == 1){
-            radButton15ft.titleLabel?.textColor = UIColor.blackColor()
-            radButton15ft.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-            
-        }
-        if(radValue == 2){
-             radButton150ft.titleLabel?.textColor = UIColor.blackColor()
-            radButton150ft.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        }
-        if(radValue == 3){
-             radButton15min.titleLabel?.textColor = UIColor.blackColor()
-            radButton15min.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        }
-        
-        
-        if(customSC.selectedSegmentIndex == 0){
-            loadNewComments()
-        }
-        else if(customSC.selectedSegmentIndex == 1){
-            
-            loadTopComments()
-        }
-    }
-    
 
     func didPullRefresh(sender:AnyObject)
     {
-        if(customSC.selectedSegmentIndex == 0){
             loadNewComments()
-        }
-        else if(customSC.selectedSegmentIndex == 1){
-            
-            loadTopComments()
-        }
-        
+
         self.refreshControl.endRefreshing()
     }
     

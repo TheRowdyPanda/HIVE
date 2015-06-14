@@ -401,7 +401,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             
             if(hasLiked == "yes"){
                 cell.heart_icon?.userInteractionEnabled = true
-                cell.heart_icon?.image = UIImage(named: "honey_full.jpg")
+                cell.heart_icon?.image = UIImage(named: "heart_full.png")
                 
                 let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
                 // 4
@@ -413,7 +413,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             }
             else if(hasLiked == "no"){
                 cell.heart_icon?.userInteractionEnabled = true
-                cell.heart_icon?.image = UIImage(named: "honey_empty.jpg")
+                cell.heart_icon?.image = UIImage(named: "heart_empty.png")
                 
                 let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
                 // 4
@@ -619,7 +619,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             
             if(hasLiked == "yes"){
                 cell.heart_icon?.userInteractionEnabled = true
-                cell.heart_icon?.image = UIImage(named: "honey_full.jpg")
+                cell.heart_icon?.image = UIImage(named: "heart_full.png")
                 
                 let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
                 // 4
@@ -631,7 +631,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
             }
             else if(hasLiked == "no"){
                 cell.heart_icon?.userInteractionEnabled = true
-                cell.heart_icon?.image = UIImage(named: "honey_empty.jpg")
+                cell.heart_icon?.image = UIImage(named: "heart_empty.png")
                 
                 let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
                 // 4
@@ -1310,7 +1310,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
                             var testVote = parseJSON["results"]![0]["vote"] as! String!
                             
                             if(testVote == "no"){
-                                cellView.heart_icon?.image = UIImage(named: "honey_empty.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "heart_empty.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1318,7 +1318,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
                                 cellView.heart_label?.text = String(curHVal! - 1)
                             }
                             else if(testVote == "yes"){
-                                cellView.heart_icon?.image = UIImage(named: "honey_full.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "heart_full.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1400,7 +1400,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
                             var testVote = parseJSON["results"]![0]["vote"] as! String!
                             
                             if(testVote == "no"){
-                                cellView.heart_icon?.image = UIImage(named: "honey_empty.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "heart_empty.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1408,7 +1408,7 @@ class MyProfileViewController: UIViewController, UITableViewDelegate, UITableVie
                                 cellView.heart_label?.text = String(curHVal! - 1)
                             }
                             else if(testVote == "yes"){
-                                cellView.heart_icon?.image = UIImage(named: "honey_full.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "heart_full.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()

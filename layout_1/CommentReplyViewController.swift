@@ -292,6 +292,7 @@ class CommentReplyViewController: UIViewController, UITableViewDelegate, UITable
     @IBAction func did_hit_reply(){
         //func did_hit_reply(){
         
+        finishedReply()
         if(isLoading == false){
             isLoading = true
         println("Data is: \(self.replyCommentView.text)")

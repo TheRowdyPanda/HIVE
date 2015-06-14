@@ -22,7 +22,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
   
         
         @IBOutlet var profilePic: UIImageView!
-        
+    @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
+    var isBounce:Bool! = false
+    var oldScrollPost:CGFloat = 0.0
         //@IBOutlet var loadingScreen: UIImageView!
         
         @IBOutlet var tableView:UITableView!
@@ -358,7 +360,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 if(hasLiked == "yes"){
                     cell.heart_icon?.userInteractionEnabled = true
-                    cell.heart_icon?.image = UIImage(named: "honey_full.jpg")
+                    cell.heart_icon?.image = UIImage(named: "heart_full.png")
                     
                     let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
                     // 4
@@ -370,7 +372,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
                 else if(hasLiked == "no"){
                     cell.heart_icon?.userInteractionEnabled = true
-                    cell.heart_icon?.image = UIImage(named: "honey_empty.jpg")
+                    cell.heart_icon?.image = UIImage(named: "heart_empty.png")
                     
                     let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
                     // 4
@@ -566,7 +568,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 if(hasLiked == "yes"){
                     cell.heart_icon?.userInteractionEnabled = true
-                    cell.heart_icon?.image = UIImage(named: "honey_full.jpg")
+                    cell.heart_icon?.image = UIImage(named: "heart_full.png")
                     
                     let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
                     // 4
@@ -578,7 +580,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 }
                 else if(hasLiked == "no"){
                     cell.heart_icon?.userInteractionEnabled = true
-                    cell.heart_icon?.image = UIImage(named: "honey_empty.jpg")
+                    cell.heart_icon?.image = UIImage(named: "heart_empty.png")
                     
                     let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
                     // 4
@@ -782,8 +784,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                         
                         
                         dispatch_async(dispatch_get_main_queue(), {
-                            self.locLable!.text = parseJSON["results"]![0]["lastLoc"] as! String! ?? ""
-                            self.timeLabel!.text = parseJSON["results"]![0]["lastTime"] as! String! ?? ""
+                            //self.locLable!.text = parseJSON["results"]![0]["lastLoc"] as! String! ?? ""
+                            self.locLable!.text = "Sherlock's Pub"
+                            //self.timeLabel!.text = parseJSON["results"]![0]["lastTime"] as! String! ?? ""
+                            self.timeLabel!.text = "5 mins ago"
                             self.followersLabel!.text = parseJSON["results"]![0]["followers"] as! String! ?? ""
                             self.followingLabel!.text = parseJSON["results"]![0]["following"] as! String! ?? ""
                             self.numPostLabel!.text = parseJSON["results"]![0]["comments"] as! String! ?? ""
@@ -1264,7 +1268,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                             var testVote = parseJSON["results"]![0]["vote"] as! String!
                             
                             if(testVote == "no"){
-                                cellView.heart_icon?.image = UIImage(named: "honey_empty.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "heart_empty.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1272,7 +1276,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 cellView.heart_label?.text = String(curHVal! - 1)
                             }
                             else if(testVote == "yes"){
-                                cellView.heart_icon?.image = UIImage(named: "honey_full.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "heart_full.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1351,7 +1355,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                             var testVote = parseJSON["results"]![0]["vote"] as! String!
                             
                             if(testVote == "no"){
-                                cellView.heart_icon?.image = UIImage(named: "honey_empty.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "heart_empty.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1359,7 +1363,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 cellView.heart_label?.text = String(curHVal! - 1)
                             }
                             else if(testVote == "yes"){
-                                cellView.heart_icon?.image = UIImage(named: "honey_full.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "heart_full.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1384,8 +1388,62 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     
+    func scrollViewDidScrollToTop(scrollView: UIScrollView) {
+        isBounce = true
+    }
     
-
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        
+        var currentOffset = scrollView.contentOffset.y;
+        
+        var test = self.oldScrollPost - currentOffset
+        
+        println("SCROLL:\(currentOffset)")
+        println("SIZE:\(scrollView.contentSize.height)")
+        println("FRAME:\(scrollView.frame.height)")
+        if(test >= 0 ){
+            //  animateBarDown()
+        }
+        else{
+            //    animateBarUp()
+            
+        }
+        
+        
+        self.oldScrollPost = currentOffset
+        
+        if(currentOffset > 20 && currentOffset < (scrollView.contentSize.height - scrollView.frame.height - 100)){
+            animateBar(test)
+        }
+        
+    }
+    
+    
+    func animateBar(byNum: CGFloat){
+        
+        let initVal:CGFloat = 10
+        let maxVal = 0 - self.profilePic.frame.height - self.followButton.frame.height
+        
+        
+        if(byNum > 0){
+            byNum*2.5
+        }
+        
+        topLayoutConstraint.constant = topLayoutConstraint.constant + byNum
+        
+        if(topLayoutConstraint.constant < maxVal){
+            topLayoutConstraint.constant = maxVal
+        }
+        else if(topLayoutConstraint.constant > initVal){
+            topLayoutConstraint.constant = initVal
+        }
+        
+        UIView.animateWithDuration(0.2, delay: 0.0, options: .BeginFromCurrentState, animations: {
+            self.view.layoutIfNeeded()
+            }, completion: nil)
+        
+    }
     
     func removeLoadingScreen(){
         //self.loadingScreen.alpha = 0.0

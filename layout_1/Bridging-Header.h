@@ -10,6 +10,8 @@
 #define ajax_test_2_Bridging_Header_h
 
 #import <FacebookSDK/FacebookSDK.h>
+#import <FBSDKShareKit/FBSDKShareKit.h>
+#import <Alau.me/AMConnect.h>
 
 #import "GAI.h"
 #import "GAIDictionaryBuilder.h"

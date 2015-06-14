@@ -70,6 +70,8 @@
 		ECB095891ACCA6EA00802E9F /* backIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = ECB095881ACCA6EA00802E9F /* backIcon.png */; };
 		ECB0958B1ACCEB3400802E9F /* CommentLikersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB0958A1ACCEB3400802E9F /* CommentLikersViewController.swift */; };
 		ECB0958D1ACD0BA300802E9F /* CommentReplyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB0958C1ACD0BA300802E9F /* CommentReplyViewController.swift */; };
+		ECBAAFDA1B1BB4FD00A3F661 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECBAAFD91B1BB4FD00A3F661 /* FBSDKShareKit.framework */; };
+		ECBAAFDC1B1BB93B00A3F661 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECBAAFDB1B1BB93B00A3F661 /* FBSDKCoreKit.framework */; };
 		ECC0B98F1AD3BE6C00B21BD0 /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC0B98E1AD3BE6C00B21BD0 /* NotificationsViewController.swift */; };
 		ECCBD1271ACE4E2F005C0495 /* loginScreen.png in Resources */ = {isa = PBXBuildFile; fileRef = ECCBD1261ACE4E2F005C0495 /* loginScreen.png */; };
 		ECCF393A1AD32D0300F8D6EB /* Raleway-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39311AD32D0300F8D6EB /* Raleway-Bold.ttf */; };
@@ -81,6 +83,11 @@
 		ECCF39401AD32D0300F8D6EB /* Raleway-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39371AD32D0300F8D6EB /* Raleway-Regular.ttf */; };
 		ECCF39411AD32D0300F8D6EB /* Raleway-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39381AD32D0300F8D6EB /* Raleway-SemiBold.ttf */; };
 		ECCF39421AD32D0300F8D6EB /* Raleway-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39391AD32D0300F8D6EB /* Raleway-Thin.ttf */; };
+		ECDF21CF1B269084009BBC07 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECDF21CE1B269084009BBC07 /* Security.framework */; };
+		ECDF21D51B2693F2009BBC07 /* Alau.me.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECDF21D41B2693F2009BBC07 /* Alau.me.framework */; };
+		ECF3C0161B2D5F7C00C70CE5 /* shareButton.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF3C0151B2D5F7C00C70CE5 /* shareButton.png */; };
+		ECF3C0191B2D616700C70CE5 /* heart_full.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF3C0171B2D616700C70CE5 /* heart_full.png */; };
+		ECF3C01A1B2D616700C70CE5 /* heart_empty.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF3C0181B2D616700C70CE5 /* heart_empty.png */; };
 		ECF5BDAD1AD581320098DD95 /* comment_tab_button.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF5BDAC1AD581320098DD95 /* comment_tab_button.png */; };
 		ECF5BDAF1AD582F10098DD95 /* Like_tab_button.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF5BDAE1AD582F10098DD95 /* Like_tab_button.png */; };
 		ECF5BDB11AD587D00098DD95 /* notification_cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF5BDB01AD587D00098DD95 /* notification_cell.swift */; };
@@ -179,6 +186,8 @@
 		ECB095881ACCA6EA00802E9F /* backIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backIcon.png; sourceTree = "<group>"; };
 		ECB0958A1ACCEB3400802E9F /* CommentLikersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentLikersViewController.swift; sourceTree = "<group>"; };
 		ECB0958C1ACD0BA300802E9F /* CommentReplyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentReplyViewController.swift; sourceTree = "<group>"; };
+		ECBAAFD91B1BB4FD00A3F661 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../../Documents/FacebookSDK/FBSDKShareKit.framework; sourceTree = "<group>"; };
+		ECBAAFDB1B1BB93B00A3F661 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		ECC0B98E1AD3BE6C00B21BD0 /* NotificationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
 		ECCBD1261ACE4E2F005C0495 /* loginScreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loginScreen.png; sourceTree = "<group>"; };
 		ECCF39311AD32D0300F8D6EB /* Raleway-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-Bold.ttf"; path = "layout_1/Raleway/Raleway-Bold.ttf"; sourceTree = "<group>"; };
@@ -190,6 +199,11 @@
 		ECCF39371AD32D0300F8D6EB /* Raleway-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-Regular.ttf"; path = "layout_1/Raleway/Raleway-Regular.ttf"; sourceTree = "<group>"; };
 		ECCF39381AD32D0300F8D6EB /* Raleway-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-SemiBold.ttf"; path = "layout_1/Raleway/Raleway-SemiBold.ttf"; sourceTree = "<group>"; };
 		ECCF39391AD32D0300F8D6EB /* Raleway-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-Thin.ttf"; path = "layout_1/Raleway/Raleway-Thin.ttf"; sourceTree = "<group>"; };
+		ECDF21CE1B269084009BBC07 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		ECDF21D41B2693F2009BBC07 /* Alau.me.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alau.me.framework; sourceTree = "<group>"; };
+		ECF3C0151B2D5F7C00C70CE5 /* shareButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shareButton.png; sourceTree = "<group>"; };
+		ECF3C0171B2D616700C70CE5 /* heart_full.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart_full.png; sourceTree = "<group>"; };
+		ECF3C0181B2D616700C70CE5 /* heart_empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart_empty.png; sourceTree = "<group>"; };
 		ECF5BDAC1AD581320098DD95 /* comment_tab_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = comment_tab_button.png; sourceTree = "<group>"; };
 		ECF5BDAE1AD582F10098DD95 /* Like_tab_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Like_tab_button.png; sourceTree = "<group>"; };
 		ECF5BDB01AD587D00098DD95 /* notification_cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = notification_cell.swift; sourceTree = "<group>"; };
@@ -203,13 +217,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ECDF21CF1B269084009BBC07 /* Security.framework in Frameworks */,
+				ECBAAFDA1B1BB4FD00A3F661 /* FBSDKShareKit.framework in Frameworks */,
 				EC0798CF1B14122800507D7F /* MapKit.framework in Frameworks */,
 				EC47B8851AC4811C00ADBCC6 /* libsqlite3.dylib in Frameworks */,
 				EC47B8831AC4810E00ADBCC6 /* libz.dylib in Frameworks */,
 				EC47B8811AC480FA00ADBCC6 /* SystemConfiguration.framework in Frameworks */,
 				EC47B87F1AC480F300ADBCC6 /* CoreData.framework in Frameworks */,
 				EC47B87D1AC480EA00ADBCC6 /* libGoogleAnalyticsServices.a in Frameworks */,
+				ECBAAFDC1B1BB93B00A3F661 /* FBSDKCoreKit.framework in Frameworks */,
 				EC4EDD591AB012E6006270F3 /* FacebookSDK.framework in Frameworks */,
+				ECDF21D51B2693F2009BBC07 /* Alau.me.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,6 +261,9 @@
 		EC4EDD571AB012DB006270F3 /* frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				ECBAAFDB1B1BB93B00A3F661 /* FBSDKCoreKit.framework */,
+				ECDF21D41B2693F2009BBC07 /* Alau.me.framework */,
+				ECBAAFD91B1BB4FD00A3F661 /* FBSDKShareKit.framework */,
 				EC47B8711AC47E8D00ADBCC6 /* Google header files */,
 				EC4EDD581AB012E6006270F3 /* FacebookSDK.framework */,
 			);
@@ -252,6 +273,8 @@
 		EC81397B1AC9DA5A00985BC5 /* icons */ = {
 			isa = PBXGroup;
 			children = (
+				ECF3C0171B2D616700C70CE5 /* heart_full.png */,
+				ECF3C0181B2D616700C70CE5 /* heart_empty.png */,
 				ECCBD1261ACE4E2F005C0495 /* loginScreen.png */,
 				EC81397C1AC9DA9700985BC5 /* Camera Roll.png */,
 				EC8B8AE81ACF5527002AD793 /* logo.png */,
@@ -272,6 +295,7 @@
 				EC8139851AC9DA9700985BC5 /* Me_Active.png */,
 				EC8139861AC9DA9700985BC5 /* Me.png */,
 				EC8139871AC9DA9700985BC5 /* Photo.png */,
+				ECF3C0151B2D5F7C00C70CE5 /* shareButton.png */,
 				EC8139881AC9DA9700985BC5 /* Share.png */,
 				EC8139891AC9DA9700985BC5 /* Time.png */,
 				EC81398A1AC9DA9700985BC5 /* Unfollow.png */,
@@ -290,6 +314,7 @@
 		EC9B53AE1AA7ED1500348B31 = {
 			isa = PBXGroup;
 			children = (
+				ECDF21CE1B269084009BBC07 /* Security.framework */,
 				EC0798CE1B14122800507D7F /* MapKit.framework */,
 				ECCF39311AD32D0300F8D6EB /* Raleway-Bold.ttf */,
 				ECCF39321AD32D0300F8D6EB /* Raleway-ExtraBold.ttf */,
@@ -483,6 +508,7 @@
 				ECCF393B1AD32D0300F8D6EB /* Raleway-ExtraBold.ttf in Resources */,
 				ECCF393C1AD32D0300F8D6EB /* Raleway-ExtraLight.ttf in Resources */,
 				ECCF393D1AD32D0300F8D6EB /* Raleway-Heavy.ttf in Resources */,
+				ECF3C0191B2D616700C70CE5 /* heart_full.png in Resources */,
 				ECCF393E1AD32D0300F8D6EB /* Raleway-Light.ttf in Resources */,
 				ECCF393F1AD32D0300F8D6EB /* Raleway-Medium.ttf in Resources */,
 				ECF5BDAF1AD582F10098DD95 /* Like_tab_button.png in Resources */,
@@ -497,6 +523,7 @@
 				EC81398E1AC9DA9700985BC5 /* Feed_Active.png in Resources */,
 				EC8B8AEB1ACF5624002AD793 /* appIcons in Resources */,
 				EC81398B1AC9DA9700985BC5 /* Camera Roll.png in Resources */,
+				ECF3C01A1B2D616700C70CE5 /* heart_empty.png in Resources */,
 				EC9B53C21AA7ED1500348B31 /* Main.storyboard in Resources */,
 				EC4EDD1A1AAFA56E006270F3 /* honey_empty.jpg in Resources */,
 				EC8139931AC9DA9700985BC5 /* Location.png in Resources */,
@@ -517,6 +544,7 @@
 				EC8139981AC9DA9700985BC5 /* Time.png in Resources */,
 				EC81398C1AC9DA9700985BC5 /* Comment.png in Resources */,
 				EC8139991AC9DA9700985BC5 /* Unfollow.png in Resources */,
+				ECF3C0161B2D5F7C00C70CE5 /* shareButton.png in Resources */,
 				EC96CF821AE1F083002A3133 /* following.png in Resources */,
 				EC81398F1AC9DA9700985BC5 /* Feed.png in Resources */,
 				EC8139971AC9DA9700985BC5 /* Share.png in Resources */,
@@ -612,6 +640,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -626,7 +655,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -646,6 +675,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "047f2983-ce6a-4d4b-b496-66114878a954";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -656,6 +686,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -670,7 +701,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -683,6 +714,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "047f2983-ce6a-4d4b-b496-66114878a954";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -693,12 +725,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_STATIC_ANALYZER_MODE_ON_ANALYZE_ACTION = shallow;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/rijulgupta/Documents/FacebookSDK,
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = layout_1/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -707,6 +741,7 @@
 					"$(inherited)",
 					/Users/rijulgupta/Downloads/GoogleAnalyticsServicesiOS_3.10,
 				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "layout_1/Bridging-Header.h";
@@ -718,12 +753,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_STATIC_ANALYZER_MODE_ON_ANALYZE_ACTION = shallow;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/rijulgupta/Documents/FacebookSDK,
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = layout_1/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -732,6 +769,7 @@
 					"$(inherited)",
 					/Users/rijulgupta/Downloads/GoogleAnalyticsServicesiOS_3.10,
 				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "layout_1/Bridging-Header.h";

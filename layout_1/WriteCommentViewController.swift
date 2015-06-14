@@ -162,7 +162,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         let image = info[UIImagePickerControllerEditedImage] as? UIImage
         
         
-        savedImage = imageWithImage(image!, scaledToSize: CGSizeMake(400, 400))
+        savedImage = imageWithImage(image!, scaledToSize: CGSizeMake(300, 300))
 
         oimageView.image = savedImage
         hasImage = true
@@ -433,7 +433,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         //var image : UIImage = UIImage(named:"laptop-classroom-1.jpg")!
         //let image = info[UIImagePickerControllerOriginalImage] as? UIImage
         let image = self.savedImage// self.sendImg
-        var imageData: NSData = UIImageJPEGRepresentation(image, 0.57)
+        var imageData: NSData = UIImageJPEGRepresentation(image, 0.50)
         
         var requestBody: NSMutableData = NSMutableData()
         

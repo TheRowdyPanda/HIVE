@@ -74,7 +74,7 @@ class custom_cell: UITableViewCell{
         userImage.layer.masksToBounds = false
        // postLabelHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
         
-        userImage.layer.cornerRadius = userImage.layer.frame.width
+        userImage.layer.cornerRadius = userImage.layer.frame.width/2
         userImage.clipsToBounds = true
 
         
@@ -83,9 +83,9 @@ class custom_cell: UITableViewCell{
         
         let color: UIColor = UIColor( red: CGFloat(51.0/255.0), green: CGFloat(51.0/255.0), blue: CGFloat(51.0/255.0), alpha: CGFloat(0.2) )
         
-        buttonHolder.layer.borderWidth=1.0
-        buttonHolder.layer.masksToBounds = false
-        buttonHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
+//        buttonHolder.layer.borderWidth=1.0
+//        buttonHolder.layer.masksToBounds = false
+//        buttonHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
         
     }
 //    

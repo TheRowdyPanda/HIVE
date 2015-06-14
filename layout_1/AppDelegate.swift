@@ -43,6 +43,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
        // let settings = UIUserNotificationSettings(forTypes: notificationType, categories: nil)
        // application.registerUserNotificationSettings(settings)
         
+        let alaume = AMConnect.sharedInstance()
+        
+        
+        // For debugging purposes only
+        alaume.isLoggingEnabled = true
+        
+        alaume.initializeWithAppId("s9", apiKey: "fff5a48b7c7e4999b7a5691d7458eed7")
+        
+        
         return true
     }
 

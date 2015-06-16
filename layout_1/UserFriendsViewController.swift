@@ -52,6 +52,14 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
         
     }
     
+    override func viewDidLayoutSubviews() {
+        let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
+        self.tableView.separatorColor = color
+        //self.tableView.separatorStyle
+        self.tableView.separatorInset.left = 0
+        self.tableView.layoutMargins = UIEdgeInsetsZero
+    }
+    
     override func viewDidAppear(animated: Bool) {
         println(ajaxRequestString)
         println(userFBID)
@@ -257,6 +265,7 @@ class UserFriendsViewController: UIViewController, UITableViewDelegate, UITableV
 
         
     }
+
     
     func get_user_following(){
         

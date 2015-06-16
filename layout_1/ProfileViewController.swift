@@ -45,7 +45,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         var imageCache = [String : UIImage]()
         var userImageCache = [String: UIImage]()
-        
+    
+    var voterCache = [Int : String]()
+    var voterValueCache = [Int : String]()
         //let transportItems = ["Bus","Helicopter","Truck","Boat","Bicycle","Motorcycle","Plane","Train","Car","Scooter","Caravan"]
         
         let leftHandItems: [String] = ["","Last Check In", "Posts", "Followers", "Following"]
@@ -219,7 +221,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
                 cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
                 cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
-                cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as! String!
+                cell.heart_label?.text = voterValueCache[indexPath.row] as String!
                 cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as! String!
                 cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as! String!
                 
@@ -306,9 +308,12 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
                 likersTap.delegate = self
-                cell.likerButtonLabel?.tag = indexPath.row
-                cell.likerButtonLabel?.userInteractionEnabled = true
-                cell.likerButtonLabel?.addGestureRecognizer(likersTap)
+                //            cell.likerButtonLabel?.tag = indexPath.row
+                //            cell.likerButtonLabel?.userInteractionEnabled = true
+                //            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
+                cell.heart_label?.tag = indexPath.row
+                cell.heart_label?.userInteractionEnabled = true
+                cell.heart_label?.addGestureRecognizer(likersTap)
                 
                 
                 
@@ -356,7 +361,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 //
                 
                 //find out if the user has liked the comment or not
-                var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as! String!
+                var hasLiked = voterCache[indexPath.row] as String!
                 
                 if(hasLiked == "yes"){
                     cell.heart_icon?.userInteractionEnabled = true
@@ -386,11 +391,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 voteUp2.delegate = self
                 cell.likerButtonHolder?.tag = indexPath.row
                 cell.likerButtonHolder?.addGestureRecognizer(voteUp2)
-                
-                
-                
-                
-                
+       
                 
                 return cell
                 
@@ -416,7 +417,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
                 cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
                 cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
-                cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as! String!
+                cell.heart_label?.text = voterValueCache[indexPath.row] as String!
                 cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as! String!
                 
                 cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as! String!
@@ -514,9 +515,12 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
                 likersTap.delegate = self
-                cell.likerButtonLabel?.tag = indexPath.row
-                cell.likerButtonLabel?.userInteractionEnabled = true
-                cell.likerButtonLabel?.addGestureRecognizer(likersTap)
+                //            cell.likerButtonLabel?.tag = indexPath.row
+                //            cell.likerButtonLabel?.userInteractionEnabled = true
+                //            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
+                cell.heart_label?.tag = indexPath.row
+                cell.heart_label?.userInteractionEnabled = true
+                cell.heart_label?.addGestureRecognizer(likersTap)
                 
                 
                 
@@ -564,7 +568,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 //
                 
                 //find out if the user has liked the comment or not
-                var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as! String!
+                var hasLiked = voterCache[indexPath.row] as String!
                 
                 if(hasLiked == "yes"){
                     cell.heart_icon?.userInteractionEnabled = true
@@ -594,6 +598,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 voteUp2.delegate = self
                 cell.likerButtonHolder?.tag = indexPath.row
                 cell.likerButtonHolder?.addGestureRecognizer(voteUp2)
+                
+                
+                let focusImage = UITapGestureRecognizer(target: self, action:Selector("showImageFullscreen:"))
+                focusImage.delegate = self
+                cell.comImage.userInteractionEnabled = true
+                cell.comImage?.tag = indexPath.row
+                cell.comImage?.addGestureRecognizer(focusImage)
                 
                 //give a loading gif to UI
                 var urlgif = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
@@ -939,6 +950,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                     if let parseJSON = json {
                         
                         self.theJSON = json
+                        self.writeVoterCache()
                         self.hasLoaded = true
                         self.numOfCells = parseJSON["results"]!.count
                         
@@ -958,7 +970,20 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             
         }
         
+    
+    func writeVoterCache(){
         
+        let finNum = (theJSON["results"]!.count - 1)
+        
+        if(finNum >= 0){
+            
+            for index in 0...finNum{
+                self.voterCache[index] = theJSON["results"]![index]["has_liked"] as? String
+                self.voterValueCache[index] = theJSON["results"]![index]["hearts"] as? String
+            }
+        }
+        
+    }
         
     func reload_table(){
         let delayTime = dispatch_time(DISPATCH_TIME_NOW,
@@ -1061,6 +1086,38 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
 
     
+    func showImageFullscreen(sender: UIGestureRecognizer){
+        println("Presenting Likers, ya heard.")
+        
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+        let imView = mainStoryboard.instantiateViewControllerWithIdentifier("Image_focus_controller") as! ImageFocusController
+        
+        var daLink = "none"
+        
+        var authorLabel:AnyObject
+        
+        authorLabel = sender.view!
+        
+        
+        let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
+        
+        if(indCell?.tag == 100){
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
+            
+        }
+        if(indCell?.tag == 200){
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
+            
+            daLink = gotCell.imageLink
+        }
+        
+        imView.imageLink = daLink
+        
+        self.presentViewController(imView, animated: true, completion: nil)
+        
+    }
+
     
     func showLikers(sender: UIGestureRecognizer){
         
@@ -1204,9 +1261,14 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     
     func toggleCommentVote(sender:UIGestureRecognizer){
+        //get the attached sender imageview
+        
         var heartImage:AnyObject
         
         heartImage = sender.view!
+        
+        //var heartImage = sender.view? as UIImageView
+        //get the main view
         
         var indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0))
         
@@ -1227,12 +1289,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             request.HTTPMethod = "POST"
             
             let defaults = NSUserDefaults.standardUserDefaults()
-            var fbid = defaults.stringForKey("saved_fb_id") as String!
-            
-            
-            
-            var params = ["fbid":fbid, "comment_id":String(cID)] as Dictionary<String, String>
-            
+            let savedFBID = defaults.stringForKey("saved_fb_id") as String!
+            var params = ["fbid":savedFBID, "comment_id":String(cID)] as Dictionary<String, String>
             
             var err: NSError?
             request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
@@ -1273,15 +1331,21 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
                                 //get the heart label
+                                self.voterValueCache[heartImage.tag] = String(curHVal! - 1)
                                 cellView.heart_label?.text = String(curHVal! - 1)
+                                //self.theJSON["results"]![100]["has_liked"] = "no" as AnyObject!?
+                                self.voterCache[heartImage.tag] = "no"
                             }
                             else if(testVote == "yes"){
-                                cellView.heart_icon?.image = UIImage(named: "heart_full.png")
+                                cellView.heart_icon.image = UIImage(named: "heart_full.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
                                 //get the heart label
+                                self.voterValueCache[heartImage.tag] = String(curHVal! + 1)
                                 cellView.heart_label?.text = String(curHVal! + 1)
+                                self.voterCache[heartImage.tag] = "yes"
+                                // self.theJSON["results"]![heartImage.tag]["has_liked"] = "yes" as [AnyObject]
                             }
                         })
                         
@@ -1314,12 +1378,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             var session = NSURLSession.sharedSession()
             request.HTTPMethod = "POST"
             
+            
             let defaults = NSUserDefaults.standardUserDefaults()
-            var fbid = defaults.stringForKey("saved_fb_id") as String!
-            
-            
-            
-            var params = ["fbid":fbid, "comment_id":String(cID)] as Dictionary<String, String>
+            let savedFBID = defaults.stringForKey("saved_fb_id") as String!
+            var params = ["fbid":savedFBID, "comment_id":String(cID)] as Dictionary<String, String>
             
             var err: NSError?
             request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
@@ -1360,7 +1422,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
                                 //get the heart label
+                                self.voterValueCache[heartImage.tag] = String(curHVal! - 1)
                                 cellView.heart_label?.text = String(curHVal! - 1)
+                                //save the new vote value in our array
+                                self.voterCache[heartImage.tag] = "no"
                             }
                             else if(testVote == "yes"){
                                 cellView.heart_icon?.image = UIImage(named: "heart_full.png")
@@ -1368,7 +1433,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
                                 //get the heart label
+                                self.voterValueCache[heartImage.tag] = String(curHVal! + 1)
                                 cellView.heart_label?.text = String(curHVal! + 1)
+                                self.voterCache[heartImage.tag] = "yes"
                             }
                         })
                         
@@ -1423,8 +1490,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     func animateBar(byNum: CGFloat){
         
         let initVal:CGFloat = 10
-        let maxVal = 0 - self.profilePic.frame.height - self.followButton.frame.height
-        
+        //let maxVal = 0 - self.profilePic.frame.height - self.followButton.frame.height
+        let maxVal = 0 - self.profilePic.frame.height - self.postLabelHolder.frame.height - 20
         
         if(byNum > 0){
             byNum*2.5
@@ -1532,7 +1599,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
 
-    
+ 
     
     
 }

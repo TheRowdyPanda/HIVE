@@ -22,6 +22,9 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
     var theJSON: NSDictionary!
     var imageCache = [String : UIImage]()
     var numOfCells = 0
+    
+    var voterCache = [Int : String]()
+    var voterValueCache = [Int : String]()
 
    // var currentUserLocation = "none"
     
@@ -95,7 +98,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
             cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
             cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
             cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
-            cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as! String!
+            cell.heart_label?.text = voterValueCache[indexPath.row] as String!
             cell.user_id = theJSON["results"]![indexPath.row]["user_id"] as! String!
             
             
@@ -110,7 +113,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
             
             
             //find out if the user has liked the comment or not
-            var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as! String!
+            var hasLiked = voterCache[indexPath.row] as String!
             
             if(hasLiked == "yes"){
                 cell.heart_icon?.userInteractionEnabled = true
@@ -148,7 +151,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
             cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
             cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
             cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
-            cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as! String!
+            cell.heart_label?.text = voterValueCache[indexPath.row] as String!
             cell.user_id = theJSON["results"]![indexPath.row]["user_id"] as! String!
             cell.imageLink = testImage
             if(testImage == "none"){
@@ -221,7 +224,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
             
             
             //find out if the user has liked the comment or not
-            var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as! String!
+            var hasLiked = voterCache[indexPath.row] as String!
             
             if(hasLiked == "yes"){
                 cell.heart_icon?.userInteractionEnabled = true
@@ -370,7 +373,7 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
                 if let parseJSON = json {
                     
                     self.theJSON = json
-                    
+                    self.writeVoterCache()
                     self.hasLoaded = true
                     self.numOfCells = parseJSON["results"]!.count
                     
@@ -390,141 +393,207 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
         
     }
     
+    func writeVoterCache(){
+        
+        let finNum = (theJSON["results"]!.count - 1)
+        
+        if(finNum >= 0){
+            
+            for index in 0...finNum{
+                self.voterCache[index] = theJSON["results"]![index]["has_liked"] as? String
+                self.voterValueCache[index] = theJSON["results"]![index]["hearts"] as? String
+            }
+        }
+        
+    }
     
-    func toggleCommentVote(sender: UIGestureRecognizer){
+    
+    func toggleCommentVote(sender:UIGestureRecognizer){
         //get the attached sender imageview
-        var heartImage = sender.view as! UIImageView
+        
+        var heartImage:AnyObject
+        
+        heartImage = sender.view!
+        
+        //var heartImage = sender.view? as UIImageView
         //get the main view
         
-        //var cellView = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as custom_cell
+        var indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0))
         
-        
-        var gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0))
-        
-        //get the cell comment id. Send this to ajax request
-        // var cID = cellView.comment_id
-        var cID:String = "none"
-        
-        if(gotCell?.tag == 100){
-            let gotCell2 = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell_no_images
-            cID = gotCell2.comment_id
-        }
-        else if(gotCell?.tag == 200){
-            let gotCell2 = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell
-            cID = gotCell2.comment_id
+        if(indCell?.tag == 100){
             
-        }
-        
-        
-        
-        
-        
-        
-        
-        
-        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_toggle_comment_vote")
-        //START AJAX
-        var request = NSMutableURLRequest(URL: url!)
-        var session = NSURLSession.sharedSession()
-        request.HTTPMethod = "POST"
-        
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let savedFBID = defaults.stringForKey("saved_fb_id")!
-        
-        var params = ["fbid":savedFBID, "comment_id":String(cID)] as Dictionary<String, String>
-        
-        var err: NSError?
-        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
-            println("Response: \(response)")
-            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
-            println("Body: \(strData)")
+            var cellView = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell_no_images
+            
+            var cID = cellView.comment_id
+            
+            
+            
+            
+            
+            let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_toggle_comment_vote")
+            //START AJAX
+            var request = NSMutableURLRequest(URL: url!)
+            var session = NSURLSession.sharedSession()
+            request.HTTPMethod = "POST"
+            
+            var params = ["fbid":userFBID, "comment_id":String(cID)] as Dictionary<String, String>
+            
             var err: NSError?
-            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
             
-            
-            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
-            if(err != nil) {
-                println(err!.localizedDescription)
-                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
-                println("Error could not parse JSON: '\(jsonStr)'")
-            }
-            else {
-                // The JSONObjectWithData constructor didn't return an error. But, we should still
+            var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+                println("Response: \(response)")
+                var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Body: \(strData)")
+                var err: NSError?
+                var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
                 
                 
-                
-                // check and make sure that json has a value using optional binding.
-                if let parseJSON = json {
-                    dispatch_async(dispatch_get_main_queue(),{
-                        //change the heart image
-                        
-                        let voteIsNow = parseJSON["results"]![0]["vote"] as! String!
-                        
-                        if(voteIsNow == "no")
-                        {
-                            
-                            heartImage.image = UIImage(named: "honey_empty.jpg")
-                            
-                            if(gotCell?.tag == 100){
-                                let gotCell2 = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell_no_images
-                                
-                                //get heart label content as int
-                                var curHVal = gotCell2.heart_label?.text?.toInt()
-                                //get the heart label
-                                gotCell2.heart_label?.text = String(curHVal! - 1)
-                            }
-                            else if(gotCell?.tag == 200){
-                                let gotCell2 = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell
-                                
-                                //get heart label content as int
-                                var curHVal = gotCell2.heart_label?.text?.toInt()
-                                //get the heart label
-                                gotCell2.heart_label?.text = String(curHVal! - 1)
-                                
-                            }
-                            
-                            
-                            
-                        }
-                        if(voteIsNow == "yes"){
-                            
-                            heartImage.image = UIImage(named: "honey_full.jpg")
-                            
-                            if(gotCell?.tag == 100){
-                                let gotCell2 = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell_no_images
-                                
-                                //get heart label content as int
-                                var curHVal = gotCell2.heart_label?.text?.toInt()
-                                //get the heart label
-                                gotCell2.heart_label?.text = String(curHVal! + 1)
-                            }
-                            else if(gotCell?.tag == 200){
-                                let gotCell2 = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell
-                                
-                                //get heart label content as int
-                                var curHVal = gotCell2.heart_label?.text?.toInt()
-                                //get the heart label
-                                gotCell2.heart_label?.text = String(curHVal! + 1)
-                                
-                            }
-                        }
-                    })
-                    
+                // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+                if(err != nil) {
+                    println(err!.localizedDescription)
+                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                    println("Error could not parse JSON: '\(jsonStr)'")
                 }
                 else {
-                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                    // The JSONObjectWithData constructor didn't return an error. But, we should still
                     
+                    
+                    
+                    // check and make sure that json has a value using optional binding.
+                    if let parseJSON = json {
+                        dispatch_async(dispatch_get_main_queue(),{
+                            //change the heart image
+                            
+                            
+                            
+                            var testVote = parseJSON["results"]![0]["vote"] as! String!
+                            
+                            if(testVote == "no"){
+                                cellView.heart_icon?.image = UIImage(named: "heart_empty.png")
+                                
+                                //get heart label content as int
+                                var curHVal = cellView.heart_label?.text?.toInt()
+                                //get the heart label
+                                self.voterValueCache[heartImage.tag] = String(curHVal! - 1)
+                                cellView.heart_label?.text = String(curHVal! - 1)
+                                //self.theJSON["results"]![100]["has_liked"] = "no" as AnyObject!?
+                                self.voterCache[heartImage.tag] = "no"
+                            }
+                            else if(testVote == "yes"){
+                                cellView.heart_icon.image = UIImage(named: "heart_full.png")
+                                
+                                //get heart label content as int
+                                var curHVal = cellView.heart_label?.text?.toInt()
+                                //get the heart label
+                                self.voterValueCache[heartImage.tag] = String(curHVal! + 1)
+                                cellView.heart_label?.text = String(curHVal! + 1)
+                                self.voterCache[heartImage.tag] = "yes"
+                                // self.theJSON["results"]![heartImage.tag]["has_liked"] = "yes" as [AnyObject]
+                            }
+                        })
+                        
+                    }
+                    else {
+                        // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                        
+                    }
                 }
-            }
-        })
-        task.resume()
-        //END AJAX
+            })
+            task.resume()
+            
+            
+            
+        }
         
-        
+        if(indCell?.tag == 200){
+            
+            var cellView = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell
+            
+            var cID = cellView.comment_id
+            
+            
+            
+            
+            
+            let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_toggle_comment_vote")
+            //START AJAX
+            var request = NSMutableURLRequest(URL: url!)
+            var session = NSURLSession.sharedSession()
+            request.HTTPMethod = "POST"
+            
+            var params = ["fbid":userFBID, "comment_id":String(cID)] as Dictionary<String, String>
+            
+            var err: NSError?
+            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+            
+            var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+                println("Response: \(response)")
+                var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Body: \(strData)")
+                var err: NSError?
+                var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+                
+                
+                // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+                if(err != nil) {
+                    println(err!.localizedDescription)
+                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                    println("Error could not parse JSON: '\(jsonStr)'")
+                }
+                else {
+                    // The JSONObjectWithData constructor didn't return an error. But, we should still
+                    
+                    
+                    
+                    // check and make sure that json has a value using optional binding.
+                    if let parseJSON = json {
+                        dispatch_async(dispatch_get_main_queue(),{
+                            //change the heart image
+                            
+                            
+                            
+                            var testVote = parseJSON["results"]![0]["vote"] as! String!
+                            
+                            if(testVote == "no"){
+                                cellView.heart_icon?.image = UIImage(named: "heart_empty.png")
+                                
+                                //get heart label content as int
+                                var curHVal = cellView.heart_label?.text?.toInt()
+                                //get the heart label
+                                self.voterValueCache[heartImage.tag] = String(curHVal! - 1)
+                                cellView.heart_label?.text = String(curHVal! - 1)
+                                //save the new vote value in our array
+                                self.voterCache[heartImage.tag] = "no"
+                            }
+                            else if(testVote == "yes"){
+                                cellView.heart_icon?.image = UIImage(named: "heart_full.png")
+                                
+                                //get heart label content as int
+                                var curHVal = cellView.heart_label?.text?.toInt()
+                                //get the heart label
+                                self.voterValueCache[heartImage.tag] = String(curHVal! + 1)
+                                cellView.heart_label?.text = String(curHVal! + 1)
+                                self.voterCache[heartImage.tag] = "yes"
+                            }
+                        })
+                        
+                    }
+                    else {
+                        // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                        
+                    }
+                }
+            })
+            task.resume()
+            
+            
+            
+        }
         
     }
 

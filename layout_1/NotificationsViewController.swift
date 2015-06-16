@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarDelegate {
+class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarDelegate, UIGestureRecognizerDelegate {
     
 
     @IBOutlet var tableView: UITableView! //holds notifications
@@ -160,7 +160,24 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
         cell.typeImage.image = UIImage(named: imTit)
         
         
+        let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
+        // 4
+        authorTap.delegate = self
+        cell.user2NameLabel?.tag = indexPath.row
+        cell.user2NameLabel?.userInteractionEnabled = true
+        cell.user2NameLabel?.addGestureRecognizer(authorTap)
+        
+        let authorTap2 = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
+        // 4
+        authorTap2.delegate = self
+        cell.user2Image?.tag = indexPath.row
+        cell.user2Image?.userInteractionEnabled = true
+        cell.user2Image?.addGestureRecognizer(authorTap2)
+        
+        
+        
         var fbid = theJSON["results"]![indexPath.row]["u2FBID"] as! String!
+        cell.user2FBID = fbid
         
         let testUserImg = "http://graph.facebook.com/\(fbid)/picture?width=30&height=30"
         
@@ -212,6 +229,33 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
     
     
     
+    
+    
+    
+    func showUserProfile(sender: UIGestureRecognizer){
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+        let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as! ProfileViewController
+        
+        
+        //var authorLabel = sender.view? as UILabel
+        var authorLabel:AnyObject
+        
+        authorLabel = sender.view!
+        
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! notification_cell
+            
+            //profView.comment = gotCell.comment_label.text!
+            profView.userFBID = gotCell.user2FBID
+            
+            profView.userName = gotCell.user2NameLabel.text!
+
+        
+        self.presentViewController(profView, animated: true, completion: nil)
+        
+        
+    }
+
     
     
     

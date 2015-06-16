@@ -15,6 +15,7 @@
 
 import UIKit
 import CoreLocation
+import Social
 
 
 
@@ -32,6 +33,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet var navBar: UINavigationBar!
     @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
     var isBounce:Bool! = false
+    
+    var voterCache = [Int : String]()
+    var voterValueCache = [Int : String]()
     
 
     @IBOutlet var customSC: UISegmentedControl!
@@ -266,6 +270,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     }
     
+    func writeVoterCache(){
+        
+        let finNum = (theJSON["results"]!.count - 1)
+        
+        if(finNum >= 0){
+        
+            for index in 0...finNum{
+                self.voterCache[index] = theJSON["results"]![index]["has_liked"] as? String
+                self.voterValueCache[index] = theJSON["results"]![index]["hearts"] as? String
+            }
+        }
+        
+    }
+    
     func loadComments(){
         
         var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
@@ -317,12 +335,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             return numOfCells
         }
         else{
-            return numOfCells
+            if(numOfCells > 0){
+                return numOfCells
+            }
+            else{
+                return 1
+            }
         }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
+        
+        if(numOfCells > 0){
         let testImage = theJSON["results"]![indexPath.row]["image"] as! String!
         
         let testType = theJSON["results"]![indexPath.row]["type"] as! String!
@@ -348,7 +373,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
             cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
             cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
-            cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as! String!
+            cell.heart_label?.text = voterValueCache[indexPath.row] as String!
             cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as! String!
             cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as! String!
 //            let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
@@ -453,9 +478,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
             likersTap.delegate = self
-            cell.likerButtonLabel?.tag = indexPath.row
-            cell.likerButtonLabel?.userInteractionEnabled = true
-            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
+            //            cell.likerButtonLabel?.tag = indexPath.row
+            //            cell.likerButtonLabel?.userInteractionEnabled = true
+            //            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
+            cell.heart_label?.tag = indexPath.row
+            cell.heart_label?.userInteractionEnabled = true
+            cell.heart_label?.addGestureRecognizer(likersTap)
             
             
             
@@ -503,11 +531,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             //
             
             //find out if the user has liked the comment or not
-            var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as! String!
+            var hasLiked = voterCache[indexPath.row] as String!
             
             if(hasLiked == "yes"){
                 cell.heart_icon?.userInteractionEnabled = true
-                cell.heart_icon?.image = UIImage(named: "honey_full.jpg")
+                cell.heart_icon?.image = UIImage(named: "heart_full.png")
                 
                 let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
                 // 4
@@ -519,7 +547,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
             else if(hasLiked == "no"){
                 cell.heart_icon?.userInteractionEnabled = true
-                cell.heart_icon?.image = UIImage(named: "honey_empty.jpg")
+                cell.heart_icon?.image = UIImage(named: "heart_empty.png")
                 
                 let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
                 // 4
@@ -564,7 +592,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
         cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
         cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
-        cell.heart_label?.text = theJSON["results"]![indexPath.row]["hearts"] as! String!
+        cell.heart_label?.text = voterValueCache[indexPath.row] as String!
             cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as! String!
             cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as! String!
             let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
@@ -675,9 +703,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
             likersTap.delegate = self
-            cell.likerButtonLabel?.tag = indexPath.row
-            cell.likerButtonLabel?.userInteractionEnabled = true
-            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
+            //            cell.likerButtonLabel?.tag = indexPath.row
+            //            cell.likerButtonLabel?.userInteractionEnabled = true
+            //            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
+            cell.heart_label?.tag = indexPath.row
+            cell.heart_label?.userInteractionEnabled = true
+            cell.heart_label?.addGestureRecognizer(likersTap)
             
             
             
@@ -725,11 +756,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 //
             
         //find out if the user has liked the comment or not
-        var hasLiked = theJSON["results"]![indexPath.row]["has_liked"] as! String!
+        var hasLiked = voterCache[indexPath.row] as String!
         
         if(hasLiked == "yes"){
             cell.heart_icon?.userInteractionEnabled = true
-            cell.heart_icon?.image = UIImage(named: "honey_full.jpg")
+            cell.heart_icon?.image = UIImage(named: "heart_full.png")
             
             let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
             // 4
@@ -741,7 +772,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         else if(hasLiked == "no"){
             cell.heart_icon?.userInteractionEnabled = true
-            cell.heart_icon?.image = UIImage(named: "honey_empty.jpg")
+            cell.heart_icon?.image = UIImage(named: "heart_empty.png")
             
             let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
             // 4
@@ -756,6 +787,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             voteUp2.delegate = self
             cell.likerButtonHolder?.tag = indexPath.row
             cell.likerButtonHolder?.addGestureRecognizer(voteUp2)
+            
+            
+            let focusImage = UITapGestureRecognizer(target: self, action:Selector("showImageFullscreen:"))
+            focusImage.delegate = self
+            cell.comImage.userInteractionEnabled = true
+            cell.comImage?.tag = indexPath.row
+            cell.comImage?.addGestureRecognizer(focusImage)
             
             //give a loading gif to UI
             var urlgif = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
@@ -1161,6 +1199,61 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             return cell
         }
+        }
+            //there are no comments, send an instructions page
+        else{
+            
+            
+            var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell_no_images") as! custom_cell_no_images
+            
+            
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            
+            cell.separatorInset.left = -10
+            cell.layoutMargins = UIEdgeInsetsZero
+            cell.tag = 400
+            
+            
+            
+            //set the cell contents with the ajax data
+            cell.comment_label?.text = "Be the first to make a post! Click me to invite your friends. Or don't. I don't care, I'm not even real! 👻"
+            cell.comment_id = "none"
+            cell.author_label?.text = "Seymor Butts"
+            cell.loc_label?.text = "Your Building"
+            cell.heart_label?.text = "1"
+            cell.time_label?.text = "1 S"
+            cell.replyNumLabel?.text = "0"
+         
+            
+            let userFBID = "100008847672713"
+            cell.user_id = userFBID
+            
+            // cell.userImage.frame = CGRectMake(20, 20, 20, 20)
+            let testUserImg = "http://graph.facebook.com/\(userFBID)/picture?type=small"
+            var imgURL: NSURL = NSURL(string: testUserImg)!
+            
+            let data = NSData(contentsOfURL: imgURL) //make sure your image in this url does exist, otherwise unwrap in a if let check
+            
+            if(data != nil){
+                cell.userImage?.image = UIImage(data: data!)
+            }
+        
+            
+            
+            
+            
+    
+                cell.heart_icon?.image = UIImage(named: "heart_full.png")
+
+            
+            
+            
+            return cell
+            
+            
+            
+            
+        }
     }
     
     
@@ -1264,32 +1357,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             comView.savedFBID = savedFBID
             comView.locationName = gotCell.locationLabel.text!
             comView.latLon = gotCell.latLon
+            comView.userLatLon = currentUserLocation
             self.presentViewController(comView, animated: true, completion: nil)
+        }
+        if(indCell?.tag == 400){
+            // 1
+            
+            if SLComposeViewController.isAvailableForServiceType(SLServiceTypeFacebook) {
+                // 2
+                var controller = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
+                // 3
+                controller.setInitialText("Check out Hive!")
+                // 4
+                self.presentViewController(controller, animated:true, completion:nil)
+            }
+            else {
+                // 3
+                println("no Facebook account found on device")
+            }
         }
         
         
         
-        
-        
-        
-        
-//        let indCell = tableView.cellForRowAtIndexPath(indexPath)
-////        
-//        if(indCell?.tag == 100){
-//            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell_no_images
-//       
-//            
-//        }
-//        if(indCell?.tag == 200){
-//        let gotCell = tableView.cellForRowAtIndexPath(indexPath) as custom_cell
-//            let urlString = gotCell.urlLink
-//            
-//            UIApplication.sharedApplication().openURL(NSURL(string:urlString)!)
-//        
-//        }
-//        // self.dismissViewControllerAnimated(true, completion: nil)
-//        
-//        self.presentViewController(comView, animated: true, completion: nil)
+
         
     }
     
@@ -1622,7 +1712,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         
         showLoadingScreen()
-        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get2_new_comments")
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_the_feed")
         //START AJAX
         var request = NSMutableURLRequest(URL: url!)
         var session = NSURLSession.sharedSession()
@@ -1672,6 +1762,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 if let parseJSON = json {
                     
                     self.theJSON = json
+                    self.writeVoterCache()
                     self.hasLoaded = true
                     self.numOfCells = parseJSON["results"]!.count
                     
@@ -1791,6 +1882,40 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         
     }
+    
+    
+    func showImageFullscreen(sender: UIGestureRecognizer){
+        println("Presenting Likers, ya heard.")
+        
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+        let imView = mainStoryboard.instantiateViewControllerWithIdentifier("Image_focus_controller") as! ImageFocusController
+        
+        var daLink = "none"
+        
+        var authorLabel:AnyObject
+        
+        authorLabel = sender.view!
+        
+        
+        let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
+        
+        if(indCell?.tag == 100){
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
+            
+        }
+        if(indCell?.tag == 200){
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
+            
+            daLink = gotCell.imageLink
+        }
+        
+        imView.imageLink = daLink
+        
+        self.presentViewController(imView, animated: true, completion: nil)
+        
+    }
+
     
     func showLikers(sender: UIGestureRecognizer){
         
@@ -2059,20 +2184,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             var testVote = parseJSON["results"]![0]["vote"] as! String!
                             
                             if(testVote == "no"){
-                            cellView.heart_icon?.image = UIImage(named: "honey_empty.jpg")
-                            
-                            //get heart label content as int
-                            var curHVal = cellView.heart_label?.text?.toInt()
-                            //get the heart label
-                            cellView.heart_label?.text = String(curHVal! - 1)
-                            }
-                            else if(testVote == "yes"){
-                                cellView.heart_icon.image = UIImage(named: "honey_full.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "heart_empty.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
                                 //get the heart label
+                                self.voterValueCache[heartImage.tag] = String(curHVal! - 1)
+                                cellView.heart_label?.text = String(curHVal! - 1)
+                                //self.theJSON["results"]![100]["has_liked"] = "no" as AnyObject!?
+                                self.voterCache[heartImage.tag] = "no"
+                            }
+                            else if(testVote == "yes"){
+                                cellView.heart_icon.image = UIImage(named: "heart_full.png")
+                                
+                                //get heart label content as int
+                                var curHVal = cellView.heart_label?.text?.toInt()
+                                //get the heart label
+                                self.voterValueCache[heartImage.tag] = String(curHVal! + 1)
                                 cellView.heart_label?.text = String(curHVal! + 1)
+                                self.voterCache[heartImage.tag] = "yes"
+                                // self.theJSON["results"]![heartImage.tag]["has_liked"] = "yes" as [AnyObject]
                             }
                         })
                         
@@ -2084,7 +2215,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 }
             })
             task.resume()
-
+            
             
             
         }
@@ -2141,20 +2272,25 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             var testVote = parseJSON["results"]![0]["vote"] as! String!
                             
                             if(testVote == "no"){
-                                cellView.heart_icon?.image = UIImage(named: "honey_empty.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "heart_empty.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
                                 //get the heart label
+                                self.voterValueCache[heartImage.tag] = String(curHVal! - 1)
                                 cellView.heart_label?.text = String(curHVal! - 1)
+                                //save the new vote value in our array
+                                self.voterCache[heartImage.tag] = "no"
                             }
                             else if(testVote == "yes"){
-                                cellView.heart_icon?.image = UIImage(named: "honey_full.jpg")
+                                cellView.heart_icon?.image = UIImage(named: "heart_full.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
                                 //get the heart label
+                                self.voterValueCache[heartImage.tag] = String(curHVal! + 1)
                                 cellView.heart_label?.text = String(curHVal! + 1)
+                                self.voterCache[heartImage.tag] = "yes"
                             }
                         })
                         
@@ -2172,7 +2308,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         
     }
-  
     
     
     

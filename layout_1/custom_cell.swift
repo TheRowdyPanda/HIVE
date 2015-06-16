@@ -76,6 +76,9 @@ class custom_cell: UITableViewCell{
         
         userImage.layer.cornerRadius = userImage.layer.frame.width/2
         userImage.clipsToBounds = true
+        
+        comImage.layer.cornerRadius = comImage.layer.frame.width/100
+        comImage.clipsToBounds = true
 
         
         

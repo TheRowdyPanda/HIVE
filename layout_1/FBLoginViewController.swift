@@ -15,6 +15,7 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate {
     
 @IBOutlet var fbLoginView : FBLoginView!
     
+    var ffList = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,7 +84,7 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate {
         
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setObject(userID, forKey: "saved_fb_id")
-       // getMyFriends()
+       getMyFriends()
     }
     
     func loginViewShowingLoggedOutUser(loginView : FBLoginView!) {
@@ -94,6 +95,84 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate {
         println("Error: \(handleError.localizedDescription)")
     }
 
+    func getMyFriends(){
+        var friendsRequest : FBRequest = FBRequest.requestForMyFriends()
+        var friendList = ""
+        friendsRequest.startWithCompletionHandler{(connection:FBRequestConnection!, result:AnyObject!, error:NSError!) -> Void in
+            var resultdict = result as! NSDictionary
+            println("Result Dict: \(resultdict)")
+            var data : NSArray = resultdict.objectForKey("data") as! NSArray
+            
+            for i in 0...data.count {
+                let valueDict : NSDictionary = data[i] as! NSDictionary
+                let id = valueDict.objectForKey("id") as! String
+                println("the id value is \(id)")
+                friendList = friendList + "\(id), "
+                self.ffList = self.ffList + "\(id), "
+                
+                
+                if i == data.count - 1{
+                    self.sendFinalList()
+                }
+                
+            }
+            
+          //  var friends = resultdict.objectForKey("data") as! NSArray
+            //println("Found \(friends.count) friends")
+            
+            
+        }
+        
+        println("FINAL FRIENDS LIST:\(friendList)")
+    }
+    
+    func sendFinalList(){
+        println("FINAL FRIENDS FINAL LIST:\(ffList)")
+        
+                //START AJAX
+                //let url = NSURL(string: "http://www.groopie.co/mobile_get2_top_comments")
+                let url = NSURL(string: "http://groopie.pythonanywhere.com/recieve_fbfriends_list")
+                var request = NSMutableURLRequest(URL: url!)
+                var session = NSURLSession.sharedSession()
+                request.HTTPMethod = "GET"
+        
+                var params = ["ffList":ffList] as Dictionary<String, String>
+        
+                var err: NSError?
+                request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+                var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+                    println("Response: \(response)")
+                    var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+                    println("Body: \(strData)")
+                    var err: NSError?
+                    var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+        
+        
+                    // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+                    if(err != nil) {
+                        println(err!.localizedDescription)
+                        let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                        println("Error could not parse JSON: '\(jsonStr)'")
+                    }
+                    else {
+        
+                        if let parseJSON = json {
+        
+                        }
+                        else {
+        
+                        }
+                    }
+                })
+                task.resume()
+                //END AJAX
+
+        
+        
+    }
     
     func testUserLogin(){
         

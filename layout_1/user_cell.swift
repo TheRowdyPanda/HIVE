@@ -30,7 +30,7 @@ class user_cell: UITableViewCell {
         userImage.layer.masksToBounds = false
         //userImage.layer.borderColor = UIColor.whiteColor().CGColor
         //profilePic.layer.cornerRadius = 13
-        userImage.layer.cornerRadius = userImage.frame.size.height
+        userImage.layer.cornerRadius = userImage.frame.size.height/2
         userImage.clipsToBounds = true
         
         //followButton.frame.width = self.frame.width/4

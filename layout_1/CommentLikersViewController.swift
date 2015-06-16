@@ -204,7 +204,7 @@ class CommentLikersViewController: UIViewController, UITableViewDelegate, UITabl
         cell.userImage?.image = UIImage(data: data!)
         cell.nameLabel.text = theJSON["results"]![indexPath.row]["userName"] as! String!
         
-        cell.userImage.layer.cornerRadius = cell.userImage.frame.size.height
+        //cell.userImage.layer.cornerRadius = cell.userImage.frame.size.height
         let followTest = theJSON["results"]![indexPath.row]["userFollow"] as! String!
         //test if general user is following the presented user
         //cell.followButton.titleLabel?.text = "test"

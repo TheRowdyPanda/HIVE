@@ -25,6 +25,9 @@
 		EC4EDD501AAFF32D006270F3 /* layout_1.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EC4EDD4E1AAFF32D006270F3 /* layout_1.xcdatamodeld */; };
 		EC4EDD541AB00CEE006270F3 /* FBLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4EDD531AB00CEE006270F3 /* FBLoginViewController.swift */; };
 		EC4EDD591AB012E6006270F3 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC4EDD581AB012E6006270F3 /* FacebookSDK.framework */; };
+		EC8016F51B2E6C26008CC953 /* ImageFocusController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC8016F41B2E6C26008CC953 /* ImageFocusController.swift */; };
+		EC8016F71B2E9AE9008CC953 /* noun_53504_cc.png in Resources */ = {isa = PBXBuildFile; fileRef = EC8016F61B2E9AE8008CC953 /* noun_53504_cc.png */; };
+		EC8016F91B2F7661008CC953 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC8016F81B2F7660008CC953 /* Social.framework */; };
 		EC81398B1AC9DA9700985BC5 /* Camera Roll.png in Resources */ = {isa = PBXBuildFile; fileRef = EC81397C1AC9DA9700985BC5 /* Camera Roll.png */; };
 		EC81398C1AC9DA9700985BC5 /* Comment.png in Resources */ = {isa = PBXBuildFile; fileRef = EC81397D1AC9DA9700985BC5 /* Comment.png */; };
 		EC81398D1AC9DA9700985BC5 /* Create.png in Resources */ = {isa = PBXBuildFile; fileRef = EC81397E1AC9DA9700985BC5 /* Create.png */; };
@@ -137,6 +140,9 @@
 		EC4EDD531AB00CEE006270F3 /* FBLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBLoginViewController.swift; sourceTree = "<group>"; };
 		EC4EDD561AB010BD006270F3 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		EC4EDD581AB012E6006270F3 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../../Documents/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
+		EC8016F41B2E6C26008CC953 /* ImageFocusController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageFocusController.swift; sourceTree = "<group>"; };
+		EC8016F61B2E9AE8008CC953 /* noun_53504_cc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noun_53504_cc.png; sourceTree = "<group>"; };
+		EC8016F81B2F7660008CC953 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		EC81397C1AC9DA9700985BC5 /* Camera Roll.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Camera Roll.png"; sourceTree = "<group>"; };
 		EC81397D1AC9DA9700985BC5 /* Comment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Comment.png; sourceTree = "<group>"; };
 		EC81397E1AC9DA9700985BC5 /* Create.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Create.png; sourceTree = "<group>"; };
@@ -217,6 +223,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC8016F91B2F7661008CC953 /* Social.framework in Frameworks */,
 				ECDF21CF1B269084009BBC07 /* Security.framework in Frameworks */,
 				ECBAAFDA1B1BB4FD00A3F661 /* FBSDKShareKit.framework in Frameworks */,
 				EC0798CF1B14122800507D7F /* MapKit.framework in Frameworks */,
@@ -273,6 +280,7 @@
 		EC81397B1AC9DA5A00985BC5 /* icons */ = {
 			isa = PBXGroup;
 			children = (
+				EC8016F61B2E9AE8008CC953 /* noun_53504_cc.png */,
 				ECF3C0171B2D616700C70CE5 /* heart_full.png */,
 				ECF3C0181B2D616700C70CE5 /* heart_empty.png */,
 				ECCBD1261ACE4E2F005C0495 /* loginScreen.png */,
@@ -314,6 +322,7 @@
 		EC9B53AE1AA7ED1500348B31 = {
 			isa = PBXGroup;
 			children = (
+				EC8016F81B2F7660008CC953 /* Social.framework */,
 				ECDF21CE1B269084009BBC07 /* Security.framework */,
 				EC0798CE1B14122800507D7F /* MapKit.framework */,
 				ECCF39311AD32D0300F8D6EB /* Raleway-Bold.ttf */,
@@ -384,6 +393,7 @@
 				ECAE3B161AB2433A00B5AD65 /* Gif.swift */,
 				ECAE3B181AB3A6E800B5AD65 /* FirstSceneViewController.swift */,
 				ECAE3B121AB188F500B5AD65 /* MyProfileViewController.swift */,
+				EC8016F41B2E6C26008CC953 /* ImageFocusController.swift */,
 				ECA90EBF1AB5653E00195A75 /* KarmaViewController.swift */,
 				ECA90EB91AB54F7800195A75 /* UserPostsViewController.swift */,
 				ECA90EBB1AB551B800195A75 /* UserFriendsViewController.swift */,
@@ -513,6 +523,7 @@
 				ECCF393F1AD32D0300F8D6EB /* Raleway-Medium.ttf in Resources */,
 				ECF5BDAF1AD582F10098DD95 /* Like_tab_button.png in Resources */,
 				ECCF39401AD32D0300F8D6EB /* Raleway-Regular.ttf in Resources */,
+				EC8016F71B2E9AE9008CC953 /* noun_53504_cc.png in Resources */,
 				ECCF39411AD32D0300F8D6EB /* Raleway-SemiBold.ttf in Resources */,
 				ECCF39421AD32D0300F8D6EB /* Raleway-Thin.ttf in Resources */,
 				EC8139921AC9DA9700985BC5 /* Like.png in Resources */,
@@ -576,6 +587,7 @@
 				ECA90EB81AB5445200195A75 /* profile_cell.swift in Sources */,
 				ECAE3B171AB2433A00B5AD65 /* Gif.swift in Sources */,
 				EC96CF7C1ADE3115002A3133 /* FollowingViewController.swift in Sources */,
+				EC8016F51B2E6C26008CC953 /* ImageFocusController.swift in Sources */,
 				ECA628C81ABCBE0900B538DA /* custom_cell_no_images.swift in Sources */,
 				EC99869D1AABECD300E0583D /* ProfileViewController.swift in Sources */,
 				ECAE3B191AB3A6E800B5AD65 /* FirstSceneViewController.swift in Sources */,

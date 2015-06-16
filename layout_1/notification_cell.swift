@@ -23,6 +23,7 @@ class notification_cell: UITableViewCell {
     //@IBOutlet var valueLabel: UILabel!
     
     var actionID = "none"
+    var user2FBID = "none"
     
     
     

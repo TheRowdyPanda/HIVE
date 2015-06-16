@@ -19,6 +19,7 @@ class LocationPeakViewController: UIViewController, MKMapViewDelegate, UITableVi
     @IBOutlet var navBar: UINavigationBar!
     var locationName = "..."
     var latLon = "none"
+    var userLatLon = "none"
     var savedFBID = "none"
     var hasLoaded = false
     var theJSON: NSDictionary!
@@ -321,9 +322,12 @@ class LocationPeakViewController: UIViewController, MKMapViewDelegate, UITableVi
             
             let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
             likersTap.delegate = self
-            cell.likerButtonLabel?.tag = indexPath.row
-            cell.likerButtonLabel?.userInteractionEnabled = true
-            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
+            //            cell.likerButtonLabel?.tag = indexPath.row
+            //            cell.likerButtonLabel?.userInteractionEnabled = true
+            //            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
+            cell.heart_label?.tag = indexPath.row
+            cell.heart_label?.userInteractionEnabled = true
+            cell.heart_label?.addGestureRecognizer(likersTap)
             
             
             
@@ -407,7 +411,7 @@ class LocationPeakViewController: UIViewController, MKMapViewDelegate, UITableVi
             cell.likerButtonHolder?.addGestureRecognizer(voteUp2)
             
             
-            
+
             
             
             return cell
@@ -546,9 +550,12 @@ class LocationPeakViewController: UIViewController, MKMapViewDelegate, UITableVi
             
             let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
             likersTap.delegate = self
-            cell.likerButtonLabel?.tag = indexPath.row
-            cell.likerButtonLabel?.userInteractionEnabled = true
-            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
+            //            cell.likerButtonLabel?.tag = indexPath.row
+            //            cell.likerButtonLabel?.userInteractionEnabled = true
+            //            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
+            cell.heart_label?.tag = indexPath.row
+            cell.heart_label?.userInteractionEnabled = true
+            cell.heart_label?.addGestureRecognizer(likersTap)
             
             
             
@@ -628,6 +635,13 @@ class LocationPeakViewController: UIViewController, MKMapViewDelegate, UITableVi
             voteUp2.delegate = self
             cell.likerButtonHolder?.tag = indexPath.row
             cell.likerButtonHolder?.addGestureRecognizer(voteUp2)
+            
+            
+            let focusImage = UITapGestureRecognizer(target: self, action:Selector("showImageFullscreen:"))
+            focusImage.delegate = self
+            cell.comImage.userInteractionEnabled = true
+            cell.comImage?.tag = indexPath.row
+            cell.comImage?.addGestureRecognizer(focusImage)
             
             //give a loading gif to UI
             var urlgif = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
@@ -776,13 +790,13 @@ class LocationPeakViewController: UIViewController, MKMapViewDelegate, UITableVi
     func getLocalComments(){
         
         
-        //let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_location_comments")
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_location_comments")
         
         
         showLoadingScreen()
         
         //peak cuppies and joe
-        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_video_feed_2")
+        //let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_video_feed_2")
         //START AJAX
         var request = NSMutableURLRequest(URL: url!)
         var session = NSURLSession.sharedSession()
@@ -851,13 +865,15 @@ class LocationPeakViewController: UIViewController, MKMapViewDelegate, UITableVi
         
         let finNum = (theJSON["results"]!.count - 1)
         
-        for index in 0...finNum{
-            self.voterCache[index] = theJSON["results"]![index]["has_liked"] as? String
-            self.voterValueCache[index] = theJSON["results"]![index]["hearts"] as? String
+        if(finNum >= 0){
+            
+            for index in 0...finNum{
+                self.voterCache[index] = theJSON["results"]![index]["has_liked"] as? String
+                self.voterValueCache[index] = theJSON["results"]![index]["hearts"] as? String
+            }
         }
-  
+        
     }
-    
     
     
     
@@ -903,6 +919,40 @@ class LocationPeakViewController: UIViewController, MKMapViewDelegate, UITableVi
         
     }
     
+    
+    func showImageFullscreen(sender: UIGestureRecognizer){
+        println("Presenting Likers, ya heard.")
+        
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+        let imView = mainStoryboard.instantiateViewControllerWithIdentifier("Image_focus_controller") as! ImageFocusController
+        
+        var daLink = "none"
+        
+        var authorLabel:AnyObject
+        
+        authorLabel = sender.view!
+        
+        
+        let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
+        
+        if(indCell?.tag == 100){
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
+            
+        }
+        if(indCell?.tag == 200){
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
+            
+            daLink = gotCell.imageLink
+        }
+        
+        imView.imageLink = daLink
+        
+        self.presentViewController(imView, animated: true, completion: nil)
+        
+    }
+
+    
     func showLikers(sender: UIGestureRecognizer){
         
         println("Presenting Likers, ya heard.")
@@ -921,7 +971,7 @@ class LocationPeakViewController: UIViewController, MKMapViewDelegate, UITableVi
         if(indCell?.tag == 100){
             let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
             
-            likeView.sentLocation = latLon
+            likeView.sentLocation = userLatLon
             likeView.commentID = gotCell.comment_id
             
             //profView.comment = gotCell.comment_label.text!
@@ -932,7 +982,7 @@ class LocationPeakViewController: UIViewController, MKMapViewDelegate, UITableVi
         if(indCell?.tag == 200){
             let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
             
-            likeView.sentLocation = latLon
+            likeView.sentLocation = userLatLon
             likeView.commentID = gotCell.comment_id
             //profView.comment = gotCell.comment_label.text!
             //profView.userFBID = gotCell.user_id
@@ -963,7 +1013,7 @@ class LocationPeakViewController: UIViewController, MKMapViewDelegate, UITableVi
         if(indCell?.tag == 100){
             let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
             
-            repView.sentLocation = latLon
+            repView.sentLocation = userLatLon
             repView.commentID = gotCell.comment_id
             //profView.comment = gotCell.comment_label.text!
             // profView.userFBID = gotCell.user_id
@@ -973,7 +1023,7 @@ class LocationPeakViewController: UIViewController, MKMapViewDelegate, UITableVi
         if(indCell?.tag == 200){
             let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
             
-            repView.sentLocation = latLon
+            repView.sentLocation = userLatLon
             repView.commentID = gotCell.comment_id
             //profView.comment = gotCell.comment_label.text!
             //profView.userFBID = gotCell.user_id

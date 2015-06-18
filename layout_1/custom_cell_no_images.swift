@@ -24,6 +24,8 @@ class custom_cell_no_images: UITableViewCell{
     @IBOutlet var shareLabel:UILabel!
     
     @IBOutlet var buttonHolder:UIView!
+    @IBOutlet var comHolder:UIView!
+    @IBOutlet var comHolderHolder:UIView!
     
     @IBOutlet var replyButtonLabel: UILabel!
     @IBOutlet var replyButtonImage: UIImageView!
@@ -82,6 +84,21 @@ class custom_cell_no_images: UITableViewCell{
         
         
         let color: UIColor = UIColor( red: CGFloat(51.0/255.0), green: CGFloat(51.0/255.0), blue: CGFloat(51.0/255.0), alpha: CGFloat(0.2) )
+        
+        let color2: UIColor = UIColor( red: CGFloat(200.0/255.0), green: CGFloat(200.0/255.0), blue: CGFloat(230.0/255.0), alpha: CGFloat(1.0) )
+        
+        comHolder.layer.borderWidth = 0.0
+        comHolder.layer.borderColor = UIColor.blackColor().CGColor
+        comHolder.layer.masksToBounds = false
+        comHolder.layer.cornerRadius = 4
+        comHolder.clipsToBounds = true
+        
+        
+        comHolderHolder.layer.shadowColor = color2.CGColor
+        comHolderHolder.layer.shadowOffset = CGSizeMake(0, 0)
+        comHolderHolder.layer.shadowRadius = 2
+        comHolderHolder.layer.shadowOpacity = 0.2
+        
         
 //        buttonHolder.layer.borderWidth=1.0
 //        buttonHolder.layer.masksToBounds = false

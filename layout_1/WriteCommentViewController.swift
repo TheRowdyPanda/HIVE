@@ -122,7 +122,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        let height2 = commentView.frame.height + oimageView.frame.height + 40
+        let height2 = commentView.frame.height + oimageView.frame.height + buttonHolder.frame.height
         scrollView.contentSize = CGSize(width:scrollView.frame.width, height:height2)
         
         println("THIS IS THE SENT LOCATION:\(sentLocation)")

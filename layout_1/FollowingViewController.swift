@@ -34,7 +34,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
             defaults.stringForKey("saved_fb_id")!
         
         
-        tableView.estimatedRowHeight = 500.0
+        tableView.estimatedRowHeight = 300.0
         tableView.rowHeight = UITableViewAutomaticDimension
         
         // Do any additional setup after loading the view.

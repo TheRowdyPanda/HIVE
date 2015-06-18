@@ -82,7 +82,16 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
         firstItem.tag = 1
         let secondItem = tabBar.items![1] as! UITabBarItem
         secondItem.tag = 2
-        
+     
+     
+     
+     
+
+     comImage.layer.masksToBounds = false
+     comImage.layer.cornerRadius = 6
+     comImage.clipsToBounds = true
+     
+     
         getCommentInfo()
         
           }
@@ -155,24 +164,43 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
                self.comImage.removeFromSuperview()
                
                var fakeCon = NSLayoutConstraint(item: self.commentView,
-                    attribute: NSLayoutAttribute.LeftMargin,
+                    attribute: NSLayoutAttribute.Bottom,
                     relatedBy: NSLayoutRelation.Equal,
                     toItem: self.tabBar,
-                    attribute: NSLayoutAttribute.LeftMargin,
+                    attribute: NSLayoutAttribute.Top,
                     multiplier: 1,
-                    constant: 20 )
-               
-               var fakeCon2 = NSLayoutConstraint(item: self.tabBar,
-                    attribute: NSLayoutAttribute.Width,
-                    relatedBy: NSLayoutRelation.Equal,
-                    toItem: self.commentView,
-                    attribute: NSLayoutAttribute.Width,
-                    multiplier: 1.2,
-                    constant:0)
+                    constant: -20 )
+//
+//               var fakeCon2 = NSLayoutConstraint(item: self.commentView,
+//                    attribute: NSLayoutAttribute.Left,
+//                    relatedBy: NSLayoutRelation.Equal,
+//                    toItem: self.locLabel,
+//                    attribute: NSLayoutAttribute.Left,
+//                    multiplier: 1.0,
+//                    constant:0)
+//               
+//               var fakeCon3 = NSLayoutConstraint(item: self.commentView,
+//                    attribute: NSLayoutAttribute.Right,
+//                    relatedBy: NSLayoutRelation.Equal,
+//                    toItem: self.view,
+//                    attribute: NSLayoutAttribute.Right,
+//                    multiplier: 1.0,
+//                    constant:-10)
+//
+//               self.commentView.frame = CGRectMake(self.commentView.frame.origin.x, self.commentView.frame.origin.y, 300, self.commentView.frame.height)
+//               var fakeCon2 = NSLayoutConstraint(item: self.commentView,
+//                    attribute: NSLayoutAttribute.Width,
+//                    relatedBy: NSLayoutRelation.Equal,
+//                    toItem: self.locLabel,
+//                    attribute: NSLayoutAttribute.Left,
+//                    multiplier: 1.0,
+//                    constant:0)
+//               
                
                
                self.view.addConstraint(fakeCon)
-               self.view.addConstraint(fakeCon2)
+//               self.view.addConstraint(fakeCon2)
+//               self.view.addConstraint(fakeCon3)
                // self.commentView.addConstraint(fakeCon)
                self.view.updateConstraints()
           }

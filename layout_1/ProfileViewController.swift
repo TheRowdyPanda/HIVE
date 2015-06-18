@@ -117,7 +117,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             
             
-            tableView.estimatedRowHeight = 500.0
+            tableView.estimatedRowHeight = 300.0
             tableView.rowHeight = UITableViewAutomaticDimension
             
         }

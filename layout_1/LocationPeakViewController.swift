@@ -41,7 +41,7 @@ class LocationPeakViewController: UIViewController, MKMapViewDelegate, UITableVi
         self.mapView.userInteractionEnabled = false
         
         
-        tableView.estimatedRowHeight = 500.0
+        tableView.estimatedRowHeight = 300.0
         tableView.rowHeight = UITableViewAutomaticDimension
         
         

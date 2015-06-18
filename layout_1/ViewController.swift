@@ -111,7 +111,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let attr = NSDictionary(objects: [font!, UIColor.whiteColor()], forKeys: [NSFontAttributeName, NSForegroundColorAttributeName])
         let attr2 = NSDictionary(objects: [font!, UIColor.blackColor()], forKeys: [NSFontAttributeName, NSForegroundColorAttributeName])
 
-        tableView.estimatedRowHeight = 500.0
+        tableView.estimatedRowHeight = 300.0
         tableView.rowHeight = UITableViewAutomaticDimension
         
         let fontFamilyNames = UIFont.familyNames()

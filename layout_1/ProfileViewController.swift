@@ -77,7 +77,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             //self.navBar.topItem.title = "SDKFJ"
             
-            navTitle.title = "My Profile"
+            navTitle.title = userName
             //var timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("reload_table"), userInfo: nil, repeats: false)
             
             

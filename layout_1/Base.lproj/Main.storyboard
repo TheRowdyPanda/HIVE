@@ -2162,7 +2162,7 @@
                                 <rect key="frame" x="-4" y="0.0" width="608" height="60"/>
                                 <color key="barTintColor" red="1" green="0.85098039219999999" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
-                                    <navigationItem title="Title" id="E8X-fA-kVr">
+                                    <navigationItem title="Profile" id="E8X-fA-kVr">
                                         <barButtonItem key="leftBarButtonItem" image="backIcon.png" id="T0X-KD-0oC">
                                             <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <connections>

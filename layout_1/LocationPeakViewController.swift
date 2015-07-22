@@ -883,6 +883,7 @@ class LocationPeakViewController: UIViewController, MKMapViewDelegate, UITableVi
     
     
     
+    
     func showUserProfile(sender: UIGestureRecognizer){
         let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
         //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
@@ -1154,6 +1155,48 @@ class LocationPeakViewController: UIViewController, MKMapViewDelegate, UITableVi
         
         
     }
+    
+    
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+   
+        
+        
+        let indCell = tableView.cellForRowAtIndexPath(indexPath)
+        
+        if(indCell?.tag == 100){
+            
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+            let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
+            
+            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell_no_images
+            
+            comView.sentLocation = userLatLon
+            comView.commentID = gotCell.comment_id
+            comView.imgLink = "none"
+
+            
+            self.presentViewController(comView, animated: true, completion: nil)
+        }
+        if(indCell?.tag == 200){
+            
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+            let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
+            
+            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell
+            
+            comView.sentLocation = userLatLon
+            comView.commentID = gotCell.comment_id
+
+            
+            
+            self.presentViewController(comView, animated: true, completion: nil)
+        }
+
+        
+        
+    }
+    
     
     
     func toggleCommentVote(sender:UIGestureRecognizer){

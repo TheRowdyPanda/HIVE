@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8EC87D9B1B5C564E0068E034 /* pickHashtagsInitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC87D9A1B5C564E0068E034 /* pickHashtagsInitialViewController.swift */; };
+		8EC87D9F1B5E13D20068E034 /* custom_cell_person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC87D9E1B5E13D20068E034 /* custom_cell_person.swift */; };
+		8EC87DA11B5E15E00068E034 /* PersonTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC87DA01B5E15E00068E034 /* PersonTableViewController.swift */; };
 		EC0798CD1B14107700507D7F /* LocationPeakViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC0798CC1B14107700507D7F /* LocationPeakViewController.swift */; };
 		EC0798CF1B14122800507D7F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC0798CE1B14122800507D7F /* MapKit.framework */; };
 		EC21857D1AAA7E2E00703CF9 /* custom_cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC21857C1AAA7E2E00703CF9 /* custom_cell.swift */; };
@@ -88,6 +91,7 @@
 		ECCF39421AD32D0300F8D6EB /* Raleway-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ECCF39391AD32D0300F8D6EB /* Raleway-Thin.ttf */; };
 		ECDF21CF1B269084009BBC07 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECDF21CE1B269084009BBC07 /* Security.framework */; };
 		ECDF21D51B2693F2009BBC07 /* Alau.me.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECDF21D41B2693F2009BBC07 /* Alau.me.framework */; };
+		ECE014531B3F7AD20064045B /* TermsAndConditionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE014521B3F7AD20064045B /* TermsAndConditionsViewController.swift */; };
 		ECF3C0161B2D5F7C00C70CE5 /* shareButton.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF3C0151B2D5F7C00C70CE5 /* shareButton.png */; };
 		ECF3C0191B2D616700C70CE5 /* heart_full.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF3C0171B2D616700C70CE5 /* heart_full.png */; };
 		ECF3C01A1B2D616700C70CE5 /* heart_empty.png in Resources */ = {isa = PBXBuildFile; fileRef = ECF3C0181B2D616700C70CE5 /* heart_empty.png */; };
@@ -110,6 +114,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8EC87D9A1B5C564E0068E034 /* pickHashtagsInitialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = pickHashtagsInitialViewController.swift; sourceTree = "<group>"; };
+		8EC87D9E1B5E13D20068E034 /* custom_cell_person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = custom_cell_person.swift; sourceTree = "<group>"; };
+		8EC87DA01B5E15E00068E034 /* PersonTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonTableViewController.swift; sourceTree = "<group>"; };
 		EC0798CC1B14107700507D7F /* LocationPeakViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPeakViewController.swift; sourceTree = "<group>"; };
 		EC0798CE1B14122800507D7F /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		EC21856F1AAA6D4F00703CF9 /* PMBPostTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PMBPostTableViewCell.h; sourceTree = "<group>"; };
@@ -207,6 +214,7 @@
 		ECCF39391AD32D0300F8D6EB /* Raleway-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Raleway-Thin.ttf"; path = "layout_1/Raleway/Raleway-Thin.ttf"; sourceTree = "<group>"; };
 		ECDF21CE1B269084009BBC07 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		ECDF21D41B2693F2009BBC07 /* Alau.me.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alau.me.framework; sourceTree = "<group>"; };
+		ECE014521B3F7AD20064045B /* TermsAndConditionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TermsAndConditionsViewController.swift; sourceTree = "<group>"; };
 		ECF3C0151B2D5F7C00C70CE5 /* shareButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shareButton.png; sourceTree = "<group>"; };
 		ECF3C0171B2D616700C70CE5 /* heart_full.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart_full.png; sourceTree = "<group>"; };
 		ECF3C0181B2D616700C70CE5 /* heart_empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart_empty.png; sourceTree = "<group>"; };
@@ -374,6 +382,7 @@
 				EC21857C1AAA7E2E00703CF9 /* custom_cell.swift */,
 				EC99A7821B11022F002CED89 /* custom_cell_location.swift */,
 				ECA628C71ABCBE0900B538DA /* custom_cell_no_images.swift */,
+				8EC87D9E1B5E13D20068E034 /* custom_cell_person.swift */,
 				ECA90EB71AB5445200195A75 /* profile_cell.swift */,
 				ECA90EBD1AB55FFA00195A75 /* user_cell.swift */,
 				EC47B86D1AC135FF00ADBCC6 /* reply_cell.swift */,
@@ -382,11 +391,14 @@
 				EC9986961AABE31F00E0583D /* ThirdViewController.swift */,
 				EC0798CC1B14107700507D7F /* LocationPeakViewController.swift */,
 				EC9B53C01AA7ED1500348B31 /* Main.storyboard */,
+				8EC87DA01B5E15E00068E034 /* PersonTableViewController.swift */,
+				8EC87D9A1B5C564E0068E034 /* pickHashtagsInitialViewController.swift */,
 				EC9B53C31AA7ED1500348B31 /* Images.xcassets */,
 				EC9B53C51AA7ED1500348B31 /* LaunchScreen.xib */,
 				EC9B53BA1AA7ED1500348B31 /* Supporting Files */,
 				EC99869C1AABECD300E0583D /* ProfileViewController.swift */,
 				EC4EDD151AAF76D2006270F3 /* WriteCommentViewController.swift */,
+				ECE014521B3F7AD20064045B /* TermsAndConditionsViewController.swift */,
 				EC4EDD1B1AAFF217006270F3 /* data.swift */,
 				EC4EDD531AB00CEE006270F3 /* FBLoginViewController.swift */,
 				EC4EDD561AB010BD006270F3 /* Bridging-Header.h */,
@@ -582,6 +594,7 @@
 				ECAE3B131AB188F500B5AD65 /* MyProfileViewController.swift in Sources */,
 				EC9C209B1AC4FF2F00811DB7 /* ViewController.swift in Sources */,
 				EC4EDD501AAFF32D006270F3 /* layout_1.xcdatamodeld in Sources */,
+				8EC87D9F1B5E13D20068E034 /* custom_cell_person.swift in Sources */,
 				EC0798CD1B14107700507D7F /* LocationPeakViewController.swift in Sources */,
 				EC9986971AABE31F00E0583D /* ThirdViewController.swift in Sources */,
 				ECA90EB81AB5445200195A75 /* profile_cell.swift in Sources */,
@@ -590,16 +603,19 @@
 				EC8016F51B2E6C26008CC953 /* ImageFocusController.swift in Sources */,
 				ECA628C81ABCBE0900B538DA /* custom_cell_no_images.swift in Sources */,
 				EC99869D1AABECD300E0583D /* ProfileViewController.swift in Sources */,
+				8EC87D9B1B5C564E0068E034 /* pickHashtagsInitialViewController.swift in Sources */,
 				ECAE3B191AB3A6E800B5AD65 /* FirstSceneViewController.swift in Sources */,
 				ECA90EC01AB5653E00195A75 /* KarmaViewController.swift in Sources */,
 				ECA90EBE1AB55FFA00195A75 /* user_cell.swift in Sources */,
 				ECB095831ACC7C9200802E9F /* CustomTabBarViewController.swift in Sources */,
 				ECB0958D1ACD0BA300802E9F /* CommentReplyViewController.swift in Sources */,
+				ECE014531B3F7AD20064045B /* TermsAndConditionsViewController.swift in Sources */,
 				EC21857D1AAA7E2E00703CF9 /* custom_cell.swift in Sources */,
 				ECA90EBA1AB54F7800195A75 /* UserPostsViewController.swift in Sources */,
 				ECB0958B1ACCEB3400802E9F /* CommentLikersViewController.swift in Sources */,
 				ECF5BDB11AD587D00098DD95 /* notification_cell.swift in Sources */,
 				EC4EDD541AB00CEE006270F3 /* FBLoginViewController.swift in Sources */,
+				8EC87DA11B5E15E00068E034 /* PersonTableViewController.swift in Sources */,
 				ECC0B98F1AD3BE6C00B21BD0 /* NotificationsViewController.swift in Sources */,
 				EC4EDD161AAF76D2006270F3 /* WriteCommentViewController.swift in Sources */,
 				EC4EDD1C1AAFF217006270F3 /* data.swift in Sources */,

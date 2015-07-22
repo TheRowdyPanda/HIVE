@@ -97,7 +97,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.locationManager.requestAlwaysAuthorization()
         
         self.locationManager.startUpdatingLocation()
-        self.locationManager.distanceFilter = 3
+        //self.locationManager.distanceFilter = 3
         
         
         //get the user facebook id. This is used to identify the user in all ajax requests
@@ -130,13 +130,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW,
-            Int64(0.9 * Double(NSEC_PER_SEC)))
+            Int64(0.45 * Double(NSEC_PER_SEC)))
         
         dispatch_after(delayTime, dispatch_get_main_queue()) {
             
             dispatch_async(dispatch_get_main_queue(),{
                // self.tableView.reloadData()
                 //self.removeLoadingScreen()
+                
+                self.loadComments()
+                
             })
             
         }
@@ -153,14 +156,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
        // loadFakePlaces()
         
-        loadClusters()
+       // loadClusters()
+        
         //show instructions screen for first time users
         
        // showInstructionsScreen()
         
         
         
-        customSC.selectedSegmentIndex = 0
+        customSC.selectedSegmentIndex = 1
 //        let font = UIFont(name: "Raleway-Bold", size: 16)
 //        let attr = NSDictionary(objects: [font!, UIColor.whiteColor()], forKeys: [NSFontAttributeName, NSForegroundColorAttributeName])
 //        let attr2 = NSDictionary(objects: [font!, UIColor.blackColor()], forKeys: [NSFontAttributeName, NSForegroundColorAttributeName])
@@ -573,7 +577,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
             
         }
-        else if(testType == "2"){
+        else{
         //image
         var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell") as! custom_cell
         
@@ -846,359 +850,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         return cell
         }
-        else{
-            var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell_location") as! custom_cell_location
-            
-            
-            
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
-            
-            cell.separatorInset.left = -10
-            cell.layoutMargins = UIEdgeInsetsZero
-            cell.tag = 300
-            
-            
-            
-//            @IBOutlet var locationLabel: UILabel!
-//            
-//            @IBOutlet var user1NameLabel: UILabel!
-//            @IBOutlet var user2NameLabel: UILabel!
-//            @IBOutlet var user3NameLabel: UILabel!
-//            @IBOutlet var user1Pic:UIImageView!
-//            @IBOutlet var user2Pic:UIImageView!
-//            @IBOutlet var user3Pic:UIImageView!
-//            
-//            
-//            @IBOutlet var locPic1:UIImageView!
-//            @IBOutlet var locPic2:UIImageView!
-//            @IBOutlet var locPic3:UIImageView!
-//            @IBOutlet var locPic4:UIImageView!
-            
-            cell.latLon = theJSON["results"]![indexPath.row]["location"] as! String!
-            cell.locationLabel?.text = theJSON["results"]![indexPath.row]["locationAddress"] as! String!
-            
-            let numF = theJSON["results"]![indexPath.row]["numMore"] as! String!
-            
-            cell.numMoreLabel?.text = "and \(numF) friends are here right now"
-            
-            cell.user1NameLabel?.text = theJSON["results"]![indexPath.row]["user1Name"] as! String!
-            let user1FBID = theJSON["results"]![indexPath.row]["user1fb"] as! String!
-            //test for existence of first user image
-            let testUserImg1 = "http://graph.facebook.com/\(user1FBID)/picture?type=small"
-            //GET TEH USER IMAGE
-            var upimage1 = self.userImageCache[testUserImg1]
-            if( upimage1 == nil ) {
-                // If the image does not exist, we need to download it
-                
-                var imgURL1: NSURL = NSURL(string: testUserImg1)!
-                
-                // Download an NSData representation of the image at the URL
-                let request: NSURLRequest = NSURLRequest(URL: imgURL1)
-                NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
-                    if error == nil {
-                        upimage1 = UIImage(data: data)
-                        
-                        // Store the image in to our cache
-                        self.userImageCache[testUserImg1] = upimage1
-                        dispatch_async(dispatch_get_main_queue(), {
-                            if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_location {
-                                cellToUpdate.user1Pic?.image = upimage1
-                            }
-                        })
-                    }
-                    else {
-                        println("Error: \(error.localizedDescription)")
-                    }
-                })
-                
-            }
-            else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_location {
-                        cellToUpdate.user1Pic?.image = upimage1
-                    }
-                })
-            }
-            
-
-            let authorTap1 = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-            // 4
-            authorTap1.delegate = self
-            cell.user1Pic?.tag = indexPath.row
-            cell.user1Pic?.userInteractionEnabled = true
-            cell.user1Pic?.addGestureRecognizer(authorTap1)
-            
-            let authorTap1b = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-            // 4
-            authorTap1b.delegate = self
-            cell.user1NameLabel?.tag = indexPath.row
-            cell.user1NameLabel?.userInteractionEnabled = true
-            cell.user1NameLabel?.addGestureRecognizer(authorTap1b)
-            
-            
-            
-            
-            cell.user2NameLabel?.text = theJSON["results"]![indexPath.row]["user2Name"] as! String!
-            let user2FBID = theJSON["results"]![indexPath.row]["user2fb"] as! String!
-            let testUserImg2 = "http://graph.facebook.com/\(user2FBID)/picture?type=small"
-            var upimage2 = self.userImageCache[testUserImg2]
-            if( upimage2 == nil ) {
-                // If the image does not exist, we need to download it
-                
-                var imgURL2: NSURL = NSURL(string: testUserImg2)!
-                
-                // Download an NSData representation of the image at the URL
-                let request: NSURLRequest = NSURLRequest(URL: imgURL2)
-                NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
-                    if error == nil {
-                        upimage2 = UIImage(data: data)
-                        
-                        // Store the image in to our cache
-                        self.userImageCache[testUserImg2] = upimage2
-                        dispatch_async(dispatch_get_main_queue(), {
-                            if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_location {
-                                cellToUpdate.user2Pic?.image = upimage2
-                            }
-                        })
-                    }
-                    else {
-                        println("Error: \(error.localizedDescription)")
-                    }
-                })
-                
-            }
-            else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_location {
-                        cellToUpdate.user2Pic?.image = upimage2
-                    }
-                })
-            }
-
-            let authorTap2 = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-            // 4
-            authorTap2.delegate = self
-            cell.user2Pic?.tag = indexPath.row
-            cell.user2Pic?.userInteractionEnabled = true
-            cell.user2Pic?.addGestureRecognizer(authorTap2)
-            
-            let authorTap2b = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-            // 4
-            authorTap2b.delegate = self
-            cell.user2NameLabel?.tag = indexPath.row
-            cell.user2NameLabel?.userInteractionEnabled = true
-            cell.user2NameLabel?.addGestureRecognizer(authorTap2b)
-            
-            
-            
-            
-            cell.user3NameLabel?.text = theJSON["results"]![indexPath.row]["user3Name"] as! String!
-            let user3FBID = theJSON["results"]![indexPath.row]["user3fb"] as! String!
-            let testUserImg3 = "http://graph.facebook.com/\(user3FBID)/picture?type=small"
-            var upimage3 = self.userImageCache[testUserImg3]
-            if( upimage3 == nil ) {
-                // If the image does not exist, we need to download it
-                
-                var imgURL3: NSURL = NSURL(string: testUserImg3)!
-                
-                // Download an NSData representation of the image at the URL
-                let request: NSURLRequest = NSURLRequest(URL: imgURL3)
-                NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
-                    if error == nil {
-                        upimage3 = UIImage(data: data)
-                        
-                        // Store the image in to our cache
-                        self.userImageCache[testUserImg3] = upimage3
-                        dispatch_async(dispatch_get_main_queue(), {
-                            if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_location {
-                                cellToUpdate.user3Pic?.image = upimage3
-                            }
-                        })
-                    }
-                    else {
-                        println("Error: \(error.localizedDescription)")
-                    }
-                })
-                
-            }
-            else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_location {
-                        cellToUpdate.user3Pic?.image = upimage3
-                    }
-                })
-            }
-            
-            let authorTap3 = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-            // 4
-            authorTap3.delegate = self
-            cell.user3Pic?.tag = indexPath.row
-            cell.user3Pic?.userInteractionEnabled = true
-            cell.user3Pic?.addGestureRecognizer(authorTap3)
-            
-            let authorTap3b = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-            // 4
-            authorTap3b.delegate = self
-            cell.user3NameLabel?.tag = indexPath.row
-            cell.user3NameLabel?.userInteractionEnabled = true
-            cell.user3NameLabel?.addGestureRecognizer(authorTap3b)
-            
-            
-            
-            
-            
-            let picLink1 = theJSON["results"]![indexPath.row]["pic1Link"] as! String!
-            var image1 = self.imageCache[picLink1]
-            if( image1 == nil ) {
-                // If the image does not exist, we need to download it
-                var imgURL1: NSURL = NSURL(string: picLink1)!
-                
-                // Download an NSData representation of the image at the URL
-                let request: NSURLRequest = NSURLRequest(URL: imgURL1)
-                NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
-                    if error == nil {
-                        image1 = UIImage(data: data)
-                        
-                        // Store the image in to our cache
-                        self.imageCache[picLink1] = image1
-                        dispatch_async(dispatch_get_main_queue(), {
-                            if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_location {
-                                cellToUpdate.locPic1.image = image1
-                            }
-                        })
-                    }
-                    else {
-                        println("Error: \(error.localizedDescription)")
-                    }
-                })
-                
-            }
-            else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_location {
-                        cellToUpdate.locPic1?.image = image1
-                    }
-                })
-            }
-            
-
-            
-            
-            
-            let picLink2 = theJSON["results"]![indexPath.row]["pic2Link"] as! String!
-            var image2 = self.imageCache[picLink2]
-            if( image2 == nil ) {
-                // If the image does not exist, we need to download it
-                var imgURL2: NSURL = NSURL(string: picLink2)!
-                
-                // Download an NSData representation of the image at the URL
-                let request: NSURLRequest = NSURLRequest(URL: imgURL2)
-                NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
-                    if error == nil {
-                        image2 = UIImage(data: data)
-                        
-                        // Store the image in to our cache
-                        self.imageCache[picLink2] = image2
-                        dispatch_async(dispatch_get_main_queue(), {
-                            if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_location {
-                                cellToUpdate.locPic2.image = image2
-                            }
-                        })
-                    }
-                    else {
-                        println("Error: \(error.localizedDescription)")
-                    }
-                })
-                
-            }
-            else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_location {
-                        cellToUpdate.locPic2?.image = image2
-                    }
-                })
-            }
-
-            
-            
-            
-            
-            let picLink3 = theJSON["results"]![indexPath.row]["pic3Link"] as! String!
-            var image3 = self.imageCache[picLink3]
-            if( image3 == nil ) {
-                // If the image does not exist, we need to download it
-                var imgURL3: NSURL = NSURL(string: picLink3)!
-                
-                // Download an NSData representation of the image at the URL
-                let request: NSURLRequest = NSURLRequest(URL: imgURL3)
-                NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
-                    if error == nil {
-                        image3 = UIImage(data: data)
-                        
-                        // Store the image in to our cache
-                        self.imageCache[picLink3] = image3
-                        dispatch_async(dispatch_get_main_queue(), {
-                            if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_location {
-                                cellToUpdate.locPic3.image = image3
-                            }
-                        })
-                    }
-                    else {
-                        println("Error: \(error.localizedDescription)")
-                    }
-                })
-                
-            }
-            else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_location {
-                        cellToUpdate.locPic3?.image = image3
-                    }
-                })
-            }
-
-            
-            
-            
-            let picLink4 = theJSON["results"]![indexPath.row]["pic4Link"] as! String!
-            var image4 = self.imageCache[picLink4]
-            if( image4 == nil ) {
-                // If the image does not exist, we need to download it
-                var imgURL4: NSURL = NSURL(string: picLink4)!
-                
-                // Download an NSData representation of the image at the URL
-                let request: NSURLRequest = NSURLRequest(URL: imgURL4)
-                NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
-                    if error == nil {
-                        image4 = UIImage(data: data)
-                        
-                        // Store the image in to our cache
-                        self.imageCache[picLink4] = image4
-                        dispatch_async(dispatch_get_main_queue(), {
-                            if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_location {
-                                cellToUpdate.locPic4.image = image4
-                            }
-                        })
-                    }
-                    else {
-                        println("Error: \(error.localizedDescription)")
-                    }
-                })
-                
-            }
-            else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_location {
-                        cellToUpdate.locPic4?.image = image4
-                    }
-                })
-            }
-
-            
-            
-            
-            return cell
-        }
+    
         }
             //there are no comments, send an instructions page
         else{
@@ -1464,7 +1116,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         //let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_video_feed_4")
         
         
-        //at the Sherlocks before refresh
+        //at the Sherlocks before refreshre
         //let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_video_feed_6")
         
         //at the Sherlocks after refresh (Jayce)

@@ -149,7 +149,7 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
      
      func loadCommentPicture(){
           
-          if(imgLink == "none" || imgLink == "none2"){
+          if(imgLink == "none" || imgLink == "none2" || imgLink == "None"){
                
                let height2 = commentView.frame.height + tableView.frame.height + tabBar.frame.height + 40
                scrollView.contentSize = CGSize(width:scrollView.frame.width, height:height2)
@@ -160,7 +160,7 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
           }
         
           
-          if(imgLink == "none2" || imgLink == "none"){
+          if(imgLink == "none2" || imgLink == "none" || imgLink == "None"){
                self.comImage.removeFromSuperview()
                
                var fakeCon = NSLayoutConstraint(item: self.commentView,
@@ -531,6 +531,63 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
         task.resume()
         
     }
+     
+     @IBAction func did_hit_flag(){
+          let alert = UIAlertView()
+          alert.title = "You flagged this post."
+          alert.message = "We will take any inappropriate content down. Flag three posts to block a user."
+          alert.addButtonWithTitle("Okay, thank you.")
+          alert.show()
+          
+          
+          let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_user_flagged")
+          //let url = NSURL(string: "http://www.groopie.co/mobile_get2_top_comments")
+          //START AJAX
+          var request = NSMutableURLRequest(URL: url!)
+          var session = NSURLSession.sharedSession()
+          request.HTTPMethod = "POST"
+          
+          let authorN = authorLabel.text! as String
+          var params = ["c_id":commentID, "author":authorN, "fbid":authorFBID,  "g_fbid":savedFBID] as Dictionary<String, String>
+          
+          
+          var err: NSError?
+          request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+          request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+          request.addValue("application/json", forHTTPHeaderField: "Accept")
+          
+          var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+               println("Response: \(response)")
+               var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+               println("Body: \(strData)")
+               var err: NSError?
+               var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+               
+               
+               // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+               if(err != nil) {
+                    println(err!.localizedDescription)
+                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                    println("Error could not parse JSON: '\(jsonStr)'")
+               }
+               else {
+                    // The JSONObjectWithData constructor didn't return an error. But, we should still
+                    // check and make sure that json has a value using optional binding.
+                    if let parseJSON = json {
+                         
+                         
+                    }
+                    else {
+                         
+                    }
+               }
+          })
+          task.resume()
+
+          
+          
+          
+     }
     
     @IBAction func did_hit_reply(){
     //func did_hit_reply(){

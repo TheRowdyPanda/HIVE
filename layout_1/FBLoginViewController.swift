@@ -11,9 +11,10 @@ import UIKit
 let fbIDConstant = "saved_fb_id"
 
 
-class FBLoginViewController: UIViewController, FBLoginViewDelegate {
+class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRecognizerDelegate {
     
 @IBOutlet var fbLoginView : FBLoginView!
+    @IBOutlet var tcLabel: UILabel!
     
     var ffList = ""
     
@@ -24,9 +25,36 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate {
         self.fbLoginView.readPermissions = ["public_profile", "email", "user_friends"]
         //main_view_scene_id
         
+        let underlineAttribute = [NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue]
+        let underlineAttributedString = NSAttributedString(string: "Terms and Conditions", attributes: underlineAttribute)
+        tcLabel.attributedText = underlineAttributedString
+        
+        
+        
+        
+        let TCTap = UITapGestureRecognizer(target: self, action:Selector("didTapTandC:"))
+        // 4
+        TCTap.delegate = self
+        tcLabel.userInteractionEnabled = true
+        tcLabel.addGestureRecognizer(TCTap)
+        
+        
+        
         
     }
     
+    func didTapTandC(sender: UIGestureRecognizer){
+        
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let tcView = mainStoryboard.instantiateViewControllerWithIdentifier("terms_and_cond_id") as! TermsAndConditionsViewController
+        
+        
+       // self.dismissViewControllerAnimated(true, completion: nil)
+        
+        self.presentViewController(tcView, animated: false, completion: nil)
+        
+        
+    }
     override func viewDidAppear(animated: Bool) {
         
         testUserLogin()
@@ -95,6 +123,8 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate {
         println("Error: \(handleError.localizedDescription)")
     }
 
+    
+    //parse user friends list into readable string
     func getMyFriends(){
         var friendsRequest : FBRequest = FBRequest.requestForMyFriends()
         var friendList = ""
@@ -126,6 +156,10 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate {
         println("FINAL FRIENDS LIST:\(friendList)")
     }
     
+    //send the friend list to our servers
+    //we use the friends list in determining which posts to show the user
+    //we also use it to show mutual friends between users
+    //the friends list is vital to our app and we need facebook login
     func sendFinalList(){
         println("FINAL FRIENDS FINAL LIST:\(ffList)")
         

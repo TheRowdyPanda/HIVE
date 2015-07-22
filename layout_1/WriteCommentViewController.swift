@@ -71,7 +71,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         self.locationManager.requestAlwaysAuthorization()
         
         self.locationManager.startUpdatingLocation()
-        self.locationManager.distanceFilter = 3
+       // self.locationManager.distanceFilter = 3
         
         
       //  let tracker = GAI.sharedInstance().defaultTracker

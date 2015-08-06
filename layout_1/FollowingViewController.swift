@@ -41,11 +41,12 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
     }
 
     override func viewDidLayoutSubviews() {
-        let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
+        let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(210.0/255.0), blue: CGFloat(11.0/255.0), alpha: CGFloat(1.0) )
         self.tableView.separatorColor = color
         //self.tableView.separatorStyle
         self.tableView.separatorInset.left = 0
         self.tableView.layoutMargins = UIEdgeInsetsZero
+        self.tableView.backgroundColor = color
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -249,7 +250,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
             
             if(hasLiked == "yes"){
                 cell.heart_icon?.userInteractionEnabled = true
-                cell.heart_icon?.image = UIImage(named: "heart_full.png")
+                cell.heart_icon?.image = UIImage(named: "button_heart.png")
                 
                 let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
                 // 4
@@ -261,7 +262,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
             }
             else if(hasLiked == "no"){
                 cell.heart_icon?.userInteractionEnabled = true
-                cell.heart_icon?.image = UIImage(named: "heart_empty.png")
+                cell.heart_icon?.image = UIImage(named: "button_heart_empty.png")
                 
                 let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
                 // 4
@@ -293,7 +294,6 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
             
             
             cell.selectionStyle = UITableViewCellSelectionStyle.None
-            
             cell.separatorInset.left = -10
             cell.layoutMargins = UIEdgeInsetsZero
             cell.imageLink = testImage
@@ -466,7 +466,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
             
             if(hasLiked == "yes"){
                 cell.heart_icon?.userInteractionEnabled = true
-                cell.heart_icon?.image = UIImage(named: "heart_full.png")
+                cell.heart_icon?.image = UIImage(named: "button_heart.png")
                 
                 let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
                 // 4
@@ -478,7 +478,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
             }
             else if(hasLiked == "no"){
                 cell.heart_icon?.userInteractionEnabled = true
-                cell.heart_icon?.image = UIImage(named: "heart_empty.png")
+                cell.heart_icon?.image = UIImage(named: "button_heart_empty.png")
                 
                 let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
                 // 4
@@ -1041,7 +1041,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                             var testVote = parseJSON["results"]![0]["vote"] as! String!
                             
                             if(testVote == "no"){
-                                cellView.heart_icon?.image = UIImage(named: "heart_empty.png")
+                                cellView.heart_icon?.image = UIImage(named: "button_heart_empty.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1052,7 +1052,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                                 self.voterCache[heartImage.tag] = "no"
                             }
                             else if(testVote == "yes"){
-                                cellView.heart_icon.image = UIImage(named: "heart_full.png")
+                                cellView.heart_icon.image = UIImage(named: "button_heart.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1129,7 +1129,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                             var testVote = parseJSON["results"]![0]["vote"] as! String!
                             
                             if(testVote == "no"){
-                                cellView.heart_icon?.image = UIImage(named: "heart_empty.png")
+                                cellView.heart_icon?.image = UIImage(named: "button_heart_empty.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()
@@ -1140,7 +1140,7 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
                                 self.voterCache[heartImage.tag] = "no"
                             }
                             else if(testVote == "yes"){
-                                cellView.heart_icon?.image = UIImage(named: "heart_full.png")
+                                cellView.heart_icon?.image = UIImage(named: "button_heart.png")
                                 
                                 //get heart label content as int
                                 var curHVal = cellView.heart_label?.text?.toInt()

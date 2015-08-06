@@ -13,9 +13,14 @@ import UIKit
 class pickHashtagsInitialViewController: UIViewController, UIGestureRecognizerDelegate, UIScrollViewDelegate {
     
     @IBOutlet var hashtagScrollHolder:UIScrollView!
+    @IBOutlet weak var bottomLayoutConsttraint: NSLayoutConstraint!
+
     var fakeHashtags = ["MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj", "Oijfodsijfoidj", "ofjijf", "Ijfi", "OSIDJFOSFSDF", "SODJFOSI", "OSIDJF", "OSIDJFOSIDJF", "ISJDFOISJ", "MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj", "Oijfodsijfoidj", "ofjijf", "Ijfi", "OSIDJFOSFSDF", "SODJFOSI", "OSIDJF", "OSIDJFOSIDJF", "ISJDFOISJ", "MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj", "Oijfodsijfoidj", "ofjijf", "Ijfi", "OSIDJFOSFSDF", "SODJFOSI", "OSIDJF", "OSIDJFOSIDJF", "ISJDFOISJ", "MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj", "Oijfodsijfoidj", "ofjijf", "Ijfi", "OSIDJFOSFSDF", "SODJFOSI", "OSIDJF", "OSIDJFOSIDJF", "ISJDFOISJ", "MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj", "Oijfodsijfoidj", "ofjijf", "Ijfi", "OSIDJFOSFSDF", "SODJFOSI", "OSIDJF", "OSIDJFOSIDJF", "ISJDFOISJ", "MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj", "Oijfodsijfoidj", "ofjijf", "Ijfi", "OSIDJFOSFSDF", "SODJFOSI", "OSIDJF", "OSIDJFOSIDJF", "ISJDFOISJ"]
+    var hashtagIDs = [NSString?]()
     var hashtagViews = [UIView?]()
     var hashtagButtons = [UIButton?]()
+    var hashtagIdIndex = [String: Int]()
+    var hashtagSelectedIndex = [Int : Bool]()
     var widthFiller = 0
     var yPos = 10.0
     var hasStartedClick = false
@@ -25,16 +30,16 @@ class pickHashtagsInitialViewController: UIViewController, UIGestureRecognizerDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.yellowColor()
+        self.view.backgroundColor = UIColor(red: (255.0/255.0), green: (210.0/255.0), blue: (11.0/255.0), alpha: 1.0)
         
-        for i in 0...(self.fakeHashtags.count - 1){
-            self.createHashtag(fakeHashtags[i]);
-            }
+//        for i in 0...(self.fakeHashtags.count - 1){
+//            self.createHashtag(fakeHashtags[i]);
+//            }
         
         //centerHashtags()
         
-        let contentSizeHeight = hashtagButtons.last??.center.y
-        self.hashtagScrollHolder.contentSize = CGSize(width: self.view.frame.width - 100.0, height: contentSizeHeight! + 20.0)
+//        let contentSizeHeight = hashtagButtons.last??.center.y
+//        self.hashtagScrollHolder.contentSize = CGSize(width: self.view.frame.width - 100.0, height: contentSizeHeight! + 20.0)
         self.hashtagScrollHolder.contentOffset = CGPointMake(self.hashtagScrollHolder.contentOffset.x, 0)
         
         self.hashtagScrollHolder.delegate = self
@@ -49,9 +54,7 @@ class pickHashtagsInitialViewController: UIViewController, UIGestureRecognizerDe
         
     }
     
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        self.isScrolling = true
-    }
+
     
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if(decelerate == false){
@@ -60,65 +63,120 @@ class pickHashtagsInitialViewController: UIViewController, UIGestureRecognizerDe
     }
     
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        self.isScrolling = false
+        //self.isScrolling = false
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+            Int64(0.2 * Double(NSEC_PER_SEC)))
+        dispatch_after(delayTime, dispatch_get_main_queue()) {
+            self.isScrolling = false
+        }
     }
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+            var scrollViewHeight = scrollView.frame.size.height;
+            var scrollContentSizeHeight = scrollView.contentSize.height;
+            var scrollOffset = scrollView.contentOffset.y;
+        
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+            Int64(0.5 * Double(NSEC_PER_SEC)))
+        
+        self.isScrolling = true
+        
+            if (scrollOffset < 0)
+            {
+                self.isScrolling = true
+            }
+            else if (scrollOffset + scrollViewHeight >= scrollContentSizeHeight)
+            {
+                self.isScrolling = true
+            }
+    }
+    
     
     func makeHashtagunSelected(hashtag:UIButton){
         let daFontColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha:0.8)
         hashtag.backgroundColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha:0.3)
         hashtag.setTitleColor(daFontColor, forState: .Normal)
+        hashtag.titleLabel?.font = UIFont(name: "Lato-Light", size: 24.0)
     }
     
     func makeHashtagSelected(hashtag:UIButton){
-        hashtag.backgroundColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.8)
+        hashtag.backgroundColor = UIColor(red: (255.0/255.0), green: (119.0/255.0), blue: (0.0/255.0), alpha: 1.0);7
     }
     
     func clearAllHashtags(){
-        for i in 0...(self.fakeHashtags.count - 1){
+        if(self.hashtagButtons.count > 0){
+        for i in 0...(self.hashtagButtons.count - 1){
             self.hashtagButtons[i]?.removeFromSuperview()
             
+        }
         }
         self.fakeHashtags.removeAll(keepCapacity: false)
         self.hashtagButtons.removeAll(keepCapacity: false)
         self.yPos = 10.0
         
     }
-    func createHashtag(title: NSString){
+    func createHashtag(title: NSString, id:NSInteger){
         //let width = Int(title.length)*12
-        var title = "#" + (title as String)
-        let width = Int(title.sizeWithAttributes([NSFontAttributeName: UIFont.systemFontOfSize(24.0)]).width) + 10
-        var xpos = 0.0
-        var widthSpacing = 10.0
+        var title = title as String
+        let f = UIFont(name: "Lato-Light", size: 23.0)
+        let width = Int(title.sizeWithAttributes([NSFontAttributeName: f!]).width) + 15
+        let height = Int(title.sizeWithAttributes([NSFontAttributeName: UIFont.systemFontOfSize(24.0)]).height) + 15
+        var xpos = 5.0
+        var widthSpacing = 12.0
         if(hashtagButtons.count > 0){
             let holder = hashtagButtons.last! as UIButton!
             xpos = Double(holder.frame.origin.x) + Double(holder.frame.width) + widthSpacing;
         }
         
-        self.widthFiller += width + Int(widthSpacing)
+        let testWidthFiller = self.widthFiller + width + Int(widthSpacing)
+        //self.widthFiller += width + Int(widthSpacing)
         
-        if(Int(self.widthFiller) > Int(self.view.frame.width)){
+        if(Int(testWidthFiller) > Int(self.hashtagScrollHolder.frame.width)){
+            var onBut = self.hashtagButtons.count - 1
+            println("ON THE BUTTON:\(onBut)")
+            if(onBut > (self.fakeHashtags.count - 1)){
+                onBut = self.fakeHashtags.count - 1
+            }
+            for i in onBut...(self.fakeHashtags.count - 1){//for the rest of the hashtags left to go
+                if(self.hashtagIdIndex[self.fakeHashtags[i]] == nil){//if these hashtags haven't been used for
+                    let testWidth = Int(self.fakeHashtags[i].sizeWithAttributes([NSFontAttributeName: f!]).width) + 15
+                    let testFiller2 = self.widthFiller + testWidth + Int(widthSpacing)
+                    if(Int(testFiller2) <= Int(self.hashtagScrollHolder.frame.width)){
+                        let hashId = self.theJSON["results"]![i]["id"] as! NSString
+                        let hashId2 = hashId.integerValue
+                        self.createHashtag(self.fakeHashtags[i], id: hashId2)
+                    }
+                }
+            }
+
             self.widthFiller = width + Int(widthSpacing)
-            self.yPos += 50.0
-            xpos = 0.0
+            self.yPos += Double(height) + 12.0
+            xpos = 5.0
+        }
+        else{
+            self.widthFiller = testWidthFiller
         }
  
-        var newButton = UIButton(frame: CGRect(x: Int(xpos), y: Int(yPos), width: width, height: 40))
-        newButton.backgroundColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
+        var newButton = UIButton(frame: CGRect(x: Int(xpos), y: Int(yPos), width: width, height: height))
+        newButton.backgroundColor = UIColor(red: (255.0/255.0), green: (165.0/255.0), blue: (0.0/255.0), alpha: 1.0)
         
         newButton.setTitle(title as String, forState: UIControlState.Normal)
-        newButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Light", size: 24.0)
+        newButton.titleLabel?.font = UIFont(name: "Lato-Light", size: 24.0)
 
         self.hashtagScrollHolder.addSubview(newButton)
         self.hashtagButtons.append(newButton)
         newButton.addTarget(self, action: "pressed:", forControlEvents: UIControlEvents.TouchDown)
         newButton.addTarget(self, action: "unpressed:", forControlEvents: UIControlEvents.TouchDragExit)
+        newButton.addTarget(self, action: "pressed:", forControlEvents: UIControlEvents.TouchDragEnter)
         newButton.addTarget(self, action: "selected:", forControlEvents: UIControlEvents.TouchUpInside)
         
+        self.hashtagIdIndex[title] = id
+        self.hashtagSelectedIndex[id] = false
         
 
     }
     
-    func pressed(dabut: UIButton){
+func pressed(dabut: UIButton){
         
         if(self.isScrolling == false){
             
@@ -138,18 +196,18 @@ class pickHashtagsInitialViewController: UIViewController, UIGestureRecognizerDe
                 dabut.frame = CGRect(x: startingX - wChanger/2.0, y: startingY - hChanger/2.0, width: startingWidth + wChanger, height: startingHeight + hChanger)
                 //dabut.titleLabel!.transform = CGAffineTransformScale(dabut.titleLabel!.transform, 1.1, 1.1);
                 //dabut.titleLabel!.center = CGPoint(x: dabut.titleLabel!.center.x + wChanger, y: dabut.titleLabel!.center.y + hChanger);
+                dabut.titleLabel?.font = UIFont(name: "Lato-Regular", size: 26.0)
                 
                 }, completion: { finished in
                     
-                    dabut.titleLabel!.sizeToFit()
             })
             
             }
             
         
     }
-    
-    func unpressed(dabut: UIButton){
+ 
+func unpressed(dabut: UIButton){
         
         
         
@@ -170,21 +228,18 @@ class pickHashtagsInitialViewController: UIViewController, UIGestureRecognizerDe
             UIView.animateWithDuration(time1, delay: time1, options: .CurveEaseOut, animations: {
                 
                 dabut.frame = CGRect(x: startingX + (wChanger + wChanger2)/2.0, y: startingY + (hChanger + hChanger2)/2.0, width: startingWidth - wChanger - wChanger2, height: startingHeight - hChanger - hChanger2)
-                
-                //dabut.titleLabel!.transform = CGAffineTransformScale(dabut.titleLabel!.transform, 0.91, 0.91);
-                //dabut.titleLabel!.center = CGPoint(x: dabut.titleLabel!.center.x - wChanger - wChanger2, y: dabut.titleLabel!.center.y - hChanger - hChanger2);
+                dabut.titleLabel?.font = UIFont(name: "Lato-Light", size: 20.0)
                 
                 }, completion: { finished in
                     
-                    dabut.titleLabel!.sizeToFit()
             })
             UIView.animateWithDuration(time1, delay: time1*2, options: .CurveEaseOut, animations: {
                 
                 dabut.frame = CGRect(x: startingX, y: startingY, width: startingWidth, height: startingHeight)
+                dabut.titleLabel?.font = UIFont(name: "Lato-Light", size: 24.0)
                 
                 }, completion: { finished in
                     
-                    dabut.titleLabel!.sizeToFit()
             })
             
         }
@@ -194,7 +249,7 @@ class pickHashtagsInitialViewController: UIViewController, UIGestureRecognizerDe
         
         let time1 = 0.1
         
-       
+        
         let wChanger = CGFloat(5.0)
         let hChanger = CGFloat(10.0)
         let wChanger2 = CGFloat(3.0)
@@ -204,48 +259,57 @@ class pickHashtagsInitialViewController: UIViewController, UIGestureRecognizerDe
         let startingX = dabut.frame.origin.x + wChanger/2.0
         let startingY = dabut.frame.origin.y + hChanger/2.0
         if(self.isScrolling == false){
-        if(hasStartedClick == false){
-            hasStartedClick = true
-            
-                       
-            
-            
-        
-        UIView.animateWithDuration(time1, delay: time1, options: .CurveEaseOut, animations: {
-            
-            dabut.frame = CGRect(x: startingX + (wChanger + wChanger2)/2.0, y: startingY + (hChanger + hChanger2)/2.0, width: startingWidth - wChanger - wChanger2, height: startingHeight - hChanger - hChanger2)
-            
-            //dabut.titleLabel!.transform = CGAffineTransformScale(dabut.titleLabel!.transform, 0.91, 0.91);
-            //dabut.titleLabel!.center = CGPoint(x: dabut.titleLabel!.center.x - wChanger - wChanger2, y: dabut.titleLabel!.center.y - hChanger - hChanger2);
-            
-            }, completion: { finished in
-               
-                dabut.titleLabel!.sizeToFit()
-        })
-        UIView.animateWithDuration(time1, delay: time1*2, options: .CurveEaseOut, animations: {
+            if(hasStartedClick == false){
+                hasStartedClick = true
                 
-                dabut.frame = CGRect(x: startingX, y: startingY, width: startingWidth, height: startingHeight)
-
-                }, completion: { finished in
+                UIView.animateWithDuration(time1, delay: time1, options: .CurveEaseOut, animations: {
                     
-                    dabut.titleLabel!.sizeToFit()
-            })
-        
-        
-        hasStartedClick = false
-            
-            if(self.hasSelectedAHashtag == false){
-                for i in 0...(self.hashtagButtons.count - 1){
-                    self.makeHashtagunSelected(self.hashtagButtons[i]!)
-                }
-                self.showNextScreenButton()
+                    dabut.frame = CGRect(x: startingX + (wChanger + wChanger2)/2.0, y: startingY + (hChanger + hChanger2)/2.0, width: startingWidth - wChanger - wChanger2, height: startingHeight - hChanger - hChanger2)
+                    dabut.titleLabel?.font = UIFont(name: "Lato-Regular", size: 20.0)
+                    
+                    }, completion: { finished in
+                        
+                })
+                UIView.animateWithDuration(time1, delay: time1*2, options: .CurveEaseOut, animations: {
+                    
+                    dabut.frame = CGRect(x: startingX, y: startingY, width: startingWidth, height: startingHeight)
+                    dabut.titleLabel?.font = UIFont(name: "Lato-Regular", size: 24.0)
+                    
+                    }, completion: { finished in
+                        
+                })
+                
+                hasStartedClick = false
+                self.selectedCode(dabut)
             }
+            
+                
+        }
+    }
+    
+    func selectedCode(dabut: UIButton){
+        
+        if(self.hasSelectedAHashtag == false){
+            for i in 0...(self.hashtagButtons.count - 1){
+                self.makeHashtagunSelected(self.hashtagButtons[i]!)
+            }
+            self.showNextScreenButton()
+        }
+        
+        let hashtagID = self.hashtagIdIndex[dabut.titleLabel!.text!]
+        let isSelected = self.hashtagSelectedIndex[hashtagID!]
+        println("Hashtag is false:\(isSelected)")
+        if(isSelected == false){
             self.makeHashtagSelected(dabut)
-            hasSelectedAHashtag = true
-            
+            self.hashtagSelectedIndex[hashtagID!] = true
         }
-            
+        else{
+            self.makeHashtagunSelected(dabut)
+            self.hashtagSelectedIndex[hashtagID!] = false
         }
+        
+        hasSelectedAHashtag = true
+        
     }
     func centerHashtags(){
         var rowHolder = [UIButton?]()
@@ -344,7 +408,9 @@ class pickHashtagsInitialViewController: UIViewController, UIGestureRecognizerDe
                         self.fakeHashtags.append(self.theJSON["results"]![j]["body"] as! String)
                     }
                     for i in 0...(self.fakeHashtags.count - 1){
-                        self.createHashtag(self.fakeHashtags[i]);
+                        var daID = self.theJSON["results"]![i]["id"] as! NSString
+                        let daID2 = daID.integerValue
+                        self.createHashtag(self.fakeHashtags[i], id: daID2);
                     }
                         
                         let contentSizeHeight = self.hashtagButtons.last??.center.y
@@ -370,18 +436,49 @@ class pickHashtagsInitialViewController: UIViewController, UIGestureRecognizerDe
     }
     
     func showNextScreenButton(){
-        var nextButton = UIButton(frame: CGRect(x: 20, y: 20, width: 100, height: 40))
+        var nextButton = UIButton(frame: CGRect(x:0, y: self.view.frame.height, width: self.view.frame.width, height: 40))
         nextButton.backgroundColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.8)
         
         nextButton.setTitle("Continue", forState: UIControlState.Normal)
-        nextButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Light", size: 24.0)
+        nextButton.titleLabel?.font = UIFont(name: "Lato-Light", size: 24.0)
         
         self.view.addSubview(nextButton)
+        
+        let time1 = 0.1
+
+        let heightConstraint = NSLayoutConstraint(item: self.hashtagScrollHolder, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: nextButton, attribute: NSLayoutAttribute.Top, multiplier: 1, constant: 0)
+        
+        UIView.animateWithDuration(time1, delay: 0.0, options: .CurveEaseOut, animations: {
+            
+            nextButton.frame = CGRect(x:0, y: self.view.frame.height - 50, width: self.view.frame.width, height: 50)
+            self.bottomLayoutConsttraint.constant = nextButton.frame.height*1.2;
+            }, completion: { finished in
+                
+//                nextButton.addTarget(self, action: "pressed:", forControlEvents: UIControlEvents.TouchDown)
+//                nextButton.addTarget(self, action: "unpressed:", forControlEvents: UIControlEvents.TouchDragExit)
+//                nextButton.addTarget(self, action: "pressed:", forControlEvents: UIControlEvents.TouchDragEnter)
+                nextButton.addTarget(self, action: "continueButtonPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+                
+                
+        })
+        
     }
     
     
 
-    
+    func continueButtonPressed(dabut: UIButton){
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let writeView = mainStoryboard.instantiateViewControllerWithIdentifier("write_comment_scene_id") as! WriteCommentViewController
+        let writeView2 = mainStoryboard.instantiateViewControllerWithIdentifier("pick_hashtags_id") as! pickHashtagsInitialViewController
+        
+        self.presentViewController(writeView, animated: false, completion: nil)
+        writeView2.dismissViewControllerAnimated(true, completion: nil)
+        
+//        self.dismissViewControllerAnimated(true, completion: ^{
+//            self.presentViewController(writeView, animated: false, completion: nil)
+//            })
+        
+    }
    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

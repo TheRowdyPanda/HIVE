@@ -17,29 +17,29 @@ class SweetView: UIImageView {
     }
 }
 
-class WriteCommentViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate{
+class WriteCommentViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate, UIScrollViewDelegate{
     
     let locationManager = CLLocationManager()
+    let fakeHashtags = ["#CounterCulture"]
+    @IBOutlet var hashtagScrollHolder:UIScrollView!
+    @IBOutlet var hashtagHolderHeightConstraint:NSLayoutConstraint!
+    @IBOutlet var postHolderView:UIView!
+    @IBOutlet var postButton:UIButton!
     
-    @IBOutlet var titleLabel: UILabel!
-    @IBOutlet var commentLabel: UILabel!
-    @IBOutlet var authorLabel: UILabel!
-    @IBOutlet var buttonHolder: UIView!
     var testString = "1"
     var comment = "empty"
     var authorID = "empty"
+    var commingFrom = "none"
     
     var sentLocation = "none"
     
-    @IBOutlet var commentField: UITextField!
     @IBOutlet var commentView: UITextView!
-    @IBOutlet var scrollView: UIScrollView!
     
     @IBOutlet var oimageView: UIImageView!
     
-   // @IBOutlet var cameraBut:UIImageView!
+    // @IBOutlet var cameraBut:UIImageView!
     @IBOutlet var cameraBLabel:UILabel!
-     //@IBOutlet var chooseBut:UIImageView!
+    //@IBOutlet var chooseBut:UIImageView!
     @IBOutlet var chooseBLabel:UILabel!
     
     var imagePicker: UIImagePickerController!
@@ -49,8 +49,19 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     var savedImage: UIImage!
     
     var imageLink = "none"
-  //  var captureDeviceBack : AVCaptureDevice?
+    //  var captureDeviceBack : AVCaptureDevice?
     let screenWidth = UIScreen.mainScreen().bounds.size.width
+    
+    var hashtagButtons = [UIButton?]()
+    var hashtagIdIndex = [String: Int]()
+    var hashtagSelectedIndex = [Int : Bool]()
+    var widthFiller = 0
+    var scrollHolderWidth = 350
+    var yPos = 10.0
+    var hasStartedClick = false
+    var isScrolling = false
+    var hasSelectedAHashtag = false
+    
     //let transportItems = ["Bus","Helicopter","Truck","Boat","Bicycle","Motorcycle","Plane","Train","Car","Scooter","Caravan"]
     
     
@@ -59,9 +70,10 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         
         
+        self.hashtagScrollHolder.delegate = self
+        self.view.backgroundColor = UIColor(red: (255.0/255.0), green: (210.0/255.0), blue: (11.0/255.0), alpha: 1.0)
         self.locationManager.delegate = self
         
         //self.locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -71,49 +83,332 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         self.locationManager.requestAlwaysAuthorization()
         
         self.locationManager.startUpdatingLocation()
-       // self.locationManager.distanceFilter = 3
+        // self.locationManager.distanceFilter = 3
         
         
-      //  let tracker = GAI.sharedInstance().defaultTracker
-      //  tracker.set(kGAIScreenName, value: "/index")
-      //  tracker.send(GAIDictionaryBuilder.createScreenView().build())
+        //  let tracker = GAI.sharedInstance().defaultTracker
+        //  tracker.set(kGAIScreenName, value: "/index")
+        //  tracker.send(GAIDictionaryBuilder.createScreenView().build())
         
         var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
         tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Show Scene", label: "Showed", value: nil).build() as [NSObject : AnyObject])
         
-      //  self.commentView.becomeFirstResponder()
-
+        //  self.commentView.becomeFirstResponder()
         
-     //  scrollView.contentSize = CGSizeMake(400, 2300)
+        
+        //  scrollView.contentSize = CGSizeMake(400, 2300)
         let defaults = NSUserDefaults.standardUserDefaults()
         let fbid = defaults.stringForKey("saved_fb_id")
         self.authorID = fbid!
         
-
-  
+        
+        
         
         
         commentView.text = "What's the Buzz?"
         commentView.textColor = UIColor.lightGrayColor()
         commentView.delegate = self
-       
+        
         let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
         
-        buttonHolder.layer.borderWidth=2.0
-                buttonHolder.layer.masksToBounds = false
-                buttonHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
+        //        buttonHolder.layer.borderWidth=2.0
+        //                buttonHolder.layer.masksToBounds = false
+        //                buttonHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
+        //
+        //                //profilePic.layer.cornerRadius = 13
+        //                buttonHolder.clipsToBounds = true
+        //
+        //        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        //        let writeView = mainStoryboard.instantiateViewControllerWithIdentifier("pick_hashtags_id") as! pickHashtagsInitialViewController
+        //
+        //
+        //         writeView.dismissViewControllerAnimated(true, completion: nil)
         
-                //profilePic.layer.cornerRadius = 13
-                buttonHolder.clipsToBounds = true
+        for i in 0...(self.fakeHashtags.count - 1){
+            var daID = "22"//self.theJSON["results"]![i]["id"] as! NSString
+            let daID2 = (i*5) + 2//daID.integerValue
+            self.createHashtag(self.fakeHashtags[i], id: daID2);
+        }
+        self.createHashtag("Add New", id: -1)
+        if(hashtagButtons.count > 0){
+            let holder = hashtagButtons.last! as UIButton!
+            let height = Double(holder.frame.origin.y) + Double(holder.frame.height) + 20.0;
+            let hashHeight = Double(hashtagHolderHeightConstraint.constant)
+            if(height < hashHeight){
+                self.hashtagHolderHeightConstraint.constant = CGFloat(height)
+            }
+            else{
+                self.hashtagScrollHolder.contentSize = CGSize(width: Double(self.hashtagScrollHolder.frame.width), height: height)
+            }
+            
+        }
         
     }
     
-    func textViewDidBeginEditing(textView: UITextView) {
-        if textView.textColor == UIColor.lightGrayColor() {
-            textView.text = nil
-            textView.textColor = UIColor.blackColor()
+    func createHashtag(title: NSString, id:NSInteger){
+        //let width = Int(title.length)*12
+        println("THE WiDTH\(self.hashtagScrollHolder.frame.width)")
+        var title = title as String
+        let f = UIFont(name: "Lato-Light", size: 23.0)
+        let width = Int(title.sizeWithAttributes([NSFontAttributeName: f!]).width) + 15
+        let height = Int(title.sizeWithAttributes([NSFontAttributeName: UIFont.systemFontOfSize(24.0)]).height) + 15
+        var xpos = 5.0
+        var widthSpacing = 12.0
+        if(hashtagButtons.count > 0){
+            let holder = hashtagButtons.last! as UIButton!
+            xpos = Double(holder.frame.origin.x) + Double(holder.frame.width) + widthSpacing;
         }
         
+        let testWidthFiller = self.widthFiller + width + Int(widthSpacing)
+        //self.widthFiller += width + Int(widthSpacing)
+        
+        if(Int(testWidthFiller) > Int(scrollHolderWidth)){
+            self.widthFiller = width + Int(widthSpacing)
+            self.yPos += Double(height) + 12.0
+            xpos = 5.0
+        }
+        else{
+            self.widthFiller = testWidthFiller
+        }
+        
+        var newButton = UIButton(frame: CGRect(x: Int(xpos), y: Int(yPos), width: width, height: height))
+        newButton.backgroundColor = UIColor(red: (255.0/255.0), green: (165.0/255.0), blue: (0.0/255.0), alpha: 1.0)
+        
+        newButton.setTitle(title as String, forState: UIControlState.Normal)
+        newButton.titleLabel?.font = UIFont(name: "Lato-Light", size: 24.0)
+        
+        self.hashtagScrollHolder.addSubview(newButton)
+        self.hashtagButtons.append(newButton)
+        
+        if(id != -1){
+            newButton.addTarget(self, action: "pressed:", forControlEvents: UIControlEvents.TouchDown)
+            newButton.addTarget(self, action: "unpressed:", forControlEvents: UIControlEvents.TouchDragExit)
+            newButton.addTarget(self, action: "pressed:", forControlEvents: UIControlEvents.TouchDragEnter)
+            newButton.addTarget(self, action: "selected:", forControlEvents: UIControlEvents.TouchUpInside)
+        }
+        else{
+            
+        }
+        
+        self.hashtagIdIndex[title] = id
+        self.hashtagSelectedIndex[id] = false
+        
+        
+    }
+    
+    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if(decelerate == false){
+            self.isScrolling = false
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        //self.isScrolling = false
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+            Int64(0.2 * Double(NSEC_PER_SEC)))
+        dispatch_after(delayTime, dispatch_get_main_queue()) {
+            self.isScrolling = false
+        }
+    }
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        var scrollViewHeight = scrollView.frame.size.height;
+        var scrollContentSizeHeight = scrollView.contentSize.height;
+        var scrollOffset = scrollView.contentOffset.y;
+        
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+            Int64(0.5 * Double(NSEC_PER_SEC)))
+        
+        self.isScrolling = true
+        
+        if (scrollOffset < 0)
+        {
+            self.isScrolling = true
+        }
+        else if (scrollOffset + scrollViewHeight >= scrollContentSizeHeight)
+        {
+            self.isScrolling = true
+        }
+    }
+
+    
+    
+    
+    func pressed(dabut: UIButton){
+        
+        if(self.isScrolling == false){
+            
+            hasStartedClick = false
+            let time1 = 0.1
+            let startingWidth = dabut.frame.width
+            let startingHeight = dabut.frame.height
+            let startingX = dabut.frame.origin.x
+            let startingY = dabut.frame.origin.y
+            let wChanger = CGFloat(5.0)
+            let hChanger = CGFloat(10.0)
+            let wChanger2 = CGFloat(3.0)
+            let hChanger2 = CGFloat(6.0)
+            
+            UIView.animateWithDuration(time1, delay: 0.0, options: .CurveEaseOut, animations: {
+                
+                dabut.frame = CGRect(x: startingX - wChanger/2.0, y: startingY - hChanger/2.0, width: startingWidth + wChanger, height: startingHeight + hChanger)
+                //dabut.titleLabel!.transform = CGAffineTransformScale(dabut.titleLabel!.transform, 1.1, 1.1);
+                //dabut.titleLabel!.center = CGPoint(x: dabut.titleLabel!.center.x + wChanger, y: dabut.titleLabel!.center.y + hChanger);
+                dabut.titleLabel?.font = UIFont(name: "Lato-Regular", size: 26.0)
+                
+                }, completion: { finished in
+                    
+            })
+            
+        }
+        
+        
+    }
+    
+    func unpressed(dabut: UIButton){
+        
+        
+        
+        let time1 = 0.1
+        
+        
+        let wChanger = CGFloat(5.0)
+        let hChanger = CGFloat(10.0)
+        let wChanger2 = CGFloat(3.0)
+        let hChanger2 = CGFloat(6.0)
+        let startingWidth = dabut.frame.width - wChanger
+        let startingHeight = dabut.frame.height - hChanger
+        let startingX = dabut.frame.origin.x + wChanger/2.0
+        let startingY = dabut.frame.origin.y + hChanger/2.0
+        
+        if(self.isScrolling == false){
+            hasStartedClick = false
+            UIView.animateWithDuration(time1, delay: time1, options: .CurveEaseOut, animations: {
+                
+                dabut.frame = CGRect(x: startingX + (wChanger + wChanger2)/2.0, y: startingY + (hChanger + hChanger2)/2.0, width: startingWidth - wChanger - wChanger2, height: startingHeight - hChanger - hChanger2)
+                dabut.titleLabel?.font = UIFont(name: "Lato-Light", size: 20.0)
+                
+                }, completion: { finished in
+                    
+            })
+            UIView.animateWithDuration(time1, delay: time1*2, options: .CurveEaseOut, animations: {
+                
+                dabut.frame = CGRect(x: startingX, y: startingY, width: startingWidth, height: startingHeight)
+                dabut.titleLabel?.font = UIFont(name: "Lato-Light", size: 24.0)
+                
+                }, completion: { finished in
+                    
+            })
+            
+        }
+    }
+    
+    func selected(dabut: UIButton){
+        
+        let time1 = 0.1
+        
+        
+        let wChanger = CGFloat(5.0)
+        let hChanger = CGFloat(10.0)
+        let wChanger2 = CGFloat(3.0)
+        let hChanger2 = CGFloat(6.0)
+        let startingWidth = dabut.frame.width - wChanger
+        let startingHeight = dabut.frame.height - hChanger
+        let startingX = dabut.frame.origin.x + wChanger/2.0
+        let startingY = dabut.frame.origin.y + hChanger/2.0
+        if(self.isScrolling == false){
+            if(hasStartedClick == false){
+                hasStartedClick = true
+                
+                UIView.animateWithDuration(time1, delay: time1, options: .CurveEaseOut, animations: {
+                    
+                    dabut.frame = CGRect(x: startingX + (wChanger + wChanger2)/2.0, y: startingY + (hChanger + hChanger2)/2.0, width: startingWidth - wChanger - wChanger2, height: startingHeight - hChanger - hChanger2)
+                    dabut.titleLabel?.font = UIFont(name: "Lato-Regular", size: 20.0)
+                    
+                    }, completion: { finished in
+                        
+                })
+                UIView.animateWithDuration(time1, delay: time1*2, options: .CurveEaseOut, animations: {
+                    
+                    dabut.frame = CGRect(x: startingX, y: startingY, width: startingWidth, height: startingHeight)
+                    dabut.titleLabel?.font = UIFont(name: "Lato-Regular", size: 24.0)
+                    
+                    }, completion: { finished in
+                        
+                })
+                
+                hasStartedClick = false
+                self.selectedCode(dabut)
+            }
+            
+            
+        }
+    }
+    
+    func selectedCode(dabut: UIButton){
+        
+
+        let hashtagID = self.hashtagIdIndex[dabut.titleLabel!.text!]
+        let isSelected = self.hashtagSelectedIndex[hashtagID!]
+        println("Hashtag is false:\(isSelected)")
+        if(isSelected == false){
+            self.hashtagSelectedIndex[hashtagID!] = true
+            self.makeHashtagSelected(dabut)
+            hasSelectedAHashtag = true
+        }
+        else{
+            self.hashtagSelectedIndex[hashtagID!] = false
+            self.makeHashtagunSelected(dabut)
+        }
+        
+        
+    }
+    
+    
+    func makeHashtagunSelected(hashtag:UIButton){
+        hashtag.titleLabel?.font = UIFont(name: "Lato-Light", size: 24.0)
+        hashtag.backgroundColor = UIColor(red: (255.0/255.0), green: (165.0/255.0), blue: (0.0/255.0), alpha: 1.0)
+        
+        var isOneHashtagTrue = false
+        for i in 0...(self.fakeHashtags.count - 1){
+            let hashId = self.hashtagIdIndex[self.fakeHashtags[i]]
+            if(self.hashtagSelectedIndex[hashId!] == true){
+                isOneHashtagTrue = true
+            }
+        }
+        self.hasSelectedAHashtag = isOneHashtagTrue
+        if(self.hasSelectedAHashtag == false){
+            if(self.commentView.isFirstResponder() == true){
+                self.commentView.resignFirstResponder()
+                self.commentView.text = "What's the Buzz?"
+                self.commentView.textColor = UIColor.lightGrayColor()
+            }
+        }
+        
+    }
+    
+    func makeHashtagSelected(hashtag:UIButton){
+        hashtag.backgroundColor = UIColor(red: (255.0/255.0), green: (119.0/255.0), blue: (0.0/255.0), alpha: 1.0);7
+    }
+    
+    
+    func textViewShouldBeginEditing(textView: UITextView) -> Bool {
+        if (self.hasSelectedAHashtag == true){
+            textView.text = nil
+            textView.textColor = UIColor.blackColor()
+            return true
+        }
+        else{
+            var alert = UIAlertController(title: "Select A Hashtag", message: "Please select a hashtag before writing a post", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+            return false
+        }
+    }
+    
+    
+    func textViewDidBeginEditing(textView: UITextView) {
+
         var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
         tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Start Comment", label: "Did Begin Editing", value: nil).build() as [NSObject : AnyObject])
         
@@ -121,33 +416,34 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        let height2 = commentView.frame.height + oimageView.frame.height + buttonHolder.frame.height
-        scrollView.contentSize = CGSize(width:scrollView.frame.width, height:height2)
-        
+        //
+        //        let height2 = commentView.frame.height + oimageView.frame.height + buttonHolder.frame.height
+        //        scrollView.contentSize = CGSize(width:scrollView.frame.width, height:height2)
+        //
         println("THIS IS THE SENT LOCATION:\(sentLocation)")
         
         
-
-//        oimageView.userInteractionEnabled = true
-//        oimageView.addGestureRecognizer(imageTap)
-        scrollView.bringSubviewToFront(oimageView)
+        
+        
+        //        oimageView.userInteractionEnabled = true
+        //        oimageView.addGestureRecognizer(imageTap)
+        // scrollView.bringSubviewToFront(oimageView)
         
         let imageTap = UITapGestureRecognizer(target: self, action:Selector("clickImage:"))
         // 4
         imageTap.delegate = self
-//        cameraBut.userInteractionEnabled = true
-//        cameraBut.addGestureRecognizer(imageTap)
-//        
+        //        cameraBut.userInteractionEnabled = true
+        //        cameraBut.addGestureRecognizer(imageTap)
+        //
         cameraBLabel.userInteractionEnabled = true
         cameraBLabel.addGestureRecognizer(imageTap)
-
+        
         
         let rollTap = UITapGestureRecognizer(target: self, action:Selector("clickRoll:"))
         // 4
         rollTap.delegate = self
-      //  chooseBut.userInteractionEnabled = true
-      //  chooseBut.addGestureRecognizer(rollTap)
+        //  chooseBut.userInteractionEnabled = true
+        //  chooseBut.addGestureRecognizer(rollTap)
         
         chooseBLabel.userInteractionEnabled = true
         chooseBLabel.addGestureRecognizer(rollTap)
@@ -157,16 +453,16 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         
         imagePicker.dismissViewControllerAnimated(true, completion: nil)
         
-       // let imageView:UIImageView!
+        // let imageView:UIImageView!
         //let image = info[UIImagePickerControllerOriginalImage] as? UIImage
         let image = info[UIImagePickerControllerEditedImage] as? UIImage
         
         
         savedImage = imageWithImage(image!, scaledToSize: CGSizeMake(300, 300))
-
+        
         oimageView.image = savedImage
         hasImage = true
-
+        
     }
     
     
@@ -195,7 +491,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
             
             self.presentViewController(imagePicker, animated: true, completion: nil)
         }
-
+        
         
     }
     @IBAction func cameraButton(){
@@ -221,18 +517,18 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     func clickRoll(sender: UIGestureRecognizer){
         
         println("ROLLING ROLLING ROLLING")
-       /// if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
-            println("Button capture")
-            
-            imagePicker = UIImagePickerController()
-            imagePicker.delegate = self
-            imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
-           // imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
-            //imagePicker.mediaTypes = [kUTTypeImage]
-            imagePicker.mediaTypes = [kUTTypeImage]
-            imagePicker.allowsEditing = true
-            
-            self.presentViewController(imagePicker, animated: true, completion: nil)
+        /// if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
+        println("Button capture")
+        
+        imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
+        // imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
+        //imagePicker.mediaTypes = [kUTTypeImage]
+        imagePicker.mediaTypes = [kUTTypeImage]
+        imagePicker.allowsEditing = true
+        
+        self.presentViewController(imagePicker, animated: true, completion: nil)
         //}
         
         
@@ -257,24 +553,24 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         
     }
     
-
     
-//    @IBAction func showCamera(){
-//        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
-//            println("Button capture")
-//            
-//            imagePicker = UIImagePickerController()
-//            imagePicker.delegate = self
-//            imagePicker.sourceType = UIImagePickerControllerSourceType.Camera;
-//            imagePicker.mediaTypes = [kUTTypeImage]
-//            imagePicker.allowsEditing = true
-//            
-//            self.presentViewController(imagePicker, animated: true, completion: nil)
-//        }
-//        
-//    }
-//    
-
+    
+    //    @IBAction func showCamera(){
+    //        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
+    //            println("Button capture")
+    //
+    //            imagePicker = UIImagePickerController()
+    //            imagePicker.delegate = self
+    //            imagePicker.sourceType = UIImagePickerControllerSourceType.Camera;
+    //            imagePicker.mediaTypes = [kUTTypeImage]
+    //            imagePicker.allowsEditing = true
+    //
+    //            self.presentViewController(imagePicker, animated: true, completion: nil)
+    //        }
+    //
+    //    }
+    //
+    
     func clickChoosePhoto(){
         
     }
@@ -283,7 +579,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         // Dispose of any resources that can be recreated.
     }
     
-
+    
     
     
     @IBAction func did_press_cancel(){
@@ -308,33 +604,33 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
             dispatch_async(dispatch_get_main_queue(),{
                 
                 
-            self.commentView.resignFirstResponder()
-            self.showLoadingScreen()
-            self.upload_picture()
-            var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-            tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Send Comment", label: "Picture", value: nil).build() as [NSObject : AnyObject])
+                self.commentView.resignFirstResponder()
+                self.showLoadingScreen()
+                self.upload_picture()
+                var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
+                tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Send Comment", label: "Picture", value: nil).build() as [NSObject : AnyObject])
                 
             })
         }
         else{
             dispatch_async(dispatch_get_main_queue(),{
-            if(self.commentView.text == ""){
-                
-                
-                let alertController = UIAlertController(title: "No Content", message:
-                    "Please enter text or a pic to submit", preferredStyle: UIAlertControllerStyle.Alert)
-                alertController.addAction(UIAlertAction(title: "For Sure", style: UIAlertActionStyle.Default,handler: nil))
-                
-                self.presentViewController(alertController, animated: true, completion: nil)
-                
-            }
-            else{
-                self.commentView.resignFirstResponder()
-                self.showLoadingScreen()
-                self.upload_comment()
-                var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
-                tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Send Comment", label: "No Picture", value: nil).build() as [NSObject : AnyObject])
-            }
+                if(self.commentView.text == ""){
+                    
+                    
+                    let alertController = UIAlertController(title: "No Content", message:
+                        "Please enter text or a pic to submit", preferredStyle: UIAlertControllerStyle.Alert)
+                    alertController.addAction(UIAlertAction(title: "For Sure", style: UIAlertActionStyle.Default,handler: nil))
+                    
+                    self.presentViewController(alertController, animated: true, completion: nil)
+                    
+                }
+                else{
+                    self.commentView.resignFirstResponder()
+                    self.showLoadingScreen()
+                    self.upload_comment()
+                    var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
+                    tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Send Comment", label: "No Picture", value: nil).build() as [NSObject : AnyObject])
+                }
                 
             })
         }
@@ -398,7 +694,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         
     }
     
-
+    
     
     func removeLoadingScreen(){
         //self.loadingScreen.alpha = 0.0
@@ -409,7 +705,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
             }
         }
     }
-
+    
     
     
     func upload_picture(){
@@ -481,54 +777,54 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         //check if we need to submit comment
         var doIt = false
         dispatch_async(dispatch_get_main_queue(),{
-        
-        
-        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
-            println("Response: \(response)")
-            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
-            println("Body: \(strData)")
-            var err: NSError?
-            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
             
-            println("start uploading picture")
-            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
-            if(err != nil) {
-                println(err!.localizedDescription)
-                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
-                println("Error could not parse JSON: '\(jsonStr)'")
+            
+            var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+                println("Response: \(response)")
+                var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Body: \(strData)")
+                var err: NSError?
+                var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+                
                 println("start uploading picture")
-            }
-            else {
-                println("start uploading picture")
-                // The JSONObjectWithData constructor didn't return an error. But, we should still
-                if let parseJSON = json {
-                 
-                    
-                    var test = parseJSON["data"]!["link"] as? String
-                    println(test!)
-                    self.imageLink = test!
-                    
-                    doIt = true
-                   
-                     self.upload_comment()
-                    
-                    // Okay, the parsedJSON is here, let's get the value for 'success' out of it
-                    //self.theJSON = parseJSON
-                    //var success = parseJSON["results"]![0]["hearts"] as? String
-                    //println("Succes: \(success)")
-                    //self.hearts[0] = parseJSON["results"]![0]["hearts"]
+                // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+                if(err != nil) {
+                    println(err!.localizedDescription)
+                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                    println("Error could not parse JSON: '\(jsonStr)'")
+                    println("start uploading picture")
                 }
-                
-                
-            }
+                else {
+                    println("start uploading picture")
+                    // The JSONObjectWithData constructor didn't return an error. But, we should still
+                    if let parseJSON = json {
+                        
+                        
+                        var test = parseJSON["data"]!["link"] as? String
+                        println(test!)
+                        self.imageLink = test!
+                        
+                        doIt = true
+                        
+                        self.upload_comment()
+                        
+                        // Okay, the parsedJSON is here, let's get the value for 'success' out of it
+                        //self.theJSON = parseJSON
+                        //var success = parseJSON["results"]![0]["hearts"] as? String
+                        //println("Succes: \(success)")
+                        //self.hearts[0] = parseJSON["results"]![0]["hearts"]
+                    }
+                    
+                    
+                }
+            })
+            task.resume()
+            
+            
         })
-        task.resume()
-        
-
-              })
         
         if(doIt == true){
-           
+            
         }
     }
     
@@ -572,7 +868,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
                     
                     
                     
-                
+                    
                     
                     self.dismissViewControllerAnimated(true, completion: nil)
                     
@@ -585,9 +881,9 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         task.resume()
         //END AJAX
         
-
+        
     }
-
+    
     
     
     func keyboardWasShown(notification: NSNotification) {
@@ -601,9 +897,9 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     
     
     func textViewDidChange(textView: UITextView) { //Handle the text changes here
-       // print(textView.text); //the textView parameter is the textView where text was changed
+        // print(textView.text); //the textView parameter is the textView where text was changed
         let height2 = commentView.frame.height + oimageView.frame.height + 200.0
-        scrollView.contentSize = CGSize(width:scrollView.frame.width, height:height2)
+        // scrollView.contentSize = CGSize(width:scrollView.frame.width, height:height2)
         
     }
     
@@ -638,8 +934,8 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         })
     }
     
-
     
-   
+    
+    
     
 }

@@ -21,6 +21,8 @@ class custom_cell_person: UITableViewCell{
     
     @IBOutlet var userImage:UIImageView!
     
+    @IBOutlet var relationshipLabel:UILabel!
+    
     var is_friend = "no"
     var comment_id = "nil"
     
@@ -29,6 +31,7 @@ class custom_cell_person: UITableViewCell{
     var widthFiller = 0
     var yPos = 10.0
     var hasLoadedInfo = false
+    
     
     
     override func awakeFromNib() {
@@ -41,10 +44,7 @@ class custom_cell_person: UITableViewCell{
         userImage.layer.cornerRadius = userImage.layer.frame.width/2
         userImage.clipsToBounds = true
         
-        name_label.font = UIFont(name: "HelveticaNeue-Light", size: 18.0)
-        friends_label.font = UIFont(name: "HelveticaNeue-Thin", size: 12.0)
-        
-        
+
         
         
         let color: UIColor = UIColor( red: CGFloat(51.0/255.0), green: CGFloat(51.0/255.0), blue: CGFloat(51.0/255.0), alpha: CGFloat(0.2) )

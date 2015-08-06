@@ -33,6 +33,8 @@ class custom_cell: UITableViewCell{
     @IBOutlet var likerButtonHolder:UIView!
     
     @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
+    
+    @IBOutlet var mainHolderView:UIView!
     var comment_id = "nil"
     var user_id = "nil"
     var imageLink = "none"
@@ -68,12 +70,15 @@ class custom_cell: UITableViewCell{
         self.comment_label.numberOfLines = 0
         self.comment_label.sizeToFit()
         
+        
+        self.mainHolderView.layer.borderWidth=0.0
+        self.mainHolderView.layer.masksToBounds = false
+        self.mainHolderView.layer.cornerRadius = 10
+        self.mainHolderView.clipsToBounds = true
 
         
         userImage.layer.borderWidth=0.0
         userImage.layer.masksToBounds = false
-       // postLabelHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
-        
         userImage.layer.cornerRadius = userImage.layer.frame.width/2
         userImage.clipsToBounds = true
         
@@ -83,8 +88,10 @@ class custom_cell: UITableViewCell{
         
         
         
+       self.contentView.backgroundColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(210.0/255.0), blue: CGFloat(11.0/255.0), alpha: CGFloat(1.0) )
         
-        let color: UIColor = UIColor( red: CGFloat(51.0/255.0), green: CGFloat(51.0/255.0), blue: CGFloat(51.0/255.0), alpha: CGFloat(0.2) )
+      //  self.contentView.backgroundColor = color
+        
         
 //        buttonHolder.layer.borderWidth=1.0
 //        buttonHolder.layer.masksToBounds = false

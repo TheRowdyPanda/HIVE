@@ -35,6 +35,8 @@ class custom_cell_no_images: UITableViewCell{
     @IBOutlet var likerButtonHolder:UIView!
     
     @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
+    
+    @IBOutlet var mainHolderView:UIView!
     var comment_id = "nil"
     var user_id = "nil"
     var imageLink = "none"
@@ -47,6 +49,15 @@ class custom_cell_no_images: UITableViewCell{
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        
+        self.contentView.backgroundColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(210.0/255.0), blue: CGFloat(11.0/255.0), alpha: CGFloat(1.0) )
+        
+        
+            mainHolderView.layer.masksToBounds = false
+        // postLabelHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
+        // userImage.frame = CGRectMake(20, 20, 40, 40)
+        mainHolderView.layer.cornerRadius = 10
+        mainHolderView.clipsToBounds = true
         
         // Initialization code
         

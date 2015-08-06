@@ -16,7 +16,6 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
  
     var refreshControl:UIRefreshControl!
     
-    
     var hasLoaded = false
     var theJSON: NSDictionary!
     var savedFBID = "none"
@@ -32,8 +31,9 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
         savedFBID =
             defaults.stringForKey("saved_fb_id")!
         
-        loadPeople()
-        
+        dispatch_async(dispatch_get_main_queue(),{
+                self.loadPeople()
+            })
         tableView.estimatedRowHeight = 300.0
         tableView.rowHeight = UITableViewAutomaticDimension
         
@@ -43,9 +43,8 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
     override func viewDidLayoutSubviews() {
         let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
         self.tableView.separatorColor = color
-        //self.tableView.separatorStyle
-        self.tableView.separatorInset.left = 0
-        self.tableView.layoutMargins = UIEdgeInsetsZero
+        self.tableView.separatorInset.left = 20
+        self.tableView.separatorInset.right = 20
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -73,10 +72,10 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
             var cell = tableView.dequeueReusableCellWithIdentifier("person_cell_id") as! custom_cell_person
         
         
-        
             cell.selectionStyle = UITableViewCellSelectionStyle.None
             
-            cell.separatorInset.left = -10
+            cell.separatorInset.left = 20
+            cell.separatorInset.right = 20
             cell.layoutMargins = UIEdgeInsetsZero
             cell.tag = 100
             
@@ -85,27 +84,73 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
             //set the cell contents with the ajax data
             cell.name_label?.text = theJSON["results"]![indexPath.row]["userName"] as! String!
             cell.comment_id = "22"//theJSON["results"]![indexPath.row]["c_id"] as! String!
-            cell.friends_label?.text = theJSON["results"]![indexPath.row]["friends"] as! String!
+            cell.friends_label?.text = "MUTUAL FRIENDS: " + (theJSON["results"]![indexPath.row]["friends"] as! String!)
             cell.hashtags = theJSON["results"]![indexPath.row]["hashtags"] as! [(NSString)]
             var yPos = 0.0
             
             let userFBID = theJSON["results"]![indexPath.row]["userID"] as! String!
 
             // cell.userImage.frame = CGRectMake(20, 20, 20, 20)
-            let testUserImg = "http://graph.facebook.com/\(userFBID)/picture?type=small"
+            let testUserImg = "http://graph.facebook.com/\(userFBID)/picture?width=100&height=100"
+//            
+//            let url = NSURL(string: testUserImg)
+//            let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
+//            cell.userImage.image = UIImage(data: data!)
+        
+        var upimage = self.userImageCache[testUserImg]
+        if( upimage == nil ) {
+            // If the image does not exist, we need to download it
             
-            let url = NSURL(string: testUserImg)
-            let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
-            cell.userImage.image = UIImage(data: data!)
+            var imgURL: NSURL = NSURL(string: testUserImg)!
             
+            // Download an NSData representation of the image at the URL
+            let request: NSURLRequest = NSURLRequest(URL: imgURL)
+            NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
+                if error == nil {
+                    upimage = UIImage(data: data)
+                    
+                    // Store the image in to our cache
+                    self.userImageCache[testUserImg] = upimage
+                    dispatch_async(dispatch_get_main_queue(), {
+                        if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_person {
+                            cellToUpdate.userImage?.image = upimage
+                        }
+                    })
+                }
+                else {
+                    println("Error: \(error.localizedDescription)")
+                }
+            })
             
+        }
+        else {
+            dispatch_async(dispatch_get_main_queue(), {
+                if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_person {
+                    cellToUpdate.userImage?.image = upimage
+                }
+            })
+        }
+        
+        
+
+        
+        
+        var mH = 0.0
         
         for i in 0...(cell.hashtags.count - 1){
             
             var title = cell.hashtags[i]
-            let width = Int(title.length)*12
+            let font = UIFont(name: "Lato-Regular", size: 12);
+            //let width = Int(title.length)*12
+            let width = Int(title.sizeWithAttributes([NSFontAttributeName: font!]).width) + 5
+            let height = Int(title.sizeWithAttributes([NSFontAttributeName: font!]).height) + 2
+            
+            if(height > Int(mH)){
+                mH = Double(height)
+            }
+            
             var xpos = 0.0
-            var widthSpacing = 10.0
+            var widthSpacing = 5.0
             if(cell.hashtagButtons.count > 0){
                 let holder = cell.hashtagButtons.last! as UIButton!
                 xpos = Double(holder.frame.origin.x) + Double(holder.frame.width) + widthSpacing;
@@ -115,14 +160,24 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
             
             if(Double(cell.widthFiller) > Double(cell.contentView.frame.width/2.60)){
                 cell.widthFiller = width + Int(widthSpacing)
-                yPos += 50.0
+                let addPos = (Double(height)*0.9)
+                yPos += addPos
                 xpos = 0.0
             }
             if(cell.hasLoadedInfo == false){
-            var newButton = UIButton(frame: CGRect(x: Int(xpos), y: Int(yPos), width: width, height: 35))
-            newButton.backgroundColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
+            var newButton = UIButton(frame: CGRect(x: Int(xpos), y: Int(yPos), width: width, height: Int(height)))
+            newButton.backgroundColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0)
             
             newButton.setTitle(title as String, forState: UIControlState.Normal)
+                
+               // newButton.titleLabel?.text = title as String
+                newButton.titleLabel?.font = font
+                newButton.titleLabel?.backgroundColor = UIColor.whiteColor()
+                
+               // newButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0)
+                //newButton.titleLabel?.textColor = UIColor.blackColor()
+                newButton.titleLabel?.textAlignment = NSTextAlignment.Left
+                newButton.setTitleColor(UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0), forState: UIControlState.Normal)
             cell.hashtagHolder.addSubview(newButton)
             cell.hashtagButtons.append(newButton)
 
@@ -136,13 +191,15 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
         }
 
         
+        let hConst = CGFloat(yPos + mH)
+        let heightConstraint = NSLayoutConstraint(item: cell.hashtagHolder, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1, constant: hConst)
+        cell.hashtagHolder.addConstraint(heightConstraint)
+        
         
             cell.userImage.backgroundColor = UIColor.redColor()
             cell.hasLoadedInfo = true
-        
-//
-//
-            return cell
+
+        return cell
             
             
             
@@ -188,8 +245,8 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
     
     func loadPeople(){
         
-        
-        showLoadingScreen()
+         dispatch_async(dispatch_get_main_queue(),{
+        self.showLoadingScreen()
         let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_people")
         //START AJAX
         var request = NSMutableURLRequest(URL: url!)
@@ -245,7 +302,7 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
         task.resume()
         //END AJAX
         
-        
+        })
         
     }
 

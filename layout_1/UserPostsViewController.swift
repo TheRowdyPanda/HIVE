@@ -91,54 +91,54 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
         
         if(testImage == "none"){
             var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell_no_images", forIndexPath: indexPath) as! custom_cell_no_images
-            cell.tag = 100
-            
-            cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as! String!
-            //cell.comment_label?.text = "\U0001f31d"
-            cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
-            cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
-            cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
-            cell.heart_label?.text = voterValueCache[indexPath.row] as String!
-            cell.user_id = theJSON["results"]![indexPath.row]["user_id"] as! String!
-            
-            
-            
-            
-            let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-            // 4
-            authorTap.delegate = self
-            cell.author_label?.tag = indexPath.row
-            cell.author_label?.userInteractionEnabled = true
-            cell.author_label?.addGestureRecognizer(authorTap)
-            
-            
-            //find out if the user has liked the comment or not
-            var hasLiked = voterCache[indexPath.row] as String!
-            
-            if(hasLiked == "yes"){
-                cell.heart_icon?.userInteractionEnabled = true
-                cell.heart_icon?.image = UIImage(named: "honey_full.jpg")
-                
-                let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
-                // 4
-                voteDown.delegate = self
-                cell.heart_icon?.tag = indexPath.row
-                cell.heart_icon?.addGestureRecognizer(voteDown)
-                
-                
-            }
-            else if(hasLiked == "no"){
-                cell.heart_icon?.userInteractionEnabled = true
-                cell.heart_icon?.image = UIImage(named: "honey_empty.jpg")
-                
-                let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
-                // 4
-                voteUp.delegate = self
-                cell.heart_icon?.tag = indexPath.row
-                cell.heart_icon?.addGestureRecognizer(voteUp)
-            }
-            
-            
+//            cell.tag = 100
+//            
+//            cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as! String!
+//            //cell.comment_label?.text = "\U0001f31d"
+//            cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
+//            cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
+//            cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
+//            cell.heart_label?.text = voterValueCache[indexPath.row] as String!
+//            cell.user_id = theJSON["results"]![indexPath.row]["user_id"] as! String!
+//            
+//            
+//            
+//            
+//            let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
+//            // 4
+//            authorTap.delegate = self
+//            cell.author_label?.tag = indexPath.row
+//            cell.author_label?.userInteractionEnabled = true
+//            cell.author_label?.addGestureRecognizer(authorTap)
+//            
+//            
+//            //find out if the user has liked the comment or not
+//            var hasLiked = voterCache[indexPath.row] as String!
+//            
+//            if(hasLiked == "yes"){
+//                cell.heart_icon?.userInteractionEnabled = true
+//                cell.heart_icon?.image = UIImage(named: "honey_full.jpg")
+//                
+//                let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
+//                // 4
+//                voteDown.delegate = self
+//                cell.heart_icon?.tag = indexPath.row
+//                cell.heart_icon?.addGestureRecognizer(voteDown)
+//                
+//                
+//            }
+//            else if(hasLiked == "no"){
+//                cell.heart_icon?.userInteractionEnabled = true
+//                cell.heart_icon?.image = UIImage(named: "honey_empty.jpg")
+//                
+//                let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
+//                // 4
+//                voteUp.delegate = self
+//                cell.heart_icon?.tag = indexPath.row
+//                cell.heart_icon?.addGestureRecognizer(voteUp)
+//            }
+//            
+//            
             return cell
         }
         else{
@@ -248,9 +248,6 @@ class UserPostsViewController: UIViewController, UITableViewDelegate, UITableVie
                 cell.heart_icon?.tag = indexPath.row
                 cell.heart_icon?.addGestureRecognizer(voteUp)
             }
-            
-            
-            
             
             
             return cell

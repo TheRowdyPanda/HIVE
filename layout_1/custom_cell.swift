@@ -35,12 +35,19 @@ class custom_cell: UITableViewCell{
     @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
     
     @IBOutlet var mainHolderView:UIView!
+    @IBOutlet var hashtagHolder:UIView!
+    
+    var hashtags = [NSString]()
+    var hashtagIdIndex = [String: Int]()
+    var hashtagButtons = [UIButton?]()
+    
     var comment_id = "nil"
     var user_id = "nil"
     var imageLink = "none"
     
     var urlLink = "none"
-    
+    var widthFiller = 0
+    var hasLoadedInfo = false
    
     
 
@@ -90,12 +97,7 @@ class custom_cell: UITableViewCell{
         
        self.contentView.backgroundColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(210.0/255.0), blue: CGFloat(11.0/255.0), alpha: CGFloat(1.0) )
         
-      //  self.contentView.backgroundColor = color
-        
-        
-//        buttonHolder.layer.borderWidth=1.0
-//        buttonHolder.layer.masksToBounds = false
-//        buttonHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
+
         
     }
 //    

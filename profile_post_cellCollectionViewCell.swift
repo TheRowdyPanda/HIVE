@@ -23,6 +23,7 @@ class profile_post_cellCollectionViewCell: UICollectionViewCell {
     @IBOutlet var hashtagHolder:UIView!
     
     var hashtags = [NSString]()
+    var hashtagIdIndex = [String: Int]()
     var hashtagButtons = [UIButton?]()
     
     var widthFiller = 0

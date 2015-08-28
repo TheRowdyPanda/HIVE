@@ -27,6 +27,7 @@ class FirstSceneViewController: UIViewController{
         
         let defaults = NSUserDefaults.standardUserDefaults()
         let fbid = defaults.stringForKey("saved_fb_id")
+        let numHashtags = defaults.stringForKey("numHashtags")
         if(fbid != nil){
             
             if(fbid == "none"){
@@ -40,17 +41,32 @@ class FirstSceneViewController: UIViewController{
                 self.presentViewController(mainView, animated: false, completion: nil)
             }
             else{
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-            //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-            let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as! UITabBarController
+                if(numHashtags == nil){
+                    
+                    let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+                    //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+                    //let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as! UITabBarController
+                    let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("pick_hashtags_id") as! pickHashtagsInitialViewController
+                    
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                    
+                    self.presentViewController(mainView, animated: false, completion: nil)
+                    
+                }
+                else{
+                    
+                    let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+                    //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+                    let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as! UITabBarController
+                   // let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("pick_hashtags_id") as! pickHashtagsInitialViewController
+                    
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                    
+                    self.presentViewController(mainView, animated: false, completion: nil)
+                    
+                    
+                }
             
-               //let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("pick_hashtags_id") as! pickHashtagsInitialViewController
-            //let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("PersonTableViewControllerID") as! PersonTableViewController
-                
-            
-            self.dismissViewControllerAnimated(true, completion: nil)
-            
-            self.presentViewController(fbView, animated: false, completion: nil)
             }
             
             

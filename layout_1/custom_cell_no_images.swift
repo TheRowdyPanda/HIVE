@@ -17,26 +17,25 @@ class custom_cell_no_images: UITableViewCell{
     @IBOutlet var comment_label: UILabel!
     @IBOutlet var author_label: UILabel!
     @IBOutlet var heart_icon: UIImageView!
-    @IBOutlet var loc_label: UILabel!
     @IBOutlet var time_label:UILabel!
     @IBOutlet var userImage:UIImageView!
     @IBOutlet var shareButton:UIImageView!
-    @IBOutlet var shareLabel:UILabel!
-    
-    @IBOutlet var buttonHolder:UIView!
-    @IBOutlet var comHolder:UIView!
-    @IBOutlet var comHolderHolder:UIView!
+
     
     @IBOutlet var replyButtonLabel: UILabel!
-    @IBOutlet var replyButtonImage: UIImageView!
     @IBOutlet var replyNumLabel: UILabel!
-    
-    @IBOutlet var likerButtonLabel:UILabel!
-    @IBOutlet var likerButtonHolder:UIView!
-    
-    @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
-    
+
     @IBOutlet var mainHolderView:UIView!
+    @IBOutlet var hashtagHolder:UIView!
+    
+    var hashtags = [NSString]()
+    var hashtagIdIndex = [String: Int]()
+    var hashtagButtons = [UIButton?]()
+    
+    var widthFiller = 0
+    var yPos = 10.0
+    var hasLoadedInfo = false
+    
     var comment_id = "nil"
     var user_id = "nil"
     var imageLink = "none"
@@ -50,71 +49,28 @@ class custom_cell_no_images: UITableViewCell{
         super.awakeFromNib()
         
         
-        self.contentView.backgroundColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(210.0/255.0), blue: CGFloat(11.0/255.0), alpha: CGFloat(1.0) )
-        
-        
-            mainHolderView.layer.masksToBounds = false
-        // postLabelHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
-        // userImage.frame = CGRectMake(20, 20, 40, 40)
-        mainHolderView.layer.cornerRadius = 10
-        mainHolderView.clipsToBounds = true
-        
-        // Initialization code
-        
-        
-        //        if(imageLink == "none"){
-        //            //xcomImage.removeFromSuperview()
-        //            //            /http://i.imgur.com/qG8Pg55.jpg
-        //            let url = NSURL(string: "http://i.imgur.com/ckSBw57.jpg")
-        //            let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
-        //            comImage.image = UIImage(data: data!)
-        //        }
-        //        else{
-        //
-        //            let url = NSURL(string: imageLink)
-        //            let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
-        //            comImage.image = UIImage(data: data!)
-        //
-        //
-        //        }
-        
         self.comment_label.numberOfLines = 0
         self.comment_label.sizeToFit()
         
         
+        self.mainHolderView.layer.borderWidth=0.0
+        self.mainHolderView.layer.masksToBounds = false
+        self.mainHolderView.layer.cornerRadius = 10
+        self.mainHolderView.clipsToBounds = true
+        
         
         userImage.layer.borderWidth=0.0
         userImage.layer.masksToBounds = false
-        // postLabelHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
-        // userImage.frame = CGRectMake(20, 20, 40, 40)
         userImage.layer.cornerRadius = userImage.layer.frame.width/2
         userImage.clipsToBounds = true
-        
-       
-        
+
         
         
-        let color: UIColor = UIColor( red: CGFloat(51.0/255.0), green: CGFloat(51.0/255.0), blue: CGFloat(51.0/255.0), alpha: CGFloat(0.2) )
         
-        let color2: UIColor = UIColor( red: CGFloat(200.0/255.0), green: CGFloat(200.0/255.0), blue: CGFloat(230.0/255.0), alpha: CGFloat(1.0) )
+        self.contentView.backgroundColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(210.0/255.0), blue: CGFloat(11.0/255.0), alpha: CGFloat(1.0) )
+
         
-        comHolder.layer.borderWidth = 0.0
-        comHolder.layer.borderColor = UIColor.blackColor().CGColor
-        comHolder.layer.masksToBounds = false
-        comHolder.layer.cornerRadius = 4
-        comHolder.clipsToBounds = true
-        
-        
-        comHolderHolder.layer.shadowColor = color2.CGColor
-        comHolderHolder.layer.shadowOffset = CGSizeMake(0, 0)
-        comHolderHolder.layer.shadowRadius = 2
-        comHolderHolder.layer.shadowOpacity = 0.2
-        
-        
-//        buttonHolder.layer.borderWidth=1.0
-//        buttonHolder.layer.masksToBounds = false
-//        buttonHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
-//        
+
 //        
     }
     //

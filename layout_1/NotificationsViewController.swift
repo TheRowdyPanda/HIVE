@@ -147,6 +147,11 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
             cell.tag = (theJSON["results"]![indexPath.row]["u2Id"] as! String!).toInt()!
             imTit = "Follow.png"
         }
+        if(type == "5"){
+            action = " wants to connect"
+            cell.tag = (theJSON["results"]![indexPath.row]["u2Id"] as! String!).toInt()!
+            imTit = "Follow.png"
+        }
         
         //let retString = otherUser + " " + action + " " + time
         let retString = action

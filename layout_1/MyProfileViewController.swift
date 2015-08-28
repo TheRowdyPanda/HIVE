@@ -9,9 +9,8 @@
 
 import UIKit
 
-
 //http://graph.facebook.com/xUID/picture?width=720&height=720
-class MyProfileViewController: UIViewController, FBLoginViewDelegate, UIGestureRecognizerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class MyProfileViewController: UIViewController, UIGestureRecognizerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     
     @IBOutlet var profilePic: UIImageView!
@@ -21,9 +20,11 @@ class MyProfileViewController: UIViewController, FBLoginViewDelegate, UIGestureR
     
     
     @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hashtagHolderTopLayoutConstraint: NSLayoutConstraint!
+    
     var isBounce:Bool! = false
     var oldScrollPost:CGFloat = 0.0
-    var fakeHashtags = ["MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj"]
+    var fakeHashtags = ["MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj","MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj","MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj"]
     
     @IBOutlet var navBar:UINavigationBar!
     @IBOutlet var navTitle:UINavigationItem!
@@ -88,7 +89,7 @@ class MyProfileViewController: UIViewController, FBLoginViewDelegate, UIGestureR
         var url = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
         var imageData = NSData(contentsOfURL: url!)
         
-        self.postSize = Double(self.view.frame.width/2.0) + 2.0
+        self.postSize = Double(self.view.frame.width/2.0) + 0.0
         
         //UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
 //        var flow = UICollectionViewFlowLayout()
@@ -209,11 +210,76 @@ class MyProfileViewController: UIViewController, FBLoginViewDelegate, UIGestureR
 //        let h = cell.postTextLabel?.frame.height
 //        cell.postTextLabel?.frame = CGRect(x: 10, y: (cell.contentView.frame.height/2.0 - h!/2.0), width: (cell.contentView.frame.width - 20.0), height: h!*2.0)
         //cell.textBacker.frame = cell.postTextLabel.frame
-        cell.dateLabel?.text = "Oioij";
+        cell.dateLabel?.text = theJSON["results"]![indexPath.row]["date"] as! String!
         cell.heartLabel?.text = voterValueCache[indexPath.row] as String!
         cell.timeLabel?.text = theJSON["results"]![indexPath.row]["time"] as! String!
-        //cell.hashtags = theJSON["results"]![indexPath.row]["hashtags"] as! [(NSString)]
-        cell.hashtags = ["FAKE 1", "The Office"]
+        
+        for j in 0...(self.theJSON["results"]![indexPath.row]["hashtags"]!.count - 1){
+            let newHashtagText = self.theJSON["results"]![indexPath.row]["hashtags"]![j]["body"] as! String
+            let newHashtagId = self.theJSON["results"]![indexPath.row]["hashtags"]![j]["id"] as! NSString
+            let daID2 = newHashtagId.integerValue
+            cell.hashtagIdIndex[newHashtagText] = daID2
+        }
+        //cell.hashtags = ["FAKE 1", "The Office"]
+
+        cell.hashtags = self.theJSON["results"]![indexPath.row]["hashtagTitles"] as! [(NSString)]
+        for sv in cell.hashtagHolder.subviews{
+            sv.removeFromSuperview()
+        }
+        cell.hashtagButtons.removeAll(keepCapacity: false)
+        var mH = 0.0
+        var yPos = 0.0
+        cell.widthFiller = 0
+        for i in 0...(cell.hashtags.count - 1){
+            var title = cell.hashtags[i]
+            //            var titleLooker = title as String
+            //            var daID = theJSON["results"]![indexPath.row]["hashtags"]![titleLooker] as! NSString
+            //            let daID2 = daID.integerValue
+            //            cell.hashtagIdIndex[titleLooker] = daID2
+            let font = UIFont(name: "Lato-Regular", size: 12);
+            //let width = Int(title.length)*12
+            let width = Int(title.sizeWithAttributes([NSFontAttributeName: font!]).width) + 12
+            let height = Int(title.sizeWithAttributes([NSFontAttributeName: font!]).height) + 2
+            
+            if(height > Int(mH)){
+                mH = Double(height)
+            }
+            
+            var xpos = 0.0
+            var widthSpacing = 8.0
+            if(cell.hashtagButtons.count > 0){
+                let holder = cell.hashtagButtons.last! as UIButton!
+                xpos = Double(holder.frame.origin.x) + Double(holder.frame.width) + widthSpacing;
+            }
+            
+            cell.widthFiller += width + Int(widthSpacing)
+            
+            if(Double(cell.widthFiller) > Double(cell.hashtagHolder.frame.width)){
+                cell.widthFiller = width + Int(widthSpacing)
+                let addPos = (Double(height) + 3.0)
+                yPos += addPos
+                xpos = 0.0
+            }
+                var newButton = UIButton(frame: CGRect(x: Int(xpos), y: Int(yPos), width: width, height: Int(height)))
+                newButton.backgroundColor = UIColor(red: (255.0/255.0), green: (210.0/255.0), blue: (11/255.0), alpha: 1.0)
+            newButton.layer.masksToBounds = true
+            newButton.layer.cornerRadius = 4.0
+                
+                newButton.setTitle(title as String, forState: UIControlState.Normal)
+                
+                newButton.titleLabel?.font = font
+                //newButton.titleLabel?.textColor = UIColor.blackColor()
+                newButton.titleLabel?.textAlignment = NSTextAlignment.Left
+                newButton.setTitleColor(UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0), forState: UIControlState.Normal)
+                cell.hashtagHolder.addSubview(newButton)
+                cell.hashtagButtons.append(newButton)
+            
+        }
+        
+        let hConst = CGFloat(yPos + mH)
+        let heightConstraint = NSLayoutConstraint(item: cell.hashtagHolder, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1, constant: hConst)
+        cell.hashtagHolder.addConstraint(heightConstraint)
+        
        // cell.replyLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as! String!
         // Configure the cell
         
@@ -258,63 +324,14 @@ class MyProfileViewController: UIViewController, FBLoginViewDelegate, UIGestureR
                 })
             }
         }
-        
-        
-        var mH = 0.0
-        var yPos = 0.0
-        
-        for i in 0...(cell.hashtags.count - 1){
-            
-            var title = cell.hashtags[i]
-            let font = UIFont(name: "Lato-Regular", size: 12);
-            //let width = Int(title.length)*12
-            let width = Int(title.sizeWithAttributes([NSFontAttributeName: font!]).width) + 12
-            let height = Int(title.sizeWithAttributes([NSFontAttributeName: font!]).height) + 2
-            
-            if(height > Int(mH)){
-                mH = Double(height)
-            }
-            
-            var xpos = 0.0
-            var widthSpacing = 8.0
-            if(cell.hashtagButtons.count > 0){
-                let holder = cell.hashtagButtons.last! as UIButton!
-                xpos = Double(holder.frame.origin.x) + Double(holder.frame.width) + widthSpacing;
-            }
-            
-            cell.widthFiller += width + Int(widthSpacing)
-            
-            if(Double(cell.widthFiller) > Double(cell.hashtagHolder.frame.width)){
-                cell.widthFiller = width + Int(widthSpacing)
-                let addPos = (Double(height)*0.9)
-                yPos += addPos
-                xpos = 0.0
-            }
-            if(cell.hasLoadedInfo == false){
-                var newButton = UIButton(frame: CGRect(x: Int(xpos), y: Int(yPos), width: width, height: Int(height)))
-                newButton.backgroundColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0)
-                
-                newButton.setTitle(title as String, forState: UIControlState.Normal)
-                
-                newButton.titleLabel?.font = font
-                //newButton.titleLabel?.textColor = UIColor.blackColor()
-                newButton.titleLabel?.textAlignment = NSTextAlignment.Left
-                newButton.setTitleColor(UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0), forState: UIControlState.Normal)
-                cell.hashtagHolder.addSubview(newButton)
-                cell.hashtagButtons.append(newButton)
-                
-                
-            }
-            else{
-                cell.hashtagButtons[i]?.setTitle(title as String, forState: UIControlState.Normal)
-            }
-            
-            
+        else{
+            cell.backgroundImage?.image = nil
         }
+        
         
 
         
-        cell.hasLoadedInfo = true
+        
     
         
     
@@ -415,7 +432,14 @@ class MyProfileViewController: UIViewController, FBLoginViewDelegate, UIGestureR
     }
     
     @IBAction func customLogout(){
+        println("DID START LOGOUT")
+        //FBSDKAccessToken.currentAccessToken()
         FBSession.activeSession().closeAndClearTokenInformation()
+        let loginManager = FBSDKLoginManager()
+        loginManager.logOut() // this is an instance function
+        
+        
+        
         let defaults = NSUserDefaults.standardUserDefaults()
         //let fbid = defaults.stringForKey("saved_fb_id") as String!
         defaults.removeObjectForKey("saved_fb_id")
@@ -428,29 +452,14 @@ class MyProfileViewController: UIViewController, FBLoginViewDelegate, UIGestureR
         
         self.dismissViewControllerAnimated(true, completion: nil)
         
-        self.presentViewController(mainView, animated: false, completion: nil)
+        //self.presentViewController(mainView, animated: false, completion: nil)
 
     }
     
-    func did_press_logout(){
-        
-        FBSession.activeSession().closeAndClearTokenInformation()
-        let defaults = NSUserDefaults.standardUserDefaults()
-        //let fbid = defaults.stringForKey("saved_fb_id") as String!
-        defaults.removeObjectForKey("saved_fb_id")
-        
-        
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-        let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("fb_login_scene_id") as! UIViewController
-        
-        
-        self.dismissViewControllerAnimated(true, completion: nil)
-        
-        self.presentViewController(mainView, animated: false, completion: nil)
-        
+    func loginViewShowingLoggedOutUser(loginView : FBLoginView!) {
+        println("User Logged Out")
     }
-    
+   
     
     
     //User info buttons
@@ -493,7 +502,7 @@ class MyProfileViewController: UIViewController, FBLoginViewDelegate, UIGestureR
     
     func getUserInfo(){
         
-        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_user_info")
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_user_get_hashtags")
         //START AJAX
         var request = NSMutableURLRequest(URL: url!)
         var session = NSURLSession.sharedSession()
@@ -537,19 +546,14 @@ class MyProfileViewController: UIViewController, FBLoginViewDelegate, UIGestureR
                 
                 // check and make sure that json has a value using optional binding.
                 if let parseJSON = json {
-                    
-                    
-//                    self.rightHandItems[1] = ""
-                    // let leftHandItems: [String] = ["","Last Check In", "Posts", "Followers", "Following"]
-                    self.rightHandItems[1] = parseJSON["results"]![0]["lastLoc"] as! String! ?? ""
-                    self.rightHandItems[2] = parseJSON["results"]![0]["comments"] as! String! ?? ""
-                    self.rightHandItems[3] = parseJSON["results"]![0]["followers"] as! String! ?? ""
-                    self.rightHandItems[4] = parseJSON["results"]![0]["following"] as! String! ?? ""
-           
-                   
+                    let infoJSON = parseJSON as NSDictionary
+
    
-                    
+                    self.fakeHashtags.removeAll(keepCapacity: false)
                     dispatch_async(dispatch_get_main_queue(), {
+                        for j in 0...(infoJSON["results"]!.count - 1){
+                            self.fakeHashtags.append(infoJSON["results"]![j]["body"] as! String)
+                        }
 //                        self.locLable!.text = parseJSON["results"]![0]["lastLoc"] as! String! ?? ""
 //                        self.timeLabel!.text = parseJSON["results"]![0]["lastTime"] as! String! ?? ""
 //                        self.followersLabel!.text = parseJSON["results"]![0]["followers"] as! String! ?? ""
@@ -584,14 +588,14 @@ class MyProfileViewController: UIViewController, FBLoginViewDelegate, UIGestureR
         var hashtagButtons = [UIButton?]()
         var mH = 0.0
         for i in 0...(self.fakeHashtags.count - 1){
-            var title = "#" + (self.fakeHashtags[i] as String)
-            let f = UIFont(name: "Lato-Light", size: 12.0)
+            var title = self.fakeHashtags[i]
+            let f = UIFont(name: "Lato-Regular", size: 14.0)
             let width = Int(title.sizeWithAttributes([NSFontAttributeName: f!]).width) + 6
-            let height = Int(title.sizeWithAttributes([NSFontAttributeName: UIFont.systemFontOfSize(24.0)]).height) + 6
+            let height = Int(title.sizeWithAttributes([NSFontAttributeName: UIFont.systemFontOfSize(24.0)]).height)
             if(height > Int(mH)){
                 mH = Double(height)
             }
-            var xpos = 12.0
+            var xpos = 5.0
             var widthSpacing = 6.0
             if(hashtagButtons.count > 0){
                 let holder = hashtagButtons.last! as UIButton!
@@ -602,15 +606,15 @@ class MyProfileViewController: UIViewController, FBLoginViewDelegate, UIGestureR
             
             if(Int(widthFiller) > Int(self.hashtagHolder.frame.width)){
                 widthFiller = width + Int(widthSpacing)
-                yPos += Double(height) + 12.0
-                xpos = 12.0
+                yPos += Double(height) - 5.0
+                xpos = 5.0
             }
             
             var newButton = UIButton(frame: CGRect(x: Int(xpos), y: Int(yPos), width: width, height: height))
             newButton.backgroundColor = UIColor.clearColor();//UIColor(red: (255.0/255.0), green: (165.0/255.0), blue: (0.0/255.0), alpha: 1.0)
             
             newButton.setTitle(title as String, forState: UIControlState.Normal)
-            newButton.titleLabel?.font = UIFont(name: "Lato-Light", size: 12.0)
+            newButton.titleLabel?.font = f
             newButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
             
             self.hashtagHolder.addSubview(newButton)
@@ -635,10 +639,6 @@ class MyProfileViewController: UIViewController, FBLoginViewDelegate, UIGestureR
         // getMyFriends()
     }
     
-    func loginViewShowingLoggedOutUser(loginView : FBLoginView!) {
-        did_press_logout()
-        println("User Logged Out")
-    }
     
     func loginView(loginView : FBLoginView!, handleError:NSError) {
         println("Error: \(handleError.localizedDescription)")
@@ -1249,17 +1249,18 @@ class MyProfileViewController: UIViewController, FBLoginViewDelegate, UIGestureR
         println("SIZE:\(scrollView.contentSize.height)")
         println("FRAME:\(scrollView.frame.height)")
         if(test >= 0 ){
-            //  animateBarDown()
+            
         }
         else{
-            //    animateBarUp()
+            
+            
             
         }
         
         
         self.oldScrollPost = currentOffset
         
-        if(currentOffset > 20 && currentOffset < (scrollView.contentSize.height - scrollView.frame.height - 100)){
+        if(currentOffset > 0 && currentOffset < (scrollView.contentSize.height - scrollView.frame.height - 100)){
             animateBar(test)
         }
         
@@ -1267,29 +1268,31 @@ class MyProfileViewController: UIViewController, FBLoginViewDelegate, UIGestureR
     
     
     func animateBar(byNum: CGFloat){
+//        self.hashtagHolderTopLayoutConstraint.constant = -1*currentOffset
+        var theChanger = byNum
+        let initVal:CGFloat = 10
+        let maxVal = 0 - self.profilePic.frame.height - self.hashtagHolder.frame.height - 20
+        //let maxVal = 0 - self.postLabelHolder.frame.origin
         
-//        let initVal:CGFloat = 10
-//        let maxVal = 0 - self.profilePic.frame.height - self.postLabelHolder.frame.height - 20
-//        //let maxVal = 0 - self.postLabelHolder.frame.origin
-//        
-//        
-//        if(byNum > 0){
-//            byNum*2.5
-//        }
-//        
-//        topLayoutConstraint.constant = topLayoutConstraint.constant + byNum
-//        
-//        if(topLayoutConstraint.constant < maxVal){
-//            topLayoutConstraint.constant = maxVal
-//        }
-//        else if(topLayoutConstraint.constant > initVal){
-//            topLayoutConstraint.constant = initVal
-//        }
-//        
-//        UIView.animateWithDuration(0.2, delay: 0.0, options: .BeginFromCurrentState, animations: {
+        
+        if(byNum > 0){
+            byNum*50.0
+        }
+        theChanger = theChanger*4.0
+        
+        topLayoutConstraint.constant = topLayoutConstraint.constant + theChanger
+        
+        if(topLayoutConstraint.constant < maxVal){
+            topLayoutConstraint.constant = maxVal
+        }
+        else if(topLayoutConstraint.constant > initVal){
+            topLayoutConstraint.constant = initVal
+        }
+        
+//        UIView.animateWithDuration(0.01, delay: 0.0, options: .BeginFromCurrentState, animations: {
 //            self.view.layoutIfNeeded()
 //            }, completion: nil)
-//        
+        
     }
     
 

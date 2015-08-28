@@ -11,31 +11,40 @@ import UIKit
 import MobileCoreServices
 import CoreLocation
 
-class SweetView: UIImageView {
-    override func intrinsicContentSize() -> CGSize {
-        return CGSize(width: 67, height: 67);
-    }
-}
 
 class WriteCommentViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextViewDelegate, UIGestureRecognizerDelegate, CLLocationManagerDelegate, UIScrollViewDelegate{
     
     let locationManager = CLLocationManager()
-    let fakeHashtags = ["#CounterCulture"]
+    var fakeHashtags = ["#CounterCulture","#Bicycle","#Motorcycle","#Plane","#Train","#Car","#Scooter","#CounterCulture","#Bicycle","#Motorcycle","#Plane","#Train","#Car","#Scooter"]
     @IBOutlet var hashtagScrollHolder:UIScrollView!
+    @IBOutlet var everythingScrollHolder:UIScrollView!
+    @IBOutlet var scrollContentView:UIView!
+    @IBOutlet var scrollContentViewHeightConnstraint:NSLayoutConstraint!
+    @IBOutlet var everythingScrollHolderBottomConstraint:NSLayoutConstraint!
     @IBOutlet var hashtagHolderHeightConstraint:NSLayoutConstraint!
     @IBOutlet var postHolderView:UIView!
+    @IBOutlet var continueLabel: UILabel!
+    @IBOutlet var charNumLabel: UILabel!
     @IBOutlet var postButton:UIButton!
+    @IBOutlet var separatorView:UIView!
+    @IBOutlet var backButton:UIBarButtonItem!
+    @IBOutlet var navigationBar:UINavigationBar!
+    @IBOutlet var navBar:UINavigationItem!
     
     var testString = "1"
     var comment = "empty"
     var authorID = "empty"
     var commingFrom = "none"
+    var hasStartedPost = false
     
     var sentLocation = "none"
+    var maxStringLength = 200;
+    var hashtagJSON: NSDictionary!
     
     @IBOutlet var commentView: UITextView!
     
     @IBOutlet var oimageView: UIImageView!
+    
     
     // @IBOutlet var cameraBut:UIImageView!
     @IBOutlet var cameraBLabel:UILabel!
@@ -71,8 +80,24 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: nil);
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name:UIKeyboardWillHideNotification, object: nil);
+        
+        self.getUserHashtags()
+        self.hasStartedPost = false
         
         self.hashtagScrollHolder.delegate = self
+        self.everythingScrollHolder.delegate = self
+        self.everythingScrollHolder.frame = self.view.frame
+        self.everythingScrollHolder.contentSize = self.view.frame.size
+        
+        self.postHolderView.layer.cornerRadius = 10.0;
+        self.postHolderView.layer.masksToBounds = true;
+        
+        self.separatorView.layer.cornerRadius = 4.0
+        self.separatorView.layer.masksToBounds = true
+        
+        
         self.view.backgroundColor = UIColor(red: (255.0/255.0), green: (210.0/255.0), blue: (11.0/255.0), alpha: 1.0)
         self.locationManager.delegate = self
         
@@ -124,9 +149,113 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         //
         //         writeView.dismissViewControllerAnimated(true, completion: nil)
         
+        
+        
+        
+        if(self.commingFrom == "pickHashtags"){
+            self.continueLabel.userInteractionEnabled = true
+            let imageTap = UITapGestureRecognizer(target: self, action:Selector("continueWithoutPosting"))
+            // 4
+            imageTap.delegate = self
+            self.continueLabel.addGestureRecognizer(imageTap)
+
+        }
+        else{
+            self.navBar.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backIcon.png"), style: UIBarButtonItemStyle.Plain, target: self, action:"did_press_cancel")
+            self.continueLabel.removeFromSuperview()
+        }
+    }
+    
+    func continueWithoutPosting(){
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+        let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as! UITabBarController
+        
+       //self.dismissViewControllerAnimated(true, completion: nil)
+        
+        self.presentViewController(fbView, animated: false, completion: nil)
+        
+    }
+    
+    func getUserHashtags(){
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_user_get_hashtags")
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        var params = ["fb_id":fbid, "gfb_id":fbid] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            
+            //self.theJSON = NSJSONSerialization.JSONObjectWithData(json, options:.MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+                
+            }
+            else {
+                
+                // The JSONObjectWithData constructor didn't return an error. But, we should still
+                
+                
+                
+                // check and make sure that json has a value using optional binding.
+                if let parseJSON = json {
+                    let infoJSON = parseJSON as NSDictionary
+                    self.hashtagJSON = json
+                    
+                    self.fakeHashtags.removeAll(keepCapacity: false)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        for j in 0...(infoJSON["results"]!.count - 1){
+                            self.fakeHashtags.append(infoJSON["results"]![j]["body"] as! String)
+                        }
+                        self.showUserHashtags()
+                    })
+                    //
+                    
+                    
+                    //   self.reload_table()
+                    
+                }
+                else {
+                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                    //   self.showErrorScreen("top")
+                }
+            }
+        })
+        task.resume()
+        //END AJAX
+        
+        
+
+       
+    }
+    
+    func showUserHashtags(){
+        
         for i in 0...(self.fakeHashtags.count - 1){
-            var daID = "22"//self.theJSON["results"]![i]["id"] as! NSString
-            let daID2 = (i*5) + 2//daID.integerValue
+            var daID = self.hashtagJSON["results"]![i]["id"] as! NSString
+            let daID2 = daID.integerValue
             self.createHashtag(self.fakeHashtags[i], id: daID2);
         }
         self.createHashtag("Add New", id: -1)
@@ -138,13 +267,11 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
                 self.hashtagHolderHeightConstraint.constant = CGFloat(height)
             }
             else{
-                self.hashtagScrollHolder.contentSize = CGSize(width: Double(self.hashtagScrollHolder.frame.width), height: height)
+                self.hashtagScrollHolder.contentSize = CGSize(width: Double(self.hashtagScrollHolder.contentSize.width), height: height)
             }
             
         }
-        
     }
-    
     func createHashtag(title: NSString, id:NSInteger){
         //let width = Int(title.length)*12
         println("THE WiDTH\(self.hashtagScrollHolder.frame.width)")
@@ -187,7 +314,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
             newButton.addTarget(self, action: "selected:", forControlEvents: UIControlEvents.TouchUpInside)
         }
         else{
-            
+            newButton.addTarget(self, action: "didPressAddNew", forControlEvents: UIControlEvents.TouchUpInside)
         }
         
         self.hashtagIdIndex[title] = id
@@ -230,7 +357,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
             self.isScrolling = true
         }
     }
-
+    
     
     
     
@@ -347,7 +474,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     
     func selectedCode(dabut: UIButton){
         
-
+        
         let hashtagID = self.hashtagIdIndex[dabut.titleLabel!.text!]
         let isSelected = self.hashtagSelectedIndex[hashtagID!]
         println("Hashtag is false:\(isSelected)")
@@ -361,6 +488,14 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
             self.makeHashtagunSelected(dabut)
         }
         
+        
+    }
+    
+    func didPressAddNew(){
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let hashView = mainStoryboard.instantiateViewControllerWithIdentifier("pick_hashtags_id") as! pickHashtagsInitialViewController
+        hashView.commingFrom = "writeView"
+        self.presentViewController(hashView, animated: true, completion: nil)
         
     }
     
@@ -391,10 +526,34 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         hashtag.backgroundColor = UIColor(red: (255.0/255.0), green: (119.0/255.0), blue: (0.0/255.0), alpha: 1.0);7
     }
     
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        if(text == "\n"){
+            textView.resignFirstResponder()
+            return false
+        }
+        let newString = textView.text as NSString!
+        var newLength = newString.length
+        if(newLength > maxStringLength){
+            let retString = newString.substringWithRange(NSRange(location: 0, length: maxStringLength))
+            textView.text = retString
+            newLength = maxStringLength
+            //return false
+        }
+        self.charNumLabel.text = "\(newLength)/\(maxStringLength)"
+        
+        return true
+    }
+    
     
     func textViewShouldBeginEditing(textView: UITextView) -> Bool {
         if (self.hasSelectedAHashtag == true){
-            textView.text = nil
+            if(self.hasStartedPost == false){
+                textView.text = nil
+                self.hasStartedPost = true
+            }
+            else{
+                
+            }
             textView.textColor = UIColor.blackColor()
             return true
         }
@@ -408,7 +567,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     
     
     func textViewDidBeginEditing(textView: UITextView) {
-
+        
         var tracker = GAI.sharedInstance().trackerWithTrackingId("UA-58702464-2")
         tracker.send(GAIDictionaryBuilder.createEventWithCategory("Write Comment Scene", action: "Start Comment", label: "Did Begin Editing", value: nil).build() as [NSObject : AnyObject])
         
@@ -476,7 +635,37 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     
     
     func clickImage(sender: UIGestureRecognizer){
+        if(self.hasSelectedAHashtag == false){
+            var alert = UIAlertController(title: "Select A Hashtag", message: "Please select a hashtag before choosing a picture", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        }
+        else{
+            println("CLICK CLICK CLICK")
+            if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
+                println("Button capture")
+                
+                imagePicker = UIImagePickerController()
+                imagePicker.delegate = self
+                //imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
+                imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
+                //imagePicker.mediaTypes = [kUTTypeImage]
+                imagePicker.mediaTypes = [kUTTypeImage]
+                imagePicker.allowsEditing = true
+                
+                self.presentViewController(imagePicker, animated: true, completion: nil)
+            }
+        }
         
+        
+    }
+    @IBAction func cameraButton(){
+        if(self.hasSelectedAHashtag == false){
+            var alert = UIAlertController(title: "Select A Hashtag", message: "Please select a hashtag before choosing a picture", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        }
+        else{
         println("CLICK CLICK CLICK")
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
             println("Button capture")
@@ -491,23 +680,6 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
             
             self.presentViewController(imagePicker, animated: true, completion: nil)
         }
-        
-        
-    }
-    @IBAction func cameraButton(){
-        println("CLICK CLICK CLICK")
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
-            println("Button capture")
-            
-            imagePicker = UIImagePickerController()
-            imagePicker.delegate = self
-            //imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
-            imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
-            //imagePicker.mediaTypes = [kUTTypeImage]
-            imagePicker.mediaTypes = [kUTTypeImage]
-            imagePicker.allowsEditing = true
-            
-            self.presentViewController(imagePicker, animated: true, completion: nil)
         }
         
         
@@ -515,26 +687,37 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     
     
     func clickRoll(sender: UIGestureRecognizer){
-        
-        println("ROLLING ROLLING ROLLING")
-        /// if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
-        println("Button capture")
-        
-        imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
-        // imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
-        //imagePicker.mediaTypes = [kUTTypeImage]
-        imagePicker.mediaTypes = [kUTTypeImage]
-        imagePicker.allowsEditing = true
-        
-        self.presentViewController(imagePicker, animated: true, completion: nil)
-        //}
-        
+        if(self.hasSelectedAHashtag == false){
+            var alert = UIAlertController(title: "Select A Hashtag", message: "Please select a hashtag before choosing a picture", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        }
+        else{
+            println("ROLLING ROLLING ROLLING")
+            /// if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
+            println("Button capture")
+            
+            imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
+            // imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
+            //imagePicker.mediaTypes = [kUTTypeImage]
+            imagePicker.mediaTypes = [kUTTypeImage]
+            imagePicker.allowsEditing = true
+            
+            self.presentViewController(imagePicker, animated: true, completion: nil)
+            //}
+        }
         
     }
     @IBAction func rollButton(){
         
+        if(self.hasSelectedAHashtag == false){
+            var alert = UIAlertController(title: "Select A Hashtag", message: "Please select a hashtag before choosing a picture", preferredStyle: UIAlertControllerStyle.Alert)
+            alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alert, animated: true, completion: nil)
+        }
+        else{
         println("ROLLING ROLLING ROLLING")
         /// if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
         println("Button capture")
@@ -549,7 +732,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         
         self.presentViewController(imagePicker, animated: true, completion: nil)
         //}
-        
+        }
         
     }
     
@@ -833,6 +1016,18 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         
         println("Data is: \(self.commentView.text)")
         
+        var hashids = ""
+        
+        for i in 0...(self.fakeHashtags.count - 1){
+            if(self.hashtagSelectedIndex[self.hashtagIdIndex[self.fakeHashtags[i]]!]! == true){
+                let hashNum = self.hashtagIdIndex[self.fakeHashtags[i]]!
+                hashids += "\(hashNum)"
+                println("THE HASH ID:\(hashids)")
+                hashids += " "
+            }
+        }
+        
+        
         let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_submit_this_comment")
         //let url = NSURL(string: "http://www.groopie.co/mobile_get2_top_comments")
         //START AJAX
@@ -840,7 +1035,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         var session = NSURLSession.sharedSession()
         request.HTTPMethod = "POST"
         
-        var params = ["cBody":self.commentView.text, "fb_id":authorID, "latLon":sentLocation, "imgLink":imageLink] as Dictionary<String, String>
+        var params = ["cBody":self.commentView.text, "fb_id":authorID, "latLon":sentLocation, "imgLink":imageLink, "hashids":hashids] as Dictionary<String, String>
         
         var err: NSError?
         request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
@@ -886,12 +1081,24 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
     
     
     
-    func keyboardWasShown(notification: NSNotification) {
+    func keyboardWillShow(notification: NSNotification) {
         var info = notification.userInfo!
         var keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
         
-        UIView.animateWithDuration(0.1, animations: { () -> Void in
-            //commentView.bottomConstraint.constant = keyboardFrame.size.height + 20
+        UIView.animateWithDuration(0.2, animations: { () -> Void in
+            self.everythingScrollHolderBottomConstraint.constant = keyboardFrame.size.height + 20
+            self.hashtagHolderHeightConstraint.constant = 70
+        })
+    }
+    
+    func keyboardWillHide(notification: NSNotification) {
+        var info = notification.userInfo!
+        var keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+        
+        UIView.animateWithDuration(0.2, animations: { () -> Void in
+            self.everythingScrollHolderBottomConstraint.constant = 0
+            self.hashtagHolderHeightConstraint.constant = 160
+            
         })
     }
     

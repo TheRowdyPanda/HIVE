@@ -11,6 +11,7 @@
 
 #import <FacebookSDK/FacebookSDK.h>
 #import <FBSDKShareKit/FBSDKShareKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <Alau.me/AMConnect.h>
 
 #import "GAI.h"

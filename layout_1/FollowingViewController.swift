@@ -74,212 +74,212 @@ class FollowingViewController: UIViewController, UITableViewDelegate, UITableVie
         
         if(testImage == "none"){
             var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell_no_images") as! custom_cell_no_images
-            
-            
-            cell.selectionStyle = UITableViewCellSelectionStyle.None
-            
-            cell.separatorInset.left = -10
-            cell.layoutMargins = UIEdgeInsetsZero
-            cell.imageLink = testImage
-            cell.tag = 100
-            
-            
-            
-            //set the cell contents with the ajax data
-            cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as! String!
-            cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
-            cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
-            cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
-            cell.heart_label?.text = voterValueCache[indexPath.row] as String!
-            cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as! String!
-            cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as! String!
-            let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
-            
-            let myMutableString2 = NSMutableAttributedString(string: "World", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 8.0)!])
-            
-            myMutableString.appendAttributedString(myMutableString2)
-            
-            
-            //     cell.comment_label?.attributedText = myMutableString
-            
-            //var doit: NSAttributedString! = self.parseHTMLString(cell.comment_label?.text!)
-            
-            let asdfasd = cell.comment_label?.text!
-            
-            var gotURL = self.parseHTMLString(asdfasd!)
-            
-            println("OH YEAH:\(gotURL)")
-            
-            if(gotURL.count == 0){
-                println("NO SHOW")
-                cell.urlLink = "none"
-            }
-            else{
-                println("LAST TIME BuDDY:\(gotURL.last)")
-                cell.urlLink = gotURL.last! as! String
-            }
-            
-            
-            let userFBID = theJSON["results"]![indexPath.row]["user_id"] as! String!
-            cell.user_id = userFBID
-            
-            // cell.userImage.frame = CGRectMake(20, 20, 20, 20)
-            let testUserImg = "http://graph.facebook.com/\(userFBID)/picture?type=small"
-            //     let imageLink = "http://graph.facebook.com/\(userFBID)/picture?type=small"
-            //let url = NSURL(string: imageLink)
-            // let data2 = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
-            // comImage.image = UIImage(data: data!)
-            
-            //  cell.userImage.image = UIImage(data:data2!)
-            
-            
-            
-            //GET TEH USER IMAGE
-            var upimage = self.userImageCache[testUserImg]
-            if( upimage == nil ) {
-                // If the image does not exist, we need to download it
-                
-                var imgURL: NSURL = NSURL(string: testUserImg)!
-                
-                // Download an NSData representation of the image at the URL
-                let request: NSURLRequest = NSURLRequest(URL: imgURL)
-                NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
-                    if error == nil {
-                        upimage = UIImage(data: data)
-                        
-                        // Store the image in to our cache
-                        self.userImageCache[testUserImg] = upimage
-                        dispatch_async(dispatch_get_main_queue(), {
-                            if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_no_images {
-                                cellToUpdate.userImage?.image = upimage
-                            }
-                        })
-                    }
-                    else {
-                        println("Error: \(error.localizedDescription)")
-                    }
-                })
-                
-            }
-            else {
-                dispatch_async(dispatch_get_main_queue(), {
-                    if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_no_images {
-                        cellToUpdate.userImage?.image = upimage
-                    }
-                })
-            }
-            
-            
-            
-            
-            
-            
-            
-            
-            let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-            // 4
-            authorTap.delegate = self
-            cell.author_label?.tag = indexPath.row
-            cell.author_label?.userInteractionEnabled = true
-            cell.author_label?.addGestureRecognizer(authorTap)
-            
-            let authorTap2 = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-            // 4
-            authorTap2.delegate = self
-            cell.userImage?.tag = indexPath.row
-            cell.userImage?.userInteractionEnabled = true
-            cell.userImage?.addGestureRecognizer(authorTap2)
-            
-            
-            
-            let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
-            likersTap.delegate = self
-//            cell.likerButtonLabel?.tag = indexPath.row
-//            cell.likerButtonLabel?.userInteractionEnabled = true
-//            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
-            cell.heart_label?.tag = indexPath.row
-            cell.heart_label?.userInteractionEnabled = true
-            cell.heart_label?.addGestureRecognizer(likersTap)
-            
-            
-            
-            let repliesTap = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
-            repliesTap.delegate = self
-            cell.replyButtonImage?.tag = indexPath.row
-            cell.replyButtonImage?.userInteractionEnabled = true
-            cell.replyButtonImage?.addGestureRecognizer(repliesTap)
-            
-            let repliesTap2 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
-            repliesTap2.delegate = self
-            cell.replyButtonLabel?.tag = indexPath.row
-            cell.replyButtonLabel?.userInteractionEnabled = true
-            cell.replyButtonLabel?.addGestureRecognizer(repliesTap2)
-            
-            let repliesTap3 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
-            repliesTap3.delegate = self
-            cell.replyNumLabel?.tag = indexPath.row
-            cell.replyNumLabel?.userInteractionEnabled = true
-            cell.replyNumLabel?.addGestureRecognizer(repliesTap3)
-            
-            
-            
-            
-            
-            //
-            
-            //
-            //
-            let shareTap = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
-            shareTap.delegate = self
-            cell.shareLabel?.tag = indexPath.row
-            cell.shareLabel?.userInteractionEnabled = true
-            cell.shareLabel?.addGestureRecognizer(shareTap)
-            // cell.bringSubviewToFront(cell.shareLabel)
-            // cell.contentView.bringSubviewToFront(cell.shareLabel)
-            
-            let shareTap2 = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
-            shareTap2.delegate = self
-            cell.shareButton?.tag = indexPath.row
-            cell.shareButton?.userInteractionEnabled = true
-            cell.shareButton?.addGestureRecognizer(shareTap2)
-            // cell.bringSubviewToFront(cell.shareButton)
-            //
-            
-            //find out if the user has liked the comment or not
-            var hasLiked = voterCache[indexPath.row] as String!
-            
-            if(hasLiked == "yes"){
-                cell.heart_icon?.userInteractionEnabled = true
-                cell.heart_icon?.image = UIImage(named: "button_heart.png")
-                
-                let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
-                // 4
-                voteDown.delegate = self
-                cell.heart_icon?.tag = indexPath.row
-                cell.heart_icon?.addGestureRecognizer(voteDown)
-                
-                
-            }
-            else if(hasLiked == "no"){
-                cell.heart_icon?.userInteractionEnabled = true
-                cell.heart_icon?.image = UIImage(named: "button_heart_empty.png")
-                
-                let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
-                // 4
-                voteUp.delegate = self
-                cell.heart_icon?.tag = indexPath.row
-                cell.heart_icon?.addGestureRecognizer(voteUp)
-            }
-            
-            
-            
-            let voteUp2 = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
-            cell.likerButtonHolder?.userInteractionEnabled = true
-            voteUp2.delegate = self
-            cell.likerButtonHolder?.tag = indexPath.row
-            cell.likerButtonHolder?.addGestureRecognizer(voteUp2)
-            
-            
+//            
+//            
+//            cell.selectionStyle = UITableViewCellSelectionStyle.None
+//            
+//            cell.separatorInset.left = -10
+//            cell.layoutMargins = UIEdgeInsetsZero
+//            cell.imageLink = testImage
+//            cell.tag = 100
+//            
+//            
+//            
+//            //set the cell contents with the ajax data
+//            cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as! String!
+//            cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
+//            cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
+//            cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
+//            cell.heart_label?.text = voterValueCache[indexPath.row] as String!
+//            cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as! String!
+//            cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as! String!
+//            let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
+//            
+//            let myMutableString2 = NSMutableAttributedString(string: "World", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 8.0)!])
+//            
+//            myMutableString.appendAttributedString(myMutableString2)
+//            
+//            
+//            //     cell.comment_label?.attributedText = myMutableString
+//            
+//            //var doit: NSAttributedString! = self.parseHTMLString(cell.comment_label?.text!)
+//            
+//            let asdfasd = cell.comment_label?.text!
+//            
+//            var gotURL = self.parseHTMLString(asdfasd!)
+//            
+//            println("OH YEAH:\(gotURL)")
+//            
+//            if(gotURL.count == 0){
+//                println("NO SHOW")
+//                cell.urlLink = "none"
+//            }
+//            else{
+//                println("LAST TIME BuDDY:\(gotURL.last)")
+//                cell.urlLink = gotURL.last! as! String
+//            }
+//            
+//            
+//            let userFBID = theJSON["results"]![indexPath.row]["user_id"] as! String!
+//            cell.user_id = userFBID
+//            
+//            // cell.userImage.frame = CGRectMake(20, 20, 20, 20)
+//            let testUserImg = "http://graph.facebook.com/\(userFBID)/picture?type=small"
+//            //     let imageLink = "http://graph.facebook.com/\(userFBID)/picture?type=small"
+//            //let url = NSURL(string: imageLink)
+//            // let data2 = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
+//            // comImage.image = UIImage(data: data!)
+//            
+//            //  cell.userImage.image = UIImage(data:data2!)
+//            
+//            
+//            
+//            //GET TEH USER IMAGE
+//            var upimage = self.userImageCache[testUserImg]
+//            if( upimage == nil ) {
+//                // If the image does not exist, we need to download it
+//                
+//                var imgURL: NSURL = NSURL(string: testUserImg)!
+//                
+//                // Download an NSData representation of the image at the URL
+//                let request: NSURLRequest = NSURLRequest(URL: imgURL)
+//                NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
+//                    if error == nil {
+//                        upimage = UIImage(data: data)
+//                        
+//                        // Store the image in to our cache
+//                        self.userImageCache[testUserImg] = upimage
+//                        dispatch_async(dispatch_get_main_queue(), {
+//                            if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_no_images {
+//                                cellToUpdate.userImage?.image = upimage
+//                            }
+//                        })
+//                    }
+//                    else {
+//                        println("Error: \(error.localizedDescription)")
+//                    }
+//                })
+//                
+//            }
+//            else {
+//                dispatch_async(dispatch_get_main_queue(), {
+//                    if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_no_images {
+//                        cellToUpdate.userImage?.image = upimage
+//                    }
+//                })
+//            }
+//            
+//            
+//            
+//            
+//            
+//            
+//            
+//            
+//            let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
+//            // 4
+//            authorTap.delegate = self
+//            cell.author_label?.tag = indexPath.row
+//            cell.author_label?.userInteractionEnabled = true
+//            cell.author_label?.addGestureRecognizer(authorTap)
+//            
+//            let authorTap2 = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
+//            // 4
+//            authorTap2.delegate = self
+//            cell.userImage?.tag = indexPath.row
+//            cell.userImage?.userInteractionEnabled = true
+//            cell.userImage?.addGestureRecognizer(authorTap2)
+//            
+//            
+//            
+//            let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
+//            likersTap.delegate = self
+////            cell.likerButtonLabel?.tag = indexPath.row
+////            cell.likerButtonLabel?.userInteractionEnabled = true
+////            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
+//            cell.heart_label?.tag = indexPath.row
+//            cell.heart_label?.userInteractionEnabled = true
+//            cell.heart_label?.addGestureRecognizer(likersTap)
+//            
+//            
+//            
+//            let repliesTap = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
+//            repliesTap.delegate = self
+//            cell.replyButtonImage?.tag = indexPath.row
+//            cell.replyButtonImage?.userInteractionEnabled = true
+//            cell.replyButtonImage?.addGestureRecognizer(repliesTap)
+//            
+//            let repliesTap2 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
+//            repliesTap2.delegate = self
+//            cell.replyButtonLabel?.tag = indexPath.row
+//            cell.replyButtonLabel?.userInteractionEnabled = true
+//            cell.replyButtonLabel?.addGestureRecognizer(repliesTap2)
+//            
+//            let repliesTap3 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
+//            repliesTap3.delegate = self
+//            cell.replyNumLabel?.tag = indexPath.row
+//            cell.replyNumLabel?.userInteractionEnabled = true
+//            cell.replyNumLabel?.addGestureRecognizer(repliesTap3)
+//            
+//            
+//            
+//            
+//            
+//            //
+//            
+//            //
+//            //
+//            let shareTap = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
+//            shareTap.delegate = self
+//            cell.shareLabel?.tag = indexPath.row
+//            cell.shareLabel?.userInteractionEnabled = true
+//            cell.shareLabel?.addGestureRecognizer(shareTap)
+//            // cell.bringSubviewToFront(cell.shareLabel)
+//            // cell.contentView.bringSubviewToFront(cell.shareLabel)
+//            
+//            let shareTap2 = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
+//            shareTap2.delegate = self
+//            cell.shareButton?.tag = indexPath.row
+//            cell.shareButton?.userInteractionEnabled = true
+//            cell.shareButton?.addGestureRecognizer(shareTap2)
+//            // cell.bringSubviewToFront(cell.shareButton)
+//            //
+//            
+//            //find out if the user has liked the comment or not
+//            var hasLiked = voterCache[indexPath.row] as String!
+//            
+//            if(hasLiked == "yes"){
+//                cell.heart_icon?.userInteractionEnabled = true
+//                cell.heart_icon?.image = UIImage(named: "button_heart.png")
+//                
+//                let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
+//                // 4
+//                voteDown.delegate = self
+//                cell.heart_icon?.tag = indexPath.row
+//                cell.heart_icon?.addGestureRecognizer(voteDown)
+//                
+//                
+//            }
+//            else if(hasLiked == "no"){
+//                cell.heart_icon?.userInteractionEnabled = true
+//                cell.heart_icon?.image = UIImage(named: "button_heart_empty.png")
+//                
+//                let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
+//                // 4
+//                voteUp.delegate = self
+//                cell.heart_icon?.tag = indexPath.row
+//                cell.heart_icon?.addGestureRecognizer(voteUp)
+//            }
+//            
+//            
+//            
+//            let voteUp2 = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
+//            cell.likerButtonHolder?.userInteractionEnabled = true
+//            voteUp2.delegate = self
+//            cell.likerButtonHolder?.tag = indexPath.row
+//            cell.likerButtonHolder?.addGestureRecognizer(voteUp2)
+//            
+//            
             
             
             

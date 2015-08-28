@@ -25,6 +25,7 @@ class custom_cell_person: UITableViewCell{
     
     var is_friend = "no"
     var comment_id = "nil"
+    var user_id = "nil"
     
     var hashtags = [NSString]()
     var hashtagButtons = [UIButton?]()

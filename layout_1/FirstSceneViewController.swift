@@ -48,6 +48,7 @@ class FirstSceneViewController: UIViewController{
                     //let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as! UITabBarController
                     let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("pick_hashtags_id") as! pickHashtagsInitialViewController
                     
+                    mainView.commingFrom = "firstView"
                     self.dismissViewControllerAnimated(true, completion: nil)
                     
                     self.presentViewController(mainView, animated: false, completion: nil)

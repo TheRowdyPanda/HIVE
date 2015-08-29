@@ -11,965 +11,742 @@ import UIKit
 
 
 //http://graph.facebook.com/xUID/picture?width=720&height=720
-class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate{
+class ProfileViewController: UIViewController, UIGestureRecognizerDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     
+    @IBOutlet var profilePic: UIImageView!
     
-    var commingFrom = "nil"
+    //@IBOutlet var loadingScreen: UIImageView!
+    @IBOutlet var collectionView: UICollectionView!
+    @IBOutlet var exitButton: UIButton!
     
-    var userName = "none"
-    var userFBID = "none"
-  
-        
-        @IBOutlet var profilePic: UIImageView!
+    
     @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
+    @IBOutlet weak var hashtagHolderTopLayoutConstraint: NSLayoutConstraint!
+    
     var isBounce:Bool! = false
     var oldScrollPost:CGFloat = 0.0
-        //@IBOutlet var loadingScreen: UIImageView!
-        
-        @IBOutlet var tableView:UITableView!
-        @IBOutlet var navBar:UINavigationBar!
-        @IBOutlet var navTitle:UINavigationItem!
-        @IBOutlet var postLabelHolder: UIView!
-    @IBOutlet var numPostLabel:UILabel!
+    var fakeHashtags = ["MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj","MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj","MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj"]
     
-        
-        @IBOutlet var locLable:UILabel!
-        @IBOutlet var timeLabel:UILabel!
-        @IBOutlet var followersName:UILabel!
-        @IBOutlet var followersLabel:UILabel!
-        @IBOutlet var followingName:UILabel!
-        @IBOutlet var followingLabel:UILabel!
+//    @IBOutlet var navBar:UINavigationBar!
+//    @IBOutlet var navTitle:UINavigationItem!
     
     @IBOutlet var followButton:UIButton!
-        
-        var imageCache = [String : UIImage]()
-        var userImageCache = [String: UIImage]()
+    @IBOutlet var blockButton:UIButton!
+    
+    @IBOutlet var hashtagHolder:UIView!
+    
+    @IBOutlet var mutualFriendsLabel:UILabel!
+    
+    @IBOutlet var backgroundProfileImage:UIImageView!
+    var userFBID = "none"
+    var userName = "none"
+    //@IBOutlet var postLabelHolder: UIView!
+    
+    //@IBOutlet var numPostLabel:UILabel!
+    
+    
+    //    @IBOutlet var locLable:UILabel!
+    //    @IBOutlet var timeLabel:UILabel!
+    //    @IBOutlet var followersName:UILabel!
+    //    @IBOutlet var followersLabel:UILabel!
+    //    @IBOutlet var followingName:UILabel!
+    //    @IBOutlet var followingLabel:UILabel!
+    
+    var imageCache = [String : UIImage]()
+    var userImageCache = [String: UIImage]()
+    var postImageCache = [String: UIImage]()
     
     var voterCache = [Int : String]()
     var voterValueCache = [Int : String]()
-        //let transportItems = ["Bus","Helicopter","Truck","Boat","Bicycle","Motorcycle","Plane","Train","Car","Scooter","Caravan"]
-        
-        let leftHandItems: [String] = ["","Last Check In", "Posts", "Followers", "Following"]
-        
-        var rightHandItems: [String] = ["","@This Place", "250", "92", "99"]
-        
-        var theJSON: NSDictionary!
-        var theUserJSON: NSDictionary!
-        var hasLoaded = false
-        var numOfCells = 0
     
     var currentUserLocation = "none"
+    var postSize = 10.0
+    var postMargin = 0.0
+    let numCellsAtATime = 20
+    
+    //let transportItems = ["Bus","Helicopter","Truck","Boat","Bicycle","Motorcycle","Plane","Train","Car","Scooter","Caravan"]
+    
+    let leftHandItems: [String] = ["","Last Check In", "Posts", "Followers", "Following"]
+    
+    var rightHandItems: [String] = ["","@This Place", "250", "92", "99"]
+    
+    var theJSON: NSDictionary!
+    var theUserJSON: NSDictionary!
+    var hasLoaded = false
+    var numOfCells = 0
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        //titleItem.title = "TESTING"
+        println("THE WIDTH IS:\(self.view.frame.width)")
         
-        override func viewDidLoad() {
-            super.viewDidLoad()
-            //titleItem.title = "TESTING"
-            
-            
-             var myCustomViewController: ViewController = ViewController(nibName: nil, bundle: nil)
-            
-            currentUserLocation = myCustomViewController.currentUserLocation
-            
-            var url = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
-            var imageData = NSData(contentsOfURL: url!)
-            
-            // Returns an animated UIImage
-            
-            //self.navBar.topItem.title = "SDKFJ"
-            
-            navTitle.title = userName
-            //var timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("reload_table"), userInfo: nil, repeats: false)
-            
-            
-            
-            // tableView.tableFooterView = UIView(frame: CGRectZero)
-            
-            //  self.tableView.rowHeight = tableView.frame.height/5
-
-            
-            let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
-            
-            postLabelHolder.layer.borderWidth=2.0
-            postLabelHolder.layer.masksToBounds = false
-            postLabelHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
-            
-            //profilePic.layer.cornerRadius = 13
-            postLabelHolder.clipsToBounds = true
-            
-            
-            let followingTap = UITapGestureRecognizer(target: self, action:Selector("showFollowing"))
-            // 4
-            followingTap.delegate = self
-            followingLabel.userInteractionEnabled = true
-            followingLabel.addGestureRecognizer(followingTap)
-            followingName.userInteractionEnabled = true
-            followingName.addGestureRecognizer(followingTap)
-            
-            
-            
-            let followersTap = UITapGestureRecognizer(target: self, action:Selector("showFollowers"))
-            // 4
-            followersTap.delegate = self
-            followersLabel.userInteractionEnabled = true
-            followersLabel.addGestureRecognizer(followersTap)
-            followersName.userInteractionEnabled = true
-            followersName.addGestureRecognizer(followersTap)
-            
-            
-            
-            tableView.estimatedRowHeight = 300.0
-            tableView.rowHeight = UITableViewAutomaticDimension
-            
-        }
+        var url = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
+        var imageData = NSData(contentsOfURL: url!)
+        
+        self.postSize = Double(self.view.frame.width/2.0) + 0.0
         
         
-        override func viewDidAppear(animated: Bool) {
-            super.viewDidAppear(animated)
-            
-            getUserPicture()
-            loadUserComments()
-            showLoadingScreen()
-            self.getUserInfo()
-            // removeLoadingScreen()
-        }
+        self.followButton.backgroundColor = UIColor(red: (141.0/255.0), green: (198.0/255.0), blue: (63.0/255.0), alpha: 1.0)
+        self.followButton.layer.cornerRadius = 5
+        self.followButton.clipsToBounds = true
+        
+        self.followButton.addTarget(self, action: "followUser", forControlEvents: UIControlEvents.TouchUpInside)
+        
+        self.blockButton.backgroundColor = UIColor(red: (242.0/255.0), green: (108.0/255.0), blue: (79.0/255.0), alpha: 1.0)
+        self.blockButton.layer.cornerRadius = 5
+        self.blockButton.clipsToBounds = true
+        self.blockButton.addTarget(self, action: "blockUser", forControlEvents: UIControlEvents.TouchUpInside)
+        
+        self.profilePic.layer.cornerRadius = self.profilePic.frame.width/2.0
+        self.profilePic.clipsToBounds = true
+        self.profilePic.layer.borderColor = UIColor(red: 0.0, green: (199.0/255.0), blue: (169.0/255.0), alpha: 1.0).CGColor
+        self.profilePic.layer.borderWidth = 2.0
+        
+        var myCustomViewController: ViewController = ViewController(nibName: nil, bundle: nil)
+        
+        currentUserLocation = myCustomViewController.currentUserLocation
+        
+        
+      //  navTitle.title = "My Profile"
+        
+        let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
+        
+        self.exitButton.addTarget(self, action: "dismissSelf", forControlEvents: UIControlEvents.TouchUpInside)
+        
+        getUserPicture()
+        loadUserComments()
+        showLoadingScreen()
+        
+        
+    }
+    
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        
+        self.getUserInfo()
+        // removeLoadingScreen()
+    }
     
     override func viewDidLayoutSubviews() {
         
         let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
-        self.tableView.separatorColor = color
-        //self.tableView.separatorStyle
-        self.tableView.separatorInset.left = 0
-        self.tableView.layoutMargins = UIEdgeInsetsZero
+        
     }
     
-        func getUserPicture(){
-            
-            //let defaults = NSUserDefaults.standardUserDefaults()
-            //let fbid = defaults.stringForKey("saved_fb_id") as String!
-            
-            let url = NSURL(string: "http://graph.facebook.com/\(userFBID)/picture?width=200&height=200")
-            let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
-            profilePic.image = UIImage(data: data!)
-            
-            
-            //
-        }
-        
-        //    func removeLoadingScreen(){
-        //
-        //        UIView.animateWithDuration(0.3, animations: {
-        //            //            self.myFirstLabel.alpha = 1.0
-        //            //            self.myFirstButton.alpha = 1.0
-        //            //            self.mySecondButton.alpha = 1.0
-        //            self.loadingScreen.alpha = 0.0
-        //        })
-        //
-        //    }
-        //    override func viewWillAppear(animated: Bool) {
-        //        super.viewWillAppear(true)
-        //
-        //        println("SLKDJF:LSKDJF:LKDJSF:KLSDFLKJ")
-        //
-        //    }
-        
-        
-        override func didReceiveMemoryWarning() {
-            super.didReceiveMemoryWarning()
-            // Dispose of any resources that can be recreated.
-        }
-        
-        @IBAction func did_press_karma(){
-            
-            
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-            let karmaView = mainStoryboard.instantiateViewControllerWithIdentifier("karma_scene_id") as! KarmaViewController
-            
-            
-            self.presentViewController(karmaView, animated: true, completion: nil)
-            
-        }
     
-        //pragma mark - table view
-        
-        func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            
-            return numOfCells
-            //make sure the json has loaded before we do anything
-            //return 5
-        }
-        
-        
-        func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
-        {
-            let testImage = theJSON["results"]![indexPath.row]["image"] as! String!
-            
-            if(testImage == "none"){
-                var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell_no_images") as! custom_cell_no_images
-//                
-//                
-//                cell.selectionStyle = UITableViewCellSelectionStyle.None
-//                
-//                cell.separatorInset.left = -10
-//                cell.layoutMargins = UIEdgeInsetsZero
-//                cell.imageLink = testImage
-//                cell.tag = 100
-//                
-//                
-//                
-//                //set the cell contents with the ajax data
-//                cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as! String!
-//                cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
-//                cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
-//                cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
-//                cell.heart_label?.text = voterValueCache[indexPath.row] as String!
-//                cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as! String!
-//                cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as! String!
-//                
-//                let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
-//                
-//                let myMutableString2 = NSMutableAttributedString(string: "World", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 8.0)!])
-//                
-//                myMutableString.appendAttributedString(myMutableString2)
-//                
-//                
-//                //     cell.comment_label?.attributedText = myMutableString
-//                
-//                //var doit: NSAttributedString! = self.parseHTMLString(cell.comment_label?.text!)
-//                
-//                let asdfasd = cell.comment_label?.text!
-//                
-//                var gotURL = self.parseHTMLString(asdfasd!)
-//                
-//                println("OH YEAH:\(gotURL)")
-//                
-//                if(gotURL.count == 0){
-//                    println("NO SHOW")
-//                    cell.urlLink = "none"
-//                }
-//                else{
-//                    println("LAST TIME BuDDY:\(gotURL.last)")
-//                    cell.urlLink = gotURL.last! as! String
-//                }
-//                
-//                
-//                let userFBID2 = theJSON["results"]![indexPath.row]["user_id"] as! String!
-//                cell.user_id = userFBID2
-//                
-//                // cell.userImage.frame = CGRectMake(20, 20, 20, 20)
-//                let testUserImg = "http://graph.facebook.com/\(userFBID2)/picture?type=small"
-//                //     let imageLink = "http://graph.facebook.com/\(userFBID)/picture?type=small"
-//          
-//                
-//                var upimage = self.userImageCache[testUserImg]
-//                if( upimage == nil ) {
-//                    //If the image does not exist, we need to download it
-//                    
-//                    var imgURL: NSURL = NSURL(string: testUserImg)!
-//                    
-//                    //Download an NSData representation of the image at the URL
-//                    let request: NSURLRequest = NSURLRequest(URL: imgURL)
-//                    NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
-//                        if error == nil {
-//                            upimage = UIImage(data: data)
-//                            
-//                            //  Store the image in to our cache
-//                            self.userImageCache[testUserImg] = upimage
-//                            dispatch_async(dispatch_get_main_queue(), {
-//                                if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_no_images {
-//                                    cellToUpdate.userImage?.image = upimage
-//                                }
-//                            })
-//                        }
-//                        else {
-//                            println("Error: \(error.localizedDescription)")
-//                        }
-//                    })
-//                    
-//                }
-//                else {
-//                    dispatch_async(dispatch_get_main_queue(), {
-//                        if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell_no_images {
-//                            cellToUpdate.userImage?.image = upimage
-//                        }
-//                    })
-//                }
-//                
-//                
-//                
-////                let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-////                // 4
-////                authorTap.delegate = self
-////                cell.author_label?.tag = indexPath.row
-////                cell.author_label?.userInteractionEnabled = true
-////                cell.author_label?.addGestureRecognizer(authorTap)
-//                
-//                
-//                
-//                
-//                let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
-//                likersTap.delegate = self
-//                //            cell.likerButtonLabel?.tag = indexPath.row
-//                //            cell.likerButtonLabel?.userInteractionEnabled = true
-//                //            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
-//                cell.heart_label?.tag = indexPath.row
-//                cell.heart_label?.userInteractionEnabled = true
-//                cell.heart_label?.addGestureRecognizer(likersTap)
-//                
-//                
-//                
-//                
-//                let repliesTap = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
-//                repliesTap.delegate = self
-//                cell.replyButtonImage?.tag = indexPath.row
-//                cell.replyButtonImage?.userInteractionEnabled = true
-//                cell.replyButtonImage?.addGestureRecognizer(repliesTap)
-//                
-//                let repliesTap2 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
-//                repliesTap2.delegate = self
-//                cell.replyButtonLabel?.tag = indexPath.row
-//                cell.replyButtonLabel?.userInteractionEnabled = true
-//                cell.replyButtonLabel?.addGestureRecognizer(repliesTap2)
-//                
-//                let repliesTap3 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
-//                repliesTap3.delegate = self
-//                cell.replyNumLabel?.tag = indexPath.row
-//                cell.replyNumLabel?.userInteractionEnabled = true
-//                cell.replyNumLabel?.addGestureRecognizer(repliesTap3)
-//                
-//                
-//                
-//                
-//                
-//                //
-//                
-//                //
-//                //
-//                let shareTap = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
-//                shareTap.delegate = self
-//                cell.shareLabel?.tag = indexPath.row
-//                cell.shareLabel?.userInteractionEnabled = true
-//                cell.shareLabel?.addGestureRecognizer(shareTap)
-//                // cell.bringSubviewToFront(cell.shareLabel)
-//                // cell.contentView.bringSubviewToFront(cell.shareLabel)
-//                
-//                let shareTap2 = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
-//                shareTap2.delegate = self
-//                cell.shareButton?.tag = indexPath.row
-//                cell.shareButton?.userInteractionEnabled = true
-//                cell.shareButton?.addGestureRecognizer(shareTap2)
-//                // cell.bringSubviewToFront(cell.shareButton)
-//                //
-//                
-//                //find out if the user has liked the comment or not
-//                var hasLiked = voterCache[indexPath.row] as String!
-//                
-//                if(hasLiked == "yes"){
-//                    cell.heart_icon?.userInteractionEnabled = true
-//                    cell.heart_icon?.image = UIImage(named: "heart_full.png")
-//                    
-//                    let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
-//                    // 4
-//                    voteDown.delegate = self
-//                    cell.heart_icon?.tag = indexPath.row
-//                    cell.heart_icon?.addGestureRecognizer(voteDown)
-//                    
-//                    
-//                }
-//                else if(hasLiked == "no"){
-//                    cell.heart_icon?.userInteractionEnabled = true
-//                    cell.heart_icon?.image = UIImage(named: "heart_empty.png")
-//                    
-//                    let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
-//                    // 4
-//                    voteUp.delegate = self
-//                    cell.heart_icon?.tag = indexPath.row
-//                    cell.heart_icon?.addGestureRecognizer(voteUp)
-//                }
-//                
-//                let voteUp2 = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
-//                cell.likerButtonHolder?.userInteractionEnabled = true
-//                voteUp2.delegate = self
-//                cell.likerButtonHolder?.tag = indexPath.row
-//                cell.likerButtonHolder?.addGestureRecognizer(voteUp2)
-//       
-//                
-                return cell
-                
-                
-                
-            }
-            else{
-                //image
-                var cell = tableView.dequeueReusableCellWithIdentifier("custom_cell") as! custom_cell
-                
-                
-                cell.selectionStyle = UITableViewCellSelectionStyle.None
-                
-                cell.separatorInset.left = -10
-                cell.layoutMargins = UIEdgeInsetsZero
-                cell.imageLink = testImage
-                cell.tag = 200
-                
-                
-                
-                //set the cell contents with the ajax data
-                cell.comment_label?.text = theJSON["results"]![indexPath.row]["comments"] as! String!
-                cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
-                cell.author_label?.text = theJSON["results"]![indexPath.row]["author"] as! String!
-                cell.loc_label?.text = theJSON["results"]![indexPath.row]["location"] as! String!
-                cell.heart_label?.text = voterValueCache[indexPath.row] as String!
-                cell.time_label?.text = theJSON["results"]![indexPath.row]["time"] as! String!
-                
-                cell.replyNumLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as! String!
-                
-                let myMutableString = NSMutableAttributedString(string: "Herro", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 18.0)!])
-                
-                let myMutableString2 = NSMutableAttributedString(string: "World", attributes: [NSFontAttributeName:UIFont(name: "Georgia", size: 8.0)!])
-                
-                myMutableString.appendAttributedString(myMutableString2)
-                
-                
-                //     cell.comment_label?.attributedText = myMutableString
-                
-                //var doit: NSAttributedString! = self.parseHTMLString(cell.comment_label?.text!)
-                
-                let asdfasd = cell.comment_label?.text!
-                
-                var gotURL = self.parseHTMLString(asdfasd!)
-                
-                println("OH YEAH:\(gotURL)")
-                
-                if(gotURL.count == 0){
-                    println("NO SHOW")
-                    cell.urlLink = "none"
-                }
-                else{
-                    println("LAST TIME BuDDY:\(gotURL.last)")
-                    cell.urlLink = gotURL.last! as! String
-                }
-                
-                
-                let userFBID2 = theJSON["results"]![indexPath.row]["user_id"] as! String!
-                cell.user_id = userFBID2
-                let testUserImg = "http://graph.facebook.com/\(userFBID2)/picture?type=small"
-                //     let imageLink = "http://graph.facebook.com/\(userFBID)/picture?type=small"
-                //    let url = NSURL(string: imageLink)
-                //   let data2 = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
-                //            comImage.image = UIImage(data: data!)
-                
-                // cell.userImage.image = UIImage(data:data2!)
-                
-                
-                
-                //GET TEH USER IMAGE
-                var upimage = self.userImageCache[testUserImg]
-                if( upimage == nil ) {
-                    // If the image does not exist, we need to download it
-                    
-                    var imgURL: NSURL = NSURL(string: testUserImg)!
-                    
-                    // Download an NSData representation of the image at the URL
-                    let request: NSURLRequest = NSURLRequest(URL: imgURL)
-                    NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
-                        if error == nil {
-                            upimage = UIImage(data: data)
-                            
-                            // Store the image in to our cache
-                            self.userImageCache[testUserImg] = upimage
-                            dispatch_async(dispatch_get_main_queue(), {
-                                if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell {
-                                    cellToUpdate.userImage?.image = upimage
-                                }
-                            })
-                        }
-                        else {
-                            println("Error: \(error.localizedDescription)")
-                        }
-                    })
-                    
-                }
-                else {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell {
-                            cellToUpdate.userImage?.image = upimage
-                        }
-                    })
-                }
-                
-                
-                
-                
-                
-                
-                
-                
-//                let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
-//                // 4
-//                authorTap.delegate = self
-//                cell.author_label?.tag = indexPath.row
-//                cell.author_label?.userInteractionEnabled = true
-//                cell.author_label?.addGestureRecognizer(authorTap)
-//                
-//                
-//                
-                
-                let likersTap = UITapGestureRecognizer(target: self, action:Selector("showLikers:"))
-                likersTap.delegate = self
-                //            cell.likerButtonLabel?.tag = indexPath.row
-                //            cell.likerButtonLabel?.userInteractionEnabled = true
-                //            cell.likerButtonLabel?.addGestureRecognizer(likersTap)
-                cell.heart_label?.tag = indexPath.row
-                cell.heart_label?.userInteractionEnabled = true
-                cell.heart_label?.addGestureRecognizer(likersTap)
-                
-                
-                
-                
-                let repliesTap = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
-                repliesTap.delegate = self
-                cell.replyButtonImage?.tag = indexPath.row
-                cell.replyButtonImage?.userInteractionEnabled = true
-                cell.replyButtonImage?.addGestureRecognizer(repliesTap)
-                
-                let repliesTap2 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
-                repliesTap2.delegate = self
-                cell.replyButtonLabel?.tag = indexPath.row
-                cell.replyButtonLabel?.userInteractionEnabled = true
-                cell.replyButtonLabel?.addGestureRecognizer(repliesTap2)
-                
-                let repliesTap3 = UITapGestureRecognizer(target: self, action:Selector("showReplies:"))
-                repliesTap3.delegate = self
-                cell.replyNumLabel?.tag = indexPath.row
-                cell.replyNumLabel?.userInteractionEnabled = true
-                cell.replyNumLabel?.addGestureRecognizer(repliesTap3)
-                
-                
-                
-                
-                
-                //
-                
-                //
-                //
-                let shareTap = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
-                shareTap.delegate = self
-                cell.shareLabel?.tag = indexPath.row
-                cell.shareLabel?.userInteractionEnabled = true
-                cell.shareLabel?.addGestureRecognizer(shareTap)
-                // cell.bringSubviewToFront(cell.shareLabel)
-                // cell.contentView.bringSubviewToFront(cell.shareLabel)
-                
-                let shareTap2 = UITapGestureRecognizer(target: self, action:Selector("shareComment:"))
-                shareTap2.delegate = self
-                cell.shareButton?.tag = indexPath.row
-                cell.shareButton?.userInteractionEnabled = true
-                cell.shareButton?.addGestureRecognizer(shareTap2)
-                // cell.bringSubviewToFront(cell.shareButton)
-                //
-                
-                //find out if the user has liked the comment or not
-                var hasLiked = voterCache[indexPath.row] as String!
-                
-                if(hasLiked == "yes"){
-                    cell.heart_icon?.userInteractionEnabled = true
-                    cell.heart_icon?.image = UIImage(named: "heart_full.png")
-                    
-                    let voteDown = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
-                    // 4
-                    voteDown.delegate = self
-                    cell.heart_icon?.tag = indexPath.row
-                    cell.heart_icon?.addGestureRecognizer(voteDown)
-                    
-                    
-                }
-                else if(hasLiked == "no"){
-                    cell.heart_icon?.userInteractionEnabled = true
-                    cell.heart_icon?.image = UIImage(named: "heart_empty.png")
-                    
-                    let voteUp = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
-                    // 4
-                    voteUp.delegate = self
-                    cell.heart_icon?.tag = indexPath.row
-                    cell.heart_icon?.addGestureRecognizer(voteUp)
-                }
-                
-                let voteUp2 = UITapGestureRecognizer(target: self, action:Selector("toggleCommentVote:"))
-                cell.likerButtonHolder?.userInteractionEnabled = true
-                voteUp2.delegate = self
-                cell.likerButtonHolder?.tag = indexPath.row
-                cell.likerButtonHolder?.addGestureRecognizer(voteUp2)
-                
-                
-                let focusImage = UITapGestureRecognizer(target: self, action:Selector("showImageFullscreen:"))
-                focusImage.delegate = self
-                cell.comImage.userInteractionEnabled = true
-                cell.comImage?.tag = indexPath.row
-                cell.comImage?.addGestureRecognizer(focusImage)
-                
-                //give a loading gif to UI
-                var urlgif = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
-                var imageDatagif = NSData(contentsOfURL: urlgif!)
-                
-                
-                let imagegif = UIImage.animatedImageWithData(imageDatagif!)
-                
-                cell.comImage.image = imagegif
-                
-                
-                
-                //GET TEH COMMENT IMAGE
-                var image = self.imageCache[testImage]
-                if( image == nil ) {
-                    // If the image does not exist, we need to download it
-                    var imgURL: NSURL = NSURL(string: testImage)!
-                    
-                    // Download an NSData representation of the image at the URL
-                    let request: NSURLRequest = NSURLRequest(URL: imgURL)
-                    NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
-                        if error == nil {
-                            image = UIImage(data: data)
-                            
-                            // Store the image in to our cache
-                            self.imageCache[testImage] = image
-                            dispatch_async(dispatch_get_main_queue(), {
-                                if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell {
-                                    cellToUpdate.comImage.image = image
-                                }
-                            })
-                        }
-                        else {
-                            println("Error: \(error.localizedDescription)")
-                        }
-                    })
-                    
-                }
-                else {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        if let cellToUpdate = tableView.cellForRowAtIndexPath(indexPath) as? custom_cell {
-                            cellToUpdate.comImage?.image = image
-                        }
-                    })
-                }
-                
-                
-                
-                
-                
-                return cell
-            }
-            
-        }
-        
-        
-        
-        func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-            
-            
-            
-            //
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-            let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
-            //
-            
-            
-            let indCell = tableView.cellForRowAtIndexPath(indexPath)
-            
-            if(indCell?.tag == 100){
-                let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell_no_images
-                
-                comView.sentLocation = currentUserLocation
-                comView.commentID = gotCell.comment_id
-            }
-            if(indCell?.tag == 200){
-                let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell
-                
-                comView.sentLocation = currentUserLocation
-                comView.commentID = gotCell.comment_id
-            }
-            
-            
-            
-            self.presentViewController(comView, animated: true, completion: nil)
-            
-            
-        }
-        
-        
-        
-        //User info buttons
-        
-        func showFollowers(){
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-            let friendView = mainStoryboard.instantiateViewControllerWithIdentifier("user_friends_scene_id") as! UserFriendsViewController
-            
-            
-            let defaults = NSUserDefaults.standardUserDefaults()
-            let fbid = defaults.stringForKey("saved_fb_id") as String!
-            
-            
-            friendView.ajaxRequestString = "followers"
-            friendView.userFBID = userFBID
-            // self.dismissViewControllerAnimated(true, completion: nil)
-            
-            self.presentViewController(friendView, animated: true, completion: nil)
-        }
-        
-        func showFollowing(){
-            
-            println("SLDKFJLS:DKFJLS:DKFSDF")
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-            let friendView = mainStoryboard.instantiateViewControllerWithIdentifier("user_friends_scene_id") as! UserFriendsViewController
-            
-            
-            let defaults = NSUserDefaults.standardUserDefaults()
-            let fbid = defaults.stringForKey("saved_fb_id") as String!
-            
-            
-            friendView.ajaxRequestString = "following"
-            friendView.userFBID = userFBID
-            // self.dismissViewControllerAnimated(true, completion: nil)
-            
-            self.presentViewController(friendView, animated: true, completion: nil)
-            
-        }
-        //AJAX
-        
-        func getUserInfo(){
-            
-            
-            let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_user_info")
-            //START AJAX
-            var request = NSMutableURLRequest(URL: url!)
-            var session = NSURLSession.sharedSession()
-            request.HTTPMethod = "POST"
-            
-            let defaults = NSUserDefaults.standardUserDefaults()
-            var fbid = defaults.stringForKey("saved_fb_id") as String!
-            
-            
-            var params = ["fb_id":userFBID, "gfb_id":fbid] as Dictionary<String, String>
-            
-            var err: NSError?
-            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue("application/json", forHTTPHeaderField: "Accept")
-            
-            var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
-                println("Response: \(response)")
-                var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
-                println("Body: \(strData)")
-                var err: NSError?
-                var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
-                
-                
-                
-                //self.theJSON = NSJSONSerialization.JSONObjectWithData(json, options:.MutableLeaves, error: &err) as? NSDictionary
-                
-                
-                // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
-                if(err != nil) {
-                    println(err!.localizedDescription)
-                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
-                    println("Error could not parse JSON: '\(jsonStr)'")
-                    
-                    self.removeLoadingScreen()
-                    
-                }
-                else {
-                    // The JSONObjectWithData constructor didn't return an error. But, we should still
-                    
-                    
-                    
-                    // check and make sure that json has a value using optional binding.
-                    if let parseJSON = json {
-                        
-                        
-                        //                    self.rightHandItems[1] = ""
-                        // let leftHandItems: [String] = ["","Last Check In", "Posts", "Followers", "Following"]
-                        self.rightHandItems[1] = parseJSON["results"]![0]["lastLoc"] as! String! ?? ""
-                        self.rightHandItems[2] = parseJSON["results"]![0]["comments"] as! String! ?? ""
-                        self.rightHandItems[3] = parseJSON["results"]![0]["followers"] as! String! ?? ""
-                        self.rightHandItems[4] = parseJSON["results"]![0]["following"] as! String! ?? ""
-                        
-                        
-                        
-                        
-                        dispatch_async(dispatch_get_main_queue(), {
-                            //self.locLable!.text = parseJSON["results"]![0]["lastLoc"] as! String! ?? ""
-                            self.locLable!.text = "Sherlock's Pub"
-                            //self.timeLabel!.text = parseJSON["results"]![0]["lastTime"] as! String! ?? ""
-                            self.timeLabel!.text = "5 mins ago"
-                            self.followersLabel!.text = parseJSON["results"]![0]["followers"] as! String! ?? ""
-                            self.followingLabel!.text = parseJSON["results"]![0]["following"] as! String! ?? ""
-                            self.numPostLabel!.text = parseJSON["results"]![0]["comments"] as! String! ?? ""
-                            
-                            let folCheck = parseJSON["results"]![0]["isFollowing"] as! String! ?? ""
-                            if(folCheck == "no"){//user is not following
-                                self.followButton.setImage(UIImage(named: "Follow.png"), forState: UIControlState.Normal)
-                            }
-                            else{
-                                self.followButton.setImage(UIImage(named: "Unfollow.png"), forState: UIControlState.Normal)
-                            }
-                            self.removeLoadingScreen()
-                            // self.tableView.reloadData()
-                        })
-                        //
-                        
-                        
-                        //   self.reload_table()
-                        
-                    }
-                    else {
-                        // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
-                        //   self.showErrorScreen("top")
-                    }
-                }
-            })
-            task.resume()
-            //END AJAX
-            
-            
-            
-        }
-        
-        
-        
-        
-        
-        // Facebook Delegate Methods
-//        
-//        func loginViewShowingLoggedInUser(loginView : FBLoginView!) {
-//            
-//        }
-//        
-//        func loginViewFetchedUserInfo(loginView : FBLoginView!, user: FBGraphUser){
-//            
-//            // getMyFriends()
-//        }
-//        
-//        func loginViewShowingLoggedOutUser(loginView : FBLoginView!) {
-//           // did_press_logout()
-//            println("User Logged Out")
-//        }
-//        
-//        func loginView(loginView : FBLoginView!, handleError:NSError) {
-//            println("Error: \(handleError.localizedDescription)")
-//        }
-//        
-    
-        func parseHTMLString(daString:NSString) -> [NSString]{
-            
-            let daString2 = daString as! String
-            
-            println("DA STRING:\(daString)")
-            let detector = NSDataDetector(types: NSTextCheckingType.Link.rawValue, error: nil)
-            
-            let fakejf = String(daString)
-            //let length = fakejf.utf16Count
-            let length = count(fakejf.utf16)
-            // let links = detector?.matchesInString(daString, options: NSMatchingOptions.ReportCompletion, range: NSMakeRange(0, length)).map {$0 as NSTextCheckingResult}
-            
-            let links = detector?.matchesInString(daString2, options: NSMatchingOptions.ReportCompletion, range: NSMakeRange(0, length)).map {$0 as! NSTextCheckingResult}
-            
-            //        var d = daString as StringE
-            //        if (d.containsString("Http://") == true){
-            //            println(daString)
-            //            println("YEAH BUDDY")
-            //        }
-            
-            var retString = NSString(string: "none")
-            //
-            
-            return links!.filter { link in
-                return link.URL != nil
-                }.map { link -> NSString in
-                    //let urString = String(contentsOfURL: link.URL!)
-                    let urString = link.URL!.absoluteString
-                    println("DA STRING:\(urString)")
-                    retString = urString!
-                    return urString!
-            }
-            
-            // var newString = retString
-            //
-            return [retString]
-            //return "OH YEAH"
-        }
-        
-        
-        
-    @IBAction func did_press_back(){
-        
-        
+    func dismissSelf(){
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     
-        func loadUserComments(){
+    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    //2
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return numOfCells
+    }
+    
+    //3
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        
+        //
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
+        //
+        
+        println("DID RECIEVE CLICK")
+        let indCell = collectionView.cellForItemAtIndexPath(indexPath) as! profile_post_cellCollectionViewCell
+        
+        comView.commentID = indCell.comment_id
+        //        let indCell = tableView.cellForRowAtIndexPath(indexPath)
+        //
+        //        if(indCell?.tag == 100){
+        //            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell_no_images
+        //
+        //            comView.sentLocation = currentUserLocation
+        //            comView.commentID = gotCell.comment_id
+        //        }
+        //        if(indCell?.tag == 200){
+        //            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell
+        //
+        //            comView.sentLocation = currentUserLocation
+        //            comView.commentID = gotCell.comment_id
+        //        }
+        //
+        
+        
+        self.presentViewController(comView, animated: true, completion: nil)
+        
+        
+        
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("profile_post_cell_id", forIndexPath: indexPath) as! profile_post_cellCollectionViewCell
+        
+        
+        
+        cell.postTextLabel?.text = theJSON["results"]![indexPath.row]["comments"] as! String!
+        
+        
+        
+        cell.dateLabel?.text = theJSON["results"]![indexPath.row]["date"] as! String!
+        cell.heartLabel?.text = voterValueCache[indexPath.row] as String!
+        cell.timeLabel?.text = theJSON["results"]![indexPath.row]["time"] as! String!
+        cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
+        
+        for j in 0...(self.theJSON["results"]![indexPath.row]["hashtags"]!.count - 1){
+            let newHashtagText = self.theJSON["results"]![indexPath.row]["hashtags"]![j]["body"] as! String
+            let newHashtagId = self.theJSON["results"]![indexPath.row]["hashtags"]![j]["id"] as! NSString
+            let daID2 = newHashtagId.integerValue
+            cell.hashtagIdIndex[newHashtagText] = daID2
+        }
+        
+        cell.hashtags = self.theJSON["results"]![indexPath.row]["hashtagTitles"] as! [(NSString)]
+        for sv in cell.hashtagHolder.subviews{
+            sv.removeFromSuperview()
+        }
+        cell.hashtagButtons.removeAll(keepCapacity: false)
+        var mH = 0.0
+        var yPos = 0.0
+        cell.widthFiller = 0
+        for i in 0...(cell.hashtags.count - 1){
+            var title = cell.hashtags[i]
+            //            var titleLooker = title as String
+            //            var daID = theJSON["results"]![indexPath.row]["hashtags"]![titleLooker] as! NSString
+            //            let daID2 = daID.integerValue
+            //            cell.hashtagIdIndex[titleLooker] = daID2
+            let font = UIFont(name: "Lato-Regular", size: 12);
+            //let width = Int(title.length)*12
+            let width = Int(title.sizeWithAttributes([NSFontAttributeName: font!]).width) + 12
+            let height = Int(title.sizeWithAttributes([NSFontAttributeName: font!]).height) + 2
             
+            if(height > Int(mH)){
+                mH = Double(height)
+            }
             
-            // showLoadingScreen()
-            let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_user_comments")
-            //START AJAX
-            var request = NSMutableURLRequest(URL: url!)
-            var session = NSURLSession.sharedSession()
-            request.HTTPMethod = "POST"
+            var xpos = 0.0
+            var widthSpacing = 8.0
+            if(cell.hashtagButtons.count > 0){
+                let holder = cell.hashtagButtons.last! as UIButton!
+                xpos = Double(holder.frame.origin.x) + Double(holder.frame.width) + widthSpacing;
+            }
             
-            let defaults = NSUserDefaults.standardUserDefaults()
-            let fbid = defaults.stringForKey("saved_fb_id") as String!
+            cell.widthFiller += width + Int(widthSpacing)
             
-            // var params = ["fbid":savedFBID, "recentLocation":currentUserLocation, "radiusValue":String(radValue)] as Dictionary<String, String>
+            if(Double(cell.widthFiller) > Double(cell.hashtagHolder.frame.width)){
+                cell.widthFiller = width + Int(widthSpacing)
+                let addPos = (Double(height) + 3.0)
+                yPos += addPos
+                xpos = 0.0
+            }
+            var newButton = UIButton(frame: CGRect(x: Int(xpos), y: Int(yPos), width: width, height: Int(height)))
+            newButton.backgroundColor = UIColor(red: (255.0/255.0), green: (210.0/255.0), blue: (11/255.0), alpha: 1.0)
+            newButton.layer.masksToBounds = true
+            newButton.layer.cornerRadius = 4.0
             
-            var params = ["fbid":userFBID, "gfbid":fbid] as Dictionary<String, String>
+            newButton.setTitle(title as String, forState: UIControlState.Normal)
             
-            var err: NSError?
-            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue("application/json", forHTTPHeaderField: "Accept")
-            
-            var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
-                println("Response: \(response)")
-                var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
-                println("Body: \(strData)")
-                var err: NSError?
-                var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
-                
-                
-                // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
-                if(err != nil) {
-                    println(err!.localizedDescription)
-                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
-                    println("Error could not parse JSON: '\(jsonStr)'")
-                }
-                else {
-                    // The JSONObjectWithData constructor didn't return an error. But, we should still
-                    
-                    
-                    
-                    // check and make sure that json has a value using optional binding.
-                    if let parseJSON = json {
-                        
-                        self.theJSON = json
-                        self.writeVoterCache()
-                        self.hasLoaded = true
-                        self.numOfCells = parseJSON["results"]!.count
-                        
-                        self.reload_table()
-                        
-                    }
-                    else {
-                        // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
-                        
-                    }
-                }
-            })
-            task.resume()
-            //END AJAX
-            
-            
+            newButton.titleLabel?.font = font
+            //newButton.titleLabel?.textColor = UIColor.blackColor()
+            newButton.titleLabel?.textAlignment = NSTextAlignment.Left
+            newButton.setTitleColor(UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0), forState: UIControlState.Normal)
+            cell.hashtagHolder.addSubview(newButton)
+            cell.hashtagButtons.append(newButton)
             
         }
         
+        let hConst = CGFloat(yPos + mH)
+        let heightConstraint = NSLayoutConstraint(item: cell.hashtagHolder, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1, constant: hConst)
+        cell.hashtagHolder.addConstraint(heightConstraint)
+        
+        // cell.replyLabel?.text = theJSON["results"]![indexPath.row]["numComments"] as! String!
+        // Configure the cell
+        
+        
+        
+        
+        let imageLink = theJSON["results"]![indexPath.row]["image"] as! String!
+        
+        if(imageLink != "none"){
+            
+            var upimage = self.postImageCache[imageLink]
+            if( upimage == nil ) {
+                //If the image does not exist, we need to download it
+                
+                var imgURL: NSURL = NSURL(string: imageLink)!
+                
+                //Download an NSData representation of the image at the URL
+                let request: NSURLRequest = NSURLRequest(URL: imgURL)
+                NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.mainQueue(), completionHandler: {(response: NSURLResponse!,data: NSData!,error: NSError!) -> Void in
+                    if error == nil {
+                        upimage = UIImage(data: data)
+                        
+                        //  Store the image in to our cache
+                        self.postImageCache[imageLink] = upimage
+                        dispatch_async(dispatch_get_main_queue(), {
+                            if let cellToUpdate = collectionView.cellForItemAtIndexPath(indexPath) as? profile_post_cellCollectionViewCell {
+                                cellToUpdate.backgroundImage?.image = upimage
+                            }
+                        })
+                    }
+                    else {
+                        println("Error: \(error.localizedDescription)")
+                    }
+                })
+                
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    if let cellToUpdate = collectionView.cellForItemAtIndexPath(indexPath) as? profile_post_cellCollectionViewCell {
+                        cellToUpdate.backgroundImage?.image = upimage
+                    }
+                })
+            }
+        }
+        else{
+            cell.backgroundImage?.image = nil
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        return cell
+    }
+    
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        
+        // let flickrPhoto =  photoForIndexPath(indexPath)
+        //            let daSize = CGSize(width: 100.0, height: 100.0)
+        //            //2
+        //            if var size = daSize {
+        //                size.width += 10
+        //                size.height += 10
+        //                return size
+        //            }
+        let sizer = (self.postSize)
+        return CGSize(width: sizer, height: sizer)
+    }
+    
+    //3
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+        let sectionInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+        return sectionInsets
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
+        return 0.0
+    }
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
+        return 0.0
+    }
+    
+    
+    
+    func getUserPicture(){
+        
+        //let defaults = NSUserDefaults.standardUserDefaults()
+        var fbid = userFBID//defaults.stringForKey("saved_fb_id") as String!
+        
+        let url = NSURL(string: "http://graph.facebook.com/\(fbid)/picture?width=200&height=200")
+        // let url = NSURL(string: "http://graph.facebook.com/1382309155407327/picture?width=200&height=200")
+        let data = NSData(contentsOfURL: url!) //make sure your image in this url does exist, otherwise unwrap in a if let check
+        
+        if(data != nil){
+            profilePic.image = UIImage(data: data!)
+            backgroundProfileImage.image = UIImage(data: data!)
+            var effect =  UIBlurEffect(style: UIBlurEffectStyle.Light)
+            
+            var effectView  = UIVisualEffectView(effect: effect)
+            
+            effectView.frame  = CGRectMake(0, 0, backgroundProfileImage.frame.width, backgroundProfileImage.frame.height)
+            
+            backgroundProfileImage.addSubview(effectView)
+            
+        }
+        
+        
+        //
+    }
+    
+    //    func removeLoadingScreen(){
+    //
+    //        UIView.animateWithDuration(0.3, animations: {
+    //            //            self.myFirstLabel.alpha = 1.0
+    //            //            self.myFirstButton.alpha = 1.0
+    //            //            self.mySecondButton.alpha = 1.0
+    //            self.loadingScreen.alpha = 0.0
+    //        })
+    //
+    //    }
+    //    override func viewWillAppear(animated: Bool) {
+    //        super.viewWillAppear(true)
+    //
+    //        println("SLKDJF:LSKDJF:LKDJSF:KLSDFLKJ")
+    //
+    //    }
+    
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func did_press_karma(){
+        
+        
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let karmaView = mainStoryboard.instantiateViewControllerWithIdentifier("karma_scene_id") as! KarmaViewController
+        
+        
+        self.presentViewController(karmaView, animated: true, completion: nil)
+        
+    }
+    
+    @IBAction func customLogout(){
+        println("DID START LOGOUT")
+        //FBSDKAccessToken.currentAccessToken()
+        FBSession.activeSession().closeAndClearTokenInformation()
+        let loginManager = FBSDKLoginManager()
+        loginManager.logOut() // this is an instance function
+        
+        
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        //let fbid = defaults.stringForKey("saved_fb_id") as String!
+        defaults.removeObjectForKey("saved_fb_id")
+        
+        
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+        let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("fb_login_scene_id") as! UIViewController
+        
+        
+        self.dismissViewControllerAnimated(true, completion: nil)
+        
+        //self.presentViewController(mainView, animated: false, completion: nil)
+        
+    }
+    
+    func loginViewShowingLoggedOutUser(loginView : FBLoginView!) {
+        println("User Logged Out")
+    }
+    
+    
+    
+    //User info buttons
+    
+    func showFollowers(){
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let friendView = mainStoryboard.instantiateViewControllerWithIdentifier("user_friends_scene_id")as! UserFriendsViewController
+        
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        
+        friendView.ajaxRequestString = "followers"
+        friendView.userFBID = fbid
+        // self.dismissViewControllerAnimated(true, completion: nil)
+        
+        self.presentViewController(friendView, animated: true, completion: nil)
+    }
+    
+    func showFollowing(){
+        
+        println("SLDKFJLS:DKFJLS:DKFSDF")
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let friendView = mainStoryboard.instantiateViewControllerWithIdentifier("user_friends_scene_id") as! UserFriendsViewController
+        
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        
+        friendView.ajaxRequestString = "following"
+        friendView.userFBID = fbid
+        // self.dismissViewControllerAnimated(true, completion: nil)
+        
+        self.presentViewController(friendView, animated: true, completion: nil)
+        
+    }
+    //AJAX
+    
+    func getUserInfo(){
+        
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_user_get_hashtags")
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = userFBID//defaults.stringForKey("saved_fb_id") as String!
+        let gfbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        var params = ["fb_id":fbid, "gfb_id":gfbid] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            
+            //self.theJSON = NSJSONSerialization.JSONObjectWithData(json, options:.MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+                self.removeLoadingScreen()
+                
+            }
+            else {
+                
+                // The JSONObjectWithData constructor didn't return an error. But, we should still
+                
+                
+                
+                // check and make sure that json has a value using optional binding.
+                if let parseJSON = json {
+                    let infoJSON = parseJSON as NSDictionary
+                    
+                    
+                    self.fakeHashtags.removeAll(keepCapacity: false)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        
+                        if(infoJSON["results"]!.count > 0){
+                            for j in 0...(infoJSON["results"]!.count - 1){
+                                self.fakeHashtags.append(infoJSON["results"]![j]["body"] as! String)
+                            }
+                        }
+                        else{
+                            self.fakeHashtags.append("#NoHashtags")
+                        }
+                        //                        self.locLable!.text = parseJSON["results"]![0]["lastLoc"] as! String! ?? ""
+                        //                        self.timeLabel!.text = parseJSON["results"]![0]["lastTime"] as! String! ?? ""
+                        //                        self.followersLabel!.text = parseJSON["results"]![0]["followers"] as! String! ?? ""
+                        //                        self.followingLabel!.text = parseJSON["results"]![0]["following"] as! String! ?? ""
+                        //                        self.numPostLabel!.text = parseJSON["results"]![0]["comments"] as! String! ?? ""
+                        self.removeLoadingScreen()
+                        self.showUserHashtags()
+                        // self.tableView.reloadData()
+                    })
+                    //
+                    
+                    
+                    //   self.reload_table()
+                    
+                }
+                else {
+                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                    //   self.showErrorScreen("top")
+                }
+            }
+        })
+        task.resume()
+        //END AJAX
+        
+        
+        
+    }
+    
+    func showUserHashtags(){
+        var widthFiller = 0
+        var yPos = 0.0
+        var hashtagButtons = [UIButton?]()
+        var mH = 0.0
+        for i in 0...(self.fakeHashtags.count - 1){
+            var title = self.fakeHashtags[i]
+            let f = UIFont(name: "Lato-Regular", size: 14.0)
+            let width = Int(title.sizeWithAttributes([NSFontAttributeName: f!]).width) + 6
+            let height = Int(title.sizeWithAttributes([NSFontAttributeName: UIFont.systemFontOfSize(24.0)]).height)
+            if(height > Int(mH)){
+                mH = Double(height)
+            }
+            var xpos = 5.0
+            var widthSpacing = 6.0
+            if(hashtagButtons.count > 0){
+                let holder = hashtagButtons.last! as UIButton!
+                xpos = Double(holder.frame.origin.x) + Double(holder.frame.width) + widthSpacing;
+            }
+            
+            widthFiller += width + Int(widthSpacing)
+            
+            if(Int(widthFiller) > Int(self.hashtagHolder.frame.width)){
+                widthFiller = width + Int(widthSpacing)
+                yPos += Double(height) - 5.0
+                xpos = 5.0
+            }
+            
+            var newButton = UIButton(frame: CGRect(x: Int(xpos), y: Int(yPos), width: width, height: height))
+            newButton.backgroundColor = UIColor.clearColor();//UIColor(red: (255.0/255.0), green: (165.0/255.0), blue: (0.0/255.0), alpha: 1.0)
+            
+            newButton.setTitle(title as String, forState: UIControlState.Normal)
+            newButton.titleLabel?.font = f
+            newButton.setTitleColor(UIColor(red: (67.0/255.0), green: (67.0/255.0), blue: (67.0/255.0), alpha: 1.0), forState: UIControlState.Normal)
+            
+            self.hashtagHolder.addSubview(newButton)
+            hashtagButtons.append(newButton)
+        }
+        let hConst = CGFloat(yPos + mH)
+        let heightConstraint = NSLayoutConstraint(item: self.hashtagHolder, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1, constant: hConst)
+        self.hashtagHolder.addConstraint(heightConstraint)
+        
+    }
+    
+    
+    
+    // Facebook Delegate Methods
+    
+    func loginViewShowingLoggedInUser(loginView : FBLoginView!) {
+        
+    }
+    
+    func loginViewFetchedUserInfo(loginView : FBLoginView!, user: FBGraphUser){
+        
+        // getMyFriends()
+    }
+    
+    
+    func loginView(loginView : FBLoginView!, handleError:NSError) {
+        println("Error: \(handleError.localizedDescription)")
+    }
+    
+    
+    func parseHTMLString(daString:NSString) -> [NSString]{
+        
+        let daString2 = daString as! String
+        
+        println("DA STRING:\(daString)")
+        let detector = NSDataDetector(types: NSTextCheckingType.Link.rawValue, error: nil)
+        
+        let fakejf = String(daString)
+        //let length = fakejf.utf16Count
+        let length = count(fakejf.utf16)
+        // let links = detector?.matchesInString(daString, options: NSMatchingOptions.ReportCompletion, range: NSMakeRange(0, length)).map {$0 as NSTextCheckingResult}
+        
+        let links = detector?.matchesInString(daString2, options: NSMatchingOptions.ReportCompletion, range: NSMakeRange(0, length)).map {$0 as! NSTextCheckingResult}
+        
+        //        var d = daString as StringE
+        //        if (d.containsString("Http://") == true){
+        //            println(daString)
+        //            println("YEAH BUDDY")
+        //        }
+        
+        var retString = NSString(string: "none")
+        //
+        
+        return links!.filter { link in
+            return link.URL != nil
+            }.map { link -> NSString in
+                //let urString = String(contentsOfURL: link.URL!)
+                let urString = link.URL!.absoluteString
+                println("DA STRING:\(urString)")
+                retString = urString!
+                return urString!
+        }
+        
+        // var newString = retString
+        //
+        return [retString]
+        //return "OH YEAH"
+    }
+    
+    
+    
+    
+    func loadUserComments(){
+        
+        
+        // showLoadingScreen()
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_user_comments")
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = userFBID//defaults.stringForKey("saved_fb_id") as String!
+        let gfbid = defaults.stringForKey("saved_fb_id") as String!
+        let offset = String(self.numOfCells)
+        let count = String(self.numCellsAtATime)
+        
+        // var params = ["fbid":savedFBID, "recentLocation":currentUserLocation, "radiusValue":String(radValue)] as Dictionary<String, String>
+        
+        var params = ["fbid":fbid, "gfbid":gfbid, "offset":offset, "count":count] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+            }
+            else {
+                // The JSONObjectWithData constructor didn't return an error. But, we should still
+                
+                
+                
+                // check and make sure that json has a value using optional binding.
+                if let parseJSON = json {
+                    
+                    self.theJSON = json
+                    self.writeVoterCache()
+                    self.hasLoaded = true
+                    self.numOfCells = parseJSON["results"]!.count
+                    
+                    self.reload_table()
+                    
+                }
+                else {
+                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                    
+                }
+            }
+        })
+        task.resume()
+        //END AJAX
+        
+        
+        
+    }
     
     func writeVoterCache(){
         
@@ -984,7 +761,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
     }
-        
+    
+    
     func reload_table(){
         let delayTime = dispatch_time(DISPATCH_TIME_NOW,
             Int64(0.3 * Double(NSEC_PER_SEC)))
@@ -992,14 +770,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         dispatch_after(delayTime, dispatch_get_main_queue()) {
             
             dispatch_async(dispatch_get_main_queue(),{
-                self.tableView.reloadData()
+                self.collectionView.reloadData()
                 // self.removeLoadingScreen()
             })
             
         }
         
     }
-
     
     
     func shareComment(sender: UIGestureRecognizer){
@@ -1020,71 +797,70 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         
         
-        let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag, inSection: 0))
-        
-        if(indCell?.tag == 100){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag!, inSection: 0)) as! custom_cell_no_images
-            
-            
-            let shareCom = gotCell.comment_label.text as String!
-            let shareAuth = gotCell.author_label.text as String!
-            
-            let giveMess = "'\(shareCom)'  @\(shareAuth) \n\n @SoLoCoHive (http://apple.co/1yTV9Fj)"
-            
-            
-            
-            
-            let objectsToShare = [giveMess]
-            
-            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
-             activityVC.popoverPresentationController?.sourceView = self.view
-            //New Excluded Activities Code
-            activityVC.excludedActivityTypes = [UIActivityTypeAirDrop,
-                UIActivityTypeAddToReadingList,
-                UIActivityTypePostToTencentWeibo,
-                UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMail,UIActivityTypePostToFlickr,UIActivityTypePostToVimeo,UIActivityTypePostToWeibo,UIActivityTypePrint]
-            //
-            
-            self.presentViewController(activityVC, animated: true, completion: nil)
-            
-            
-            
-        }
-        if(indCell?.tag == 200){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag!, inSection: 0)) as! custom_cell
-            
-            
-            let shareCom = gotCell.comment_label.text as String!
-            let shareAuth = gotCell.author_label.text as String!
-            
-            let giveMess = "'\(shareCom)'  @\(shareAuth) \n\n @SoLoCoHive (http://apple.co/1yTV9Fj)"
-            let hiveSite = NSURL(string: "http://apple.co/1yTV9Fj")
-            
-            let shareImage = gotCell.comImage?.image as UIImage!
-            
-            let objectsToShare = [giveMess, shareImage]
-            
-            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
-             activityVC.popoverPresentationController?.sourceView = self.view
-            //New Excluded Activities Code
-            activityVC.excludedActivityTypes = [UIActivityTypeAirDrop,
-                UIActivityTypeAddToReadingList,
-                UIActivityTypePostToTencentWeibo,
-                UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMail,UIActivityTypePostToFlickr,UIActivityTypePostToVimeo,UIActivityTypePostToWeibo,UIActivityTypePrint]
-            //
-            
-            self.presentViewController(activityVC, animated: true, completion: nil)
-            
-            
-        }
-        
-        
-        
-        
+        //        let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag, inSection: 0))
+        //
+        //        if(indCell?.tag == 100){
+        //            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag!, inSection: 0)) as! custom_cell_no_images
+        //
+        //
+        //            let shareCom = gotCell.comment_label.text as String!
+        //            let shareAuth = gotCell.author_label.text as String!
+        //
+        //            let giveMess = "'\(shareCom)'  @\(shareAuth) \n\n @SoLoCoHive (http://apple.co/1yTV9Fj)"
+        //
+        //
+        //
+        //
+        //            let objectsToShare = [giveMess]
+        //
+        //            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+        //             activityVC.popoverPresentationController?.sourceView = self.view
+        //            //New Excluded Activities Code
+        //            activityVC.excludedActivityTypes = [UIActivityTypeAirDrop,
+        //                UIActivityTypeAddToReadingList,
+        //                UIActivityTypePostToTencentWeibo,
+        //                UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMail,UIActivityTypePostToFlickr,UIActivityTypePostToVimeo,UIActivityTypePostToWeibo,UIActivityTypePrint]
+        //            //
+        //
+        //            self.presentViewController(activityVC, animated: true, completion: nil)
+        //
+        //
+        //
+        //        }
+        //        if(indCell?.tag == 200){
+        //            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: sharedButton.tag!, inSection: 0)) as! custom_cell
+        //
+        //
+        //            let shareCom = gotCell.comment_label.text as String!
+        //            let shareAuth = gotCell.author_label.text as String!
+        //
+        //            let giveMess = "'\(shareCom)'  @\(shareAuth) \n\n @SoLoCoHive (http://apple.co/1yTV9Fj)"
+        //            let hiveSite = NSURL(string: "http://apple.co/1yTV9Fj")
+        //
+        //            let shareImage = gotCell.comImage?.image as UIImage!
+        //
+        //            let objectsToShare = [giveMess, shareImage]
+        //
+        //            let activityVC = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+        //             activityVC.popoverPresentationController?.sourceView = self.view
+        //            //New Excluded Activities Code
+        //            activityVC.excludedActivityTypes = [UIActivityTypeAirDrop,
+        //                UIActivityTypeAddToReadingList,
+        //                UIActivityTypePostToTencentWeibo,
+        //                UIActivityTypeCopyToPasteboard, UIActivityTypeAssignToContact,UIActivityTypeMail,UIActivityTypePostToFlickr,UIActivityTypePostToVimeo,UIActivityTypePostToWeibo,UIActivityTypePrint]
+        //            //
+        //
+        //            self.presentViewController(activityVC, animated: true, completion: nil)
+        //
+        //
+        //        }
+        //
+        //
+        //
+        //
         
         
     }
-
     
     func showImageFullscreen(sender: UIGestureRecognizer){
         println("Presenting Likers, ya heard.")
@@ -1099,25 +875,24 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         authorLabel = sender.view!
         
-        
-        let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
-        
-        if(indCell?.tag == 100){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
-            
-        }
-        if(indCell?.tag == 200){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
-            
-            daLink = gotCell.imageLink
-        }
-        
-        imView.imageLink = daLink
-        
-        self.presentViewController(imView, animated: true, completion: nil)
+        //
+        //        let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
+        //
+        //        if(indCell?.tag == 100){
+        //            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
+        //
+        //        }
+        //        if(indCell?.tag == 200){
+        //            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
+        //
+        //           daLink = gotCell.imageLink
+        //        }
+        //
+        //        imView.imageLink = daLink
+        //
+        //         self.presentViewController(imView, animated: true, completion: nil)
         
     }
-
     
     func showLikers(sender: UIGestureRecognizer){
         
@@ -1130,35 +905,34 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         var authorLabel:AnyObject
         
         authorLabel = sender.view!
-       
         
         
-        let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
-        
-        if(indCell?.tag == 100){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
-            
-            likeView.sentLocation = currentUserLocation
-            likeView.commentID = gotCell.comment_id
-            
-            //profView.comment = gotCell.comment_label.text!
-            // profView.userFBID = gotCell.user_id
-            
-            //profView.userName = gotCell.author_label.text!
-        }
-        if(indCell?.tag == 200){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
-            
-            likeView.sentLocation = currentUserLocation
-            likeView.commentID = gotCell.comment_id
-            //profView.comment = gotCell.comment_label.text!
-            //profView.userFBID = gotCell.user_id
-            
-            //profView.userName = gotCell.author_label.text!
-        }
-        
-        
-        self.presentViewController(likeView, animated: true, completion: nil)
+        //        let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
+        //
+        //        if(indCell?.tag == 100){
+        //            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
+        //
+        //            likeView.sentLocation = currentUserLocation
+        //            likeView.commentID = gotCell.comment_id
+        //
+        //            //profView.comment = gotCell.comment_label.text!
+        //            // profView.userFBID = gotCell.user_id
+        //
+        //            //profView.userName = gotCell.author_label.text!
+        //        }
+        //        if(indCell?.tag == 200){
+        //            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
+        //
+        //            likeView.sentLocation = currentUserLocation
+        //            likeView.commentID = gotCell.comment_id
+        //            //profView.comment = gotCell.comment_label.text!
+        //            //profView.userFBID = gotCell.user_id
+        //
+        //            //profView.userName = gotCell.author_label.text!
+        //        }
+        //
+        //
+        //        self.presentViewController(likeView, animated: true, completion: nil)
         
     }
     
@@ -1174,36 +948,35 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         authorLabel = sender.view!
         
-        
-        let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
-        
-        if(indCell?.tag == 100){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
-            
-            repView.sentLocation = currentUserLocation
-            repView.commentID = gotCell.comment_id
-            //profView.comment = gotCell.comment_label.text!
-            // profView.userFBID = gotCell.user_id
-            
-            //profView.userName = gotCell.author_label.text!
-        }
-        if(indCell?.tag == 200){
-            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
-            
-            repView.sentLocation = currentUserLocation
-            repView.commentID = gotCell.comment_id
-            //profView.comment = gotCell.comment_label.text!
-            //profView.userFBID = gotCell.user_id
-            
-            //profView.userName = gotCell.author_label.text!
-        }
-        
-        
-        self.presentViewController(repView, animated: true, completion: nil)
+        //
+        //        let indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0))
+        //
+        //        if(indCell?.tag == 100){
+        //            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_no_images
+        //
+        //            repView.sentLocation = currentUserLocation
+        //            repView.commentID = gotCell.comment_id
+        //            //profView.comment = gotCell.comment_label.text!
+        //            // profView.userFBID = gotCell.user_id
+        //
+        //            //profView.userName = gotCell.author_label.text!
+        //        }
+        //        if(indCell?.tag == 200){
+        //            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell
+        //
+        //            repView.sentLocation = currentUserLocation
+        //            repView.commentID = gotCell.comment_id
+        //            //profView.comment = gotCell.comment_label.text!
+        //            //profView.userFBID = gotCell.user_id
+        //
+        //            //profView.userName = gotCell.author_label.text!
+        //        }
+        //
+        //
+        //        self.presentViewController(repView, animated: true, completion: nil)
         
     }
     
-
     
     func showLoadingScreen(){
         
@@ -1260,6 +1033,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     
+    
     func toggleCommentVote(sender:UIGestureRecognizer){
         //get the attached sender imageview
         
@@ -1270,188 +1044,187 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         //var heartImage = sender.view? as UIImageView
         //get the main view
         
-        var indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0))
-        
-        if(indCell?.tag == 100){
-            
-            var cellView = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell_no_images
-            
-            var cID = cellView.comment_id
-            
-            
-            
-            
-            
-            let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_toggle_comment_vote")
-            //START AJAX
-            var request = NSMutableURLRequest(URL: url!)
-            var session = NSURLSession.sharedSession()
-            request.HTTPMethod = "POST"
-            
-            let defaults = NSUserDefaults.standardUserDefaults()
-            let savedFBID = defaults.stringForKey("saved_fb_id") as String!
-            var params = ["fbid":savedFBID, "comment_id":String(cID)] as Dictionary<String, String>
-            
-            var err: NSError?
-            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue("application/json", forHTTPHeaderField: "Accept")
-            
-            var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
-                println("Response: \(response)")
-                var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
-                println("Body: \(strData)")
-                var err: NSError?
-                var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
-                
-                
-                // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
-                if(err != nil) {
-                    println(err!.localizedDescription)
-                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
-                    println("Error could not parse JSON: '\(jsonStr)'")
-                }
-                else {
-                    // The JSONObjectWithData constructor didn't return an error. But, we should still
-                    
-                    
-                    
-                    // check and make sure that json has a value using optional binding.
-                    if let parseJSON = json {
-                        dispatch_async(dispatch_get_main_queue(),{
-                            //change the heart image
-                            
-                            
-                            
-                            var testVote = parseJSON["results"]![0]["vote"] as! String!
-                            
-                            if(testVote == "no"){
-                                cellView.heart_icon?.image = UIImage(named: "heart_empty.png")
-                                
-                                //get heart label content as int
-                                var curHVal = cellView.heart_label?.text?.toInt()
-                                //get the heart label
-                                self.voterValueCache[heartImage.tag] = String(curHVal! - 1)
-                                cellView.heart_label?.text = String(curHVal! - 1)
-                                //self.theJSON["results"]![100]["has_liked"] = "no" as AnyObject!?
-                                self.voterCache[heartImage.tag] = "no"
-                            }
-                            else if(testVote == "yes"){
-                                cellView.heart_icon.image = UIImage(named: "heart_full.png")
-                                
-                                //get heart label content as int
-                                var curHVal = cellView.heart_label?.text?.toInt()
-                                //get the heart label
-                                self.voterValueCache[heartImage.tag] = String(curHVal! + 1)
-                                cellView.heart_label?.text = String(curHVal! + 1)
-                                self.voterCache[heartImage.tag] = "yes"
-                                // self.theJSON["results"]![heartImage.tag]["has_liked"] = "yes" as [AnyObject]
-                            }
-                        })
-                        
-                    }
-                    else {
-                        // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
-                        
-                    }
-                }
-            })
-            task.resume()
-            
-            
-            
-        }
-        
-        if(indCell?.tag == 200){
-            
-            var cellView = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell
-            
-            var cID = cellView.comment_id
-            
-            
-            
-            
-            
-            let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_toggle_comment_vote")
-            //START AJAX
-            var request = NSMutableURLRequest(URL: url!)
-            var session = NSURLSession.sharedSession()
-            request.HTTPMethod = "POST"
-            
-            
-            let defaults = NSUserDefaults.standardUserDefaults()
-            let savedFBID = defaults.stringForKey("saved_fb_id") as String!
-            var params = ["fbid":savedFBID, "comment_id":String(cID)] as Dictionary<String, String>
-            
-            var err: NSError?
-            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
-            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.addValue("application/json", forHTTPHeaderField: "Accept")
-            
-            var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
-                println("Response: \(response)")
-                var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
-                println("Body: \(strData)")
-                var err: NSError?
-                var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
-                
-                
-                // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
-                if(err != nil) {
-                    println(err!.localizedDescription)
-                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
-                    println("Error could not parse JSON: '\(jsonStr)'")
-                }
-                else {
-                    // The JSONObjectWithData constructor didn't return an error. But, we should still
-                    
-                    
-                    
-                    // check and make sure that json has a value using optional binding.
-                    if let parseJSON = json {
-                        dispatch_async(dispatch_get_main_queue(),{
-                            //change the heart image
-                            
-                            
-                            
-                            var testVote = parseJSON["results"]![0]["vote"] as! String!
-                            
-                            if(testVote == "no"){
-                                cellView.heart_icon?.image = UIImage(named: "heart_empty.png")
-                                
-                                //get heart label content as int
-                                var curHVal = cellView.heart_label?.text?.toInt()
-                                //get the heart label
-                                self.voterValueCache[heartImage.tag] = String(curHVal! - 1)
-                                cellView.heart_label?.text = String(curHVal! - 1)
-                                //save the new vote value in our array
-                                self.voterCache[heartImage.tag] = "no"
-                            }
-                            else if(testVote == "yes"){
-                                cellView.heart_icon?.image = UIImage(named: "heart_full.png")
-                                
-                                //get heart label content as int
-                                var curHVal = cellView.heart_label?.text?.toInt()
-                                //get the heart label
-                                self.voterValueCache[heartImage.tag] = String(curHVal! + 1)
-                                cellView.heart_label?.text = String(curHVal! + 1)
-                                self.voterCache[heartImage.tag] = "yes"
-                            }
-                        })
-                        
-                    }
-                    else {
-                        // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
-                        
-                    }
-                }
-            })
-            task.resume()
-            
-            
-            
-        }
-        
+        //        var indCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0))
+        //
+        //        if(indCell?.tag == 100){
+        //
+        //            var cellView = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell_no_images
+        //
+        //            var cID = cellView.comment_id
+        //
+        //
+        //
+        //
+        //
+        //            let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_toggle_comment_vote")
+        //            //START AJAX
+        //            var request = NSMutableURLRequest(URL: url!)
+        //            var session = NSURLSession.sharedSession()
+        //            request.HTTPMethod = "POST"
+        //
+        //            let defaults = NSUserDefaults.standardUserDefaults()
+        //            let userFBID = defaults.stringForKey("saved_fb_id") as String!
+        //            var params = ["fbid":userFBID, "comment_id":String(cID)] as Dictionary<String, String>
+        //
+        //            var err: NSError?
+        //            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        //            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        //            request.addValue("application/json", forHTTPHeaderField: "Accept")
+        //
+        //            var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+        //                println("Response: \(response)")
+        //                var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+        //                println("Body: \(strData)")
+        //                var err: NSError?
+        //                var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+        //
+        //
+        //                // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+        //                if(err != nil) {
+        //                    println(err!.localizedDescription)
+        //                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+        //                    println("Error could not parse JSON: '\(jsonStr)'")
+        //                }
+        //                else {
+        //                    // The JSONObjectWithData constructor didn't return an error. But, we should still
+        //
+        //
+        //
+        //                    // check and make sure that json has a value using optional binding.
+        //                    if let parseJSON = json {
+        //                        dispatch_async(dispatch_get_main_queue(),{
+        //                            //change the heart image
+        //
+        //
+        //
+        //                            var testVote = parseJSON["results"]![0]["vote"] as! String!
+        //
+        //                            if(testVote == "no"){
+        //                                cellView.heart_icon?.image = UIImage(named: "heart_empty.png")
+        //
+        //                                //get heart label content as int
+        //                                var curHVal = cellView.heart_label?.text?.toInt()
+        //                                //get the heart label
+        //                                self.voterValueCache[heartImage.tag] = String(curHVal! - 1)
+        //                                cellView.heart_label?.text = String(curHVal! - 1)
+        //                                //self.theJSON["results"]![100]["has_liked"] = "no" as AnyObject!?
+        //                                self.voterCache[heartImage.tag] = "no"
+        //                            }
+        //                            else if(testVote == "yes"){
+        //                                cellView.heart_icon.image = UIImage(named: "heart_full.png")
+        //
+        //                                //get heart label content as int
+        //                                var curHVal = cellView.heart_label?.text?.toInt()
+        //                                //get the heart label
+        //                                self.voterValueCache[heartImage.tag] = String(curHVal! + 1)
+        //                                cellView.heart_label?.text = String(curHVal! + 1)
+        //                                self.voterCache[heartImage.tag] = "yes"
+        //                                // self.theJSON["results"]![heartImage.tag]["has_liked"] = "yes" as [AnyObject]
+        //                            }
+        //                        })
+        //
+        //                    }
+        //                    else {
+        //                        // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+        //
+        //                    }
+        //                }
+        //            })
+        //            task.resume()
+        //
+        //
+        //
+        //        }
+        //
+        //        if(indCell?.tag == 200){
+        //
+        //            var cellView = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: heartImage.tag, inSection: 0)) as! custom_cell
+        //
+        //            var cID = cellView.comment_id
+        //
+        //
+        //
+        //
+        //
+        //            let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_toggle_comment_vote")
+        //            //START AJAX
+        //            var request = NSMutableURLRequest(URL: url!)
+        //            var session = NSURLSession.sharedSession()
+        //            request.HTTPMethod = "POST"
+        //
+        //            let defaults = NSUserDefaults.standardUserDefaults()
+        //            let userFBID = defaults.stringForKey("saved_fb_id") as String!
+        //            var params = ["fbid":userFBID, "comment_id":String(cID)] as Dictionary<String, String>
+        //
+        //            var err: NSError?
+        //            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        //            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        //            request.addValue("application/json", forHTTPHeaderField: "Accept")
+        //
+        //            var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+        //                println("Response: \(response)")
+        //                var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+        //                println("Body: \(strData)")
+        //                var err: NSError?
+        //                var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+        //
+        //
+        //                // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+        //                if(err != nil) {
+        //                    println(err!.localizedDescription)
+        //                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+        //                    println("Error could not parse JSON: '\(jsonStr)'")
+        //                }
+        //                else {
+        //                    // The JSONObjectWithData constructor didn't return an error. But, we should still
+        //
+        //
+        //
+        //                    // check and make sure that json has a value using optional binding.
+        //                    if let parseJSON = json {
+        //                        dispatch_async(dispatch_get_main_queue(),{
+        //                            //change the heart image
+        //
+        //
+        //
+        //                            var testVote = parseJSON["results"]![0]["vote"] as! String!
+        //
+        //                            if(testVote == "no"){
+        //                                cellView.heart_icon?.image = UIImage(named: "heart_empty.png")
+        //
+        //                                //get heart label content as int
+        //                                var curHVal = cellView.heart_label?.text?.toInt()
+        //                                //get the heart label
+        //                                self.voterValueCache[heartImage.tag] = String(curHVal! - 1)
+        //                                cellView.heart_label?.text = String(curHVal! - 1)
+        //                                //save the new vote value in our array
+        //                                self.voterCache[heartImage.tag] = "no"
+        //                            }
+        //                            else if(testVote == "yes"){
+        //                                cellView.heart_icon?.image = UIImage(named: "heart_full.png")
+        //
+        //                                //get heart label content as int
+        //                                var curHVal = cellView.heart_label?.text?.toInt()
+        //                                //get the heart label
+        //                                self.voterValueCache[heartImage.tag] = String(curHVal! + 1)
+        //                                cellView.heart_label?.text = String(curHVal! + 1)
+        //                                self.voterCache[heartImage.tag] = "yes"
+        //                            }
+        //                        })
+        //
+        //                    }
+        //                    else {
+        //                        // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+        //
+        //                    }
+        //                }
+        //            })
+        //            task.resume()
+        //
+        //
+        //
+        //        }
+        //
     }
     
     
@@ -1470,17 +1243,18 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         println("SIZE:\(scrollView.contentSize.height)")
         println("FRAME:\(scrollView.frame.height)")
         if(test >= 0 ){
-            //  animateBarDown()
+            
         }
         else{
-            //    animateBarUp()
+            
+            
             
         }
         
         
         self.oldScrollPost = currentOffset
         
-        if(currentOffset > 20 && currentOffset < (scrollView.contentSize.height - scrollView.frame.height - 100)){
+        if(currentOffset > 0 && currentOffset < (scrollView.contentSize.height - scrollView.frame.height - 100)){
             animateBar(test)
         }
         
@@ -1488,16 +1262,19 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     
     func animateBar(byNum: CGFloat){
+        //        self.hashtagHolderTopLayoutConstraint.constant = -1*currentOffset
+        var theChanger = byNum
+        let initVal:CGFloat = 0//10
+        let maxVal = 0 - self.backgroundProfileImage.frame.height - self.hashtagHolder.frame.height - 20
+        //let maxVal = 0 - self.postLabelHolder.frame.origin
         
-        let initVal:CGFloat = 10
-        //let maxVal = 0 - self.profilePic.frame.height - self.followButton.frame.height
-        let maxVal = 0 - self.profilePic.frame.height - self.postLabelHolder.frame.height - 20
         
         if(byNum > 0){
-            byNum*2.5
+            byNum*50.0
         }
+        theChanger = theChanger*1.0
         
-        topLayoutConstraint.constant = topLayoutConstraint.constant + byNum
+        topLayoutConstraint.constant = topLayoutConstraint.constant + theChanger
         
         if(topLayoutConstraint.constant < maxVal){
             topLayoutConstraint.constant = maxVal
@@ -1506,11 +1283,14 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             topLayoutConstraint.constant = initVal
         }
         
-        UIView.animateWithDuration(0.2, delay: 0.0, options: .BeginFromCurrentState, animations: {
-            self.view.layoutIfNeeded()
-            }, completion: nil)
+        //        UIView.animateWithDuration(0.01, delay: 0.0, options: .BeginFromCurrentState, animations: {
+        //            self.view.layoutIfNeeded()
+        //            }, completion: nil)
         
     }
+    
+    
+    
     
     func removeLoadingScreen(){
         //self.loadingScreen.alpha = 0.0
@@ -1523,10 +1303,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     
-    @IBAction func toggle_user_follow(){
+    
+    func followUser(){
         
-        
-       // self.followButton.titleLabel?.text = "..."
+        //self.followButton.titleLabel?.text = "..."
+        self.followButton.setTitle("...", forState: UIControlState.Normal)
         
         let defaults = NSUserDefaults.standardUserDefaults()
         let fbid = defaults.stringForKey("saved_fb_id") as String!
@@ -1539,7 +1320,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         var session = NSURLSession.sharedSession()
         request.HTTPMethod = "POST"
         
-        var params = ["gUser_fbID":fbid, "iUser_fbID":userFBID] as Dictionary<String, String>
+        var params = ["gUser_fbID":fbid, "iUser_fbID":fbid] as Dictionary<String, String>
         
         var err: NSError?
         request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
@@ -1568,21 +1349,23 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     if(valTest == "yes"){//user did just follow
                         dispatch_async(dispatch_get_main_queue(),{
-                            
+                            //self.followButton.titleLabel?.text = "UNFOLLOW"
+                            self.followButton.setTitle("UNFOLLOW", forState: UIControlState.Normal)
                             
                             //self.followButton.titleLabel?.text = "done"
                             //self.followButton.setTitle("unfollow", forState: UIControlState.Normal)
-                            self.followButton.setImage(UIImage(named: "Unfollow.png"), forState: UIControlState.Normal)
+                            // self.followButton.setImage(UIImage(named: "Unfollow.png"), forState: UIControlState.Normal)
                         })
                     }
                     else{
                         //user did just unfollow
                         dispatch_async(dispatch_get_main_queue(),{
                             
-                            
+                            self.followButton.setTitle("FOLLOW", forState: UIControlState.Normal)
+                            //self.followButton.titleLabel?.text = "FOLLOW"
                             //self.followButton.titleLabel?.text = "done"
                             //self.followButton.setTitle("follow", forState: UIControlState.Normal)
-                            self.followButton.setImage(UIImage(named: "Follow.png"), forState: UIControlState.Normal)
+                            //  self.followButton.setImage(UIImage(named: "Follow.png"), forState: UIControlState.Normal)
                         })
                         
                     }
@@ -1598,8 +1381,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         //END AJAX
         
     }
-
- 
+    
+    func blockUser(){
+        println("CLICK BLOCK USER")
+    }
+    
     
     
 }

@@ -29,6 +29,7 @@ class profile_post_cellCollectionViewCell: UICollectionViewCell {
     var widthFiller = 0
     var yPos = 10.0
     var hasLoadedInfo = false
+    var comment_id = "none"
     
     //@IBOutlet var hashtagHolderBottomConstraint:NSLayoutConstraint!
     

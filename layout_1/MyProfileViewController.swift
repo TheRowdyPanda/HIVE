@@ -76,94 +76,37 @@ class MyProfileViewController: UIViewController, UIGestureRecognizerDelegate, UI
         super.viewDidLoad()
         //titleItem.title = "TESTING"
         println("THE WIDTH IS:\(self.view.frame.width)")
-       // self.collectionView!.registerClass(profile_post_cellCollectionViewCell.self, forCellWithReuseIdentifier: "profile_post_cell_id")
-        
-       
-
-        
-//        let heightConstraint = NSLayoutConstraint(item: self.hashtagHolder, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1, constant: 100)
-//        self.hashtagHolder.addConstraint(heightConstraint)
-        
-        //self.hashtagHolder.frame = CGRect(origin: self.hashtagHolder.frame.origin, size: CGSize(width: self.hashtagHolder.frame.width, height: 50.0));
-        
+    
         var url = NSBundle.mainBundle().URLForResource("loader2", withExtension: "gif")
         var imageData = NSData(contentsOfURL: url!)
         
         self.postSize = Double(self.view.frame.width/2.0) + 0.0
         
-        //UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
-//        var flow = UICollectionViewFlowLayout()
-//        flow.minimumInteritemSpacing = 0;
-//        flow.minimumLineSpacing = 0;
-        
-        
-        self.followButton.backgroundColor = UIColor.greenColor()
-        self.followButton.layer.cornerRadius = 8
+
+        self.followButton.backgroundColor = UIColor(red: (141.0/255.0), green: (198.0/255.0), blue: (63.0/255.0), alpha: 1.0)
+        self.followButton.layer.cornerRadius = 5
         self.followButton.clipsToBounds = true
         
-        self.blockButton.backgroundColor = UIColor.redColor()
-        self.blockButton.layer.cornerRadius = 8
-        self.blockButton.clipsToBounds = true
+        self.followButton.addTarget(self, action: "followUser", forControlEvents: UIControlEvents.TouchUpInside)
         
+        self.blockButton.backgroundColor = UIColor(red: (242.0/255.0), green: (108.0/255.0), blue: (79.0/255.0), alpha: 1.0)
+        self.blockButton.layer.cornerRadius = 5
+        self.blockButton.clipsToBounds = true
+        self.blockButton.addTarget(self, action: "blockUser", forControlEvents: UIControlEvents.TouchUpInside)
         
         self.profilePic.layer.cornerRadius = self.profilePic.frame.width/2.0
         self.profilePic.clipsToBounds = true
+        self.profilePic.layer.borderColor = UIColor(red: 0.0, green: (199.0/255.0), blue: (169.0/255.0), alpha: 1.0).CGColor
+        self.profilePic.layer.borderWidth = 2.0
         
         var myCustomViewController: ViewController = ViewController(nibName: nil, bundle: nil)
         
         currentUserLocation = myCustomViewController.currentUserLocation
         
-        
-        
-        // Returns an animated UIImage
-        
-       //self.navBar.topItem.title = "SDKFJ"
-
+      
      navTitle.title = "My Profile"
-        //var timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("reload_table"), userInfo: nil, repeats: false)
-        
-        
-        
-      // tableView.tableFooterView = UIView(frame: CGRectZero)
-        
-      //  self.tableView.rowHeight = tableView.frame.height/5
-        
-        
-//        self.fbLoginView.delegate = self
-//        self.fbLoginView.readPermissions = ["public_profile", "email", "user_friends"]
-//        
+   
         let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
-//        
-//        postLabelHolder.layer.borderWidth=2.0
-//        postLabelHolder.layer.masksToBounds = false
-//        postLabelHolder.layer.borderColor = color.CGColor//UIColor.blackColor().CGColor
-//        
-//        profilePic.layer.cornerRadius = 13
-//        profilePic.clipsToBounds = true
-        
-        
-//        let followingTap = UITapGestureRecognizer(target: self, action:Selector("showFollowing"))
-//        followingTap.delegate = self
-//        followingLabel.userInteractionEnabled = true
-//        followingLabel.addGestureRecognizer(followingTap)
-//        
-//        let followingTap2 = UITapGestureRecognizer(target: self, action:Selector("showFollowing"))
-//        followingTap2.delegate = self
-//        followingName.userInteractionEnabled = true
-//        followingName.addGestureRecognizer(followingTap2)
-//        
-//        
-//        
-//        let followersTap = UITapGestureRecognizer(target: self, action:Selector("showFollowers"))
-//        followersTap.delegate = self
-//        followersLabel.userInteractionEnabled = true
-//        followersLabel.addGestureRecognizer(followersTap)
-//        
-//        let followersTap2 = UITapGestureRecognizer(target: self, action:Selector("showFollowers"))
-//        followersTap2.delegate = self
-//        followersName.userInteractionEnabled = true
-//        followersName.addGestureRecognizer(followersTap2)
-//        
 
         getUserPicture()
         loadUserComments()
@@ -198,6 +141,40 @@ class MyProfileViewController: UIViewController, UIGestureRecognizerDelegate, UI
     
     //3
     
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        
+        //
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
+        //
+        
+        println("DID RECIEVE CLICK")
+        let indCell = collectionView.cellForItemAtIndexPath(indexPath) as! profile_post_cellCollectionViewCell
+        
+        comView.commentID = indCell.comment_id
+//        let indCell = tableView.cellForRowAtIndexPath(indexPath)
+//        
+//        if(indCell?.tag == 100){
+//            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell_no_images
+//            
+//            comView.sentLocation = currentUserLocation
+//            comView.commentID = gotCell.comment_id
+//        }
+//        if(indCell?.tag == 200){
+//            let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell
+//            
+//            comView.sentLocation = currentUserLocation
+//            comView.commentID = gotCell.comment_id
+//        }
+//        
+        
+        
+        self.presentViewController(comView, animated: true, completion: nil)
+        
+
+        
+    }
+    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("profile_post_cell_id", forIndexPath: indexPath) as! profile_post_cellCollectionViewCell
         
@@ -206,13 +183,11 @@ class MyProfileViewController: UIViewController, UIGestureRecognizerDelegate, UI
         cell.postTextLabel?.text = theJSON["results"]![indexPath.row]["comments"] as! String!
         
   
-        
-//        let h = cell.postTextLabel?.frame.height
-//        cell.postTextLabel?.frame = CGRect(x: 10, y: (cell.contentView.frame.height/2.0 - h!/2.0), width: (cell.contentView.frame.width - 20.0), height: h!*2.0)
-        //cell.textBacker.frame = cell.postTextLabel.frame
+
         cell.dateLabel?.text = theJSON["results"]![indexPath.row]["date"] as! String!
         cell.heartLabel?.text = voterValueCache[indexPath.row] as String!
         cell.timeLabel?.text = theJSON["results"]![indexPath.row]["time"] as! String!
+        cell.comment_id = theJSON["results"]![indexPath.row]["c_id"] as! String!
         
         for j in 0...(self.theJSON["results"]![indexPath.row]["hashtags"]!.count - 1){
             let newHashtagText = self.theJSON["results"]![indexPath.row]["hashtags"]![j]["body"] as! String
@@ -220,7 +195,6 @@ class MyProfileViewController: UIViewController, UIGestureRecognizerDelegate, UI
             let daID2 = newHashtagId.integerValue
             cell.hashtagIdIndex[newHashtagText] = daID2
         }
-        //cell.hashtags = ["FAKE 1", "The Office"]
 
         cell.hashtags = self.theJSON["results"]![indexPath.row]["hashtagTitles"] as! [(NSString)]
         for sv in cell.hashtagHolder.subviews{
@@ -615,7 +589,7 @@ class MyProfileViewController: UIViewController, UIGestureRecognizerDelegate, UI
             
             newButton.setTitle(title as String, forState: UIControlState.Normal)
             newButton.titleLabel?.font = f
-            newButton.setTitleColor(UIColor.grayColor(), forState: UIControlState.Normal)
+            newButton.setTitleColor(UIColor(red: (67.0/255.0), green: (67.0/255.0), blue: (67.0/255.0), alpha: 1.0), forState: UIControlState.Normal)
             
             self.hashtagHolder.addSubview(newButton)
             hashtagButtons.append(newButton)
@@ -1310,6 +1284,87 @@ class MyProfileViewController: UIViewController, UIGestureRecognizerDelegate, UI
     
     
     
+    func followUser(){
+        
+        //self.followButton.titleLabel?.text = "..."
+        self.followButton.setTitle("...", forState: UIControlState.Normal)
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        
+        
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_toggle_user_follow")
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        var params = ["gUser_fbID":fbid, "iUser_fbID":fbid] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+            }
+            else {
+                
+                if let parseJSON = json {
+                    
+                    let valTest = parseJSON["results"]![0]["value"] as! String!
+                    
+                    if(valTest == "yes"){//user did just follow
+                        dispatch_async(dispatch_get_main_queue(),{
+                            //self.followButton.titleLabel?.text = "UNFOLLOW"
+                            self.followButton.setTitle("UNFOLLOW", forState: UIControlState.Normal)
+                            
+                            //self.followButton.titleLabel?.text = "done"
+                            //self.followButton.setTitle("unfollow", forState: UIControlState.Normal)
+                           // self.followButton.setImage(UIImage(named: "Unfollow.png"), forState: UIControlState.Normal)
+                        })
+                    }
+                    else{
+                        //user did just unfollow
+                        dispatch_async(dispatch_get_main_queue(),{
+                            
+                            self.followButton.setTitle("FOLLOW", forState: UIControlState.Normal)
+                            //self.followButton.titleLabel?.text = "FOLLOW"
+                            //self.followButton.titleLabel?.text = "done"
+                            //self.followButton.setTitle("follow", forState: UIControlState.Normal)
+                          //  self.followButton.setImage(UIImage(named: "Follow.png"), forState: UIControlState.Normal)
+                        })
+                        
+                    }
+                    
+                }
+                else {
+                    
+                    
+                }
+            }
+        })
+        task.resume()
+        //END AJAX
+ 
+    }
+    
+    func blockUser(){
+        println("CLICK BLOCK USER")
+    }
         
     
     

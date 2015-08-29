@@ -68,7 +68,7 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     override func viewDidLayoutSubviews() {
-        let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
+        let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(210.0/255.0), blue: CGFloat(11.0/255.0), alpha: CGFloat(1.0) )
         self.tableView.separatorColor = color
         self.tableView.separatorInset.left = 0
         self.tableView.separatorInset.right = 0
@@ -95,6 +95,8 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
         //let testImage = theJSON["results"]![indexPath.row]["image"] as! String!
+        
+        if(indexPath.row <= self.numOfCells){
         
         if(self.typeOfCell == 1){
         var cell = tableView.dequeueReusableCellWithIdentifier("person_cell_id") as! custom_cell_person
@@ -358,9 +360,11 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
                         
                     }
                     else{
+                        if(i < cell.hashtagButtons.count){
                         cell.hashtagButtons[i]?.setTitle(title as String, forState: UIControlState.Normal)
                         cell.hashtagButtons[i]?.sizeToFit()
                         //cell.hashtagButtons[i]?.frame = CGRect(x: Int(xpos), y: Int(yPos), width: width, height: Int(height))
+                    }
                     }
                     
                     
@@ -895,6 +899,11 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
             }
 
         }
+        }
+        else{
+            var cell = UITableViewCell()
+            return cell
+        }
         
         
         
@@ -980,6 +989,7 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
                 // check and make sure that json has a value using optional binding.
                 if let parseJSON = json {
                     
+                    self.tableView.backgroundColor = UIColor.whiteColor()
                     self.theJSON = json
                     self.hasLoaded = true
                     self.numOfCells = parseJSON["results"]!.count
@@ -1003,6 +1013,7 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
     
     func loadComments(){
         
+        self.showLoadingScreen()
         let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_following_comments")
         //START AJAX
         var request = NSMutableURLRequest(URL: url!)
@@ -1042,6 +1053,9 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
                 // check and make sure that json has a value using optional binding.
                 if let parseJSON = json {
                     
+                    //self.view.backgroundColor = UIColor.redColor()
+                    let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(210.0/255.0), blue: CGFloat(11.0/255.0), alpha: CGFloat(1.0) )
+                    self.tableView.backgroundColor = color
                     self.theJSON = json
                     self.writeVoterCache()
                     self.hasLoaded = true
@@ -1181,6 +1195,8 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
         dispatch_after(delayTime, dispatch_get_main_queue()) {
             
             dispatch_async(dispatch_get_main_queue(),{
+                self.tableView.setContentOffset(CGPoint(x: 0.0, y: 0.0), animated: false)
+                //self.tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0), atScrollPosition: UITableViewScrollPosition.Top, animated: false)
                 self.tableView.reloadData()
                 // self.removeLoadingScreen()
             })

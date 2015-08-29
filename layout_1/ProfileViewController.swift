@@ -125,7 +125,7 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate, UICo
         
         if(self.userFriends == "none"){
             getMutualFriends()
-            self.mutualFriendsLabel.text = ""
+            self.mutualFriendsLabel.text = " "
         }
         else{
             self.mutualFriendsLabel.text = self.userFriends

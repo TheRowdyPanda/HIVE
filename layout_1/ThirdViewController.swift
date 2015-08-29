@@ -34,6 +34,7 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBOutlet var replyButton: UIButton!
     
     @IBOutlet weak var comImageConstraint: NSLayoutConstraint!
+     @IBOutlet weak var comWidthConstraint: NSLayoutConstraint!
     var testString = "1"
     var comment = "empty"
     var author = "empty"
@@ -157,6 +158,8 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
           else{
                let height2 = commentView.frame.height + comImage.frame.height + tableView.frame.height + tabBar.frame.height + 80
                scrollView.contentSize = CGSize(width:scrollView.frame.width, height:height2)
+               
+               
           }
         
           
@@ -206,6 +209,10 @@ class ThirdViewController: UIViewController, UITableViewDelegate, UITableViewDat
           }
           else{
                
+               println("THE WIDTH:\(self.view.frame.width)")
+               if(self.view.frame.width <= 320.0){
+                    self.comWidthConstraint.constant = 250
+               }
                //give a loading gif to UI
                var urlgif = NSBundle.mainBundle().URLForResource("loader", withExtension: "gif")
                var imageDatagif = NSData(contentsOfURL: urlgif!)

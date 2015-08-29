@@ -298,8 +298,10 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
                 
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
                 
-                cell.separatorInset.left = -10
+                cell.separatorInset.left = 0
+                cell.separatorInset.right = 0
                 cell.layoutMargins = UIEdgeInsetsZero
+                cell.preservesSuperviewLayoutMargins = false
                 cell.imageLink = testImage
                 cell.tag = 100
                 
@@ -575,8 +577,10 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
                 
                 
                 cell.selectionStyle = UITableViewCellSelectionStyle.None
-                cell.separatorInset.left = -10
+                cell.separatorInset.left = 0
+                cell.separatorInset.right = 0
                 cell.layoutMargins = UIEdgeInsetsZero
+                cell.preservesSuperviewLayoutMargins = false
                 cell.imageLink = testImage
                 cell.tag = 200
                 
@@ -992,6 +996,7 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
     func loadPeople(){
         
          dispatch_async(dispatch_get_main_queue(),{
+            println("DID START GETTING PEOPLE")
         self.showLoadingScreen()
         let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_people")
         //START AJAX
@@ -1056,6 +1061,7 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
     
     func loadComments(){
         
+        println("DID START GETTING COMMENTS")
         self.showLoadingScreen()
         let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_get_following_comments")
         //START AJAX

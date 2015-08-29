@@ -79,6 +79,7 @@ class DirectMessagingViewController: UIViewController, UITableViewDelegate, UITa
     
     func backWasPressed(){
        // self.modalTransitionStyle = .FlipHorizontal
+        self.timer?.invalidate()
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
@@ -303,12 +304,20 @@ class DirectMessagingViewController: UIViewController, UITableViewDelegate, UITa
                     
                     self.theJSON = parseJSON as! NSMutableDictionary
                     self.numOfCells = parseJSON["results"]!.count
-                    self.mostRecentMessageId = parseJSON["results"]![self.numOfCells - 1]!["id"] as! String
-                    self.reload_table()
+                    
+                    println("TEH CELL COUNT\(self.numOfCells)")
+                    if(self.numOfCells > 0){
+                        self.mostRecentMessageId = parseJSON["results"]![self.numOfCells - 1]!["id"] as! String
+                        
+                    }
+                    else{
+                        self.mostRecentMessageId = "0"
+                    }
+                self.reload_table()
                     
                     //self.timer = NSTimer.scheduledTimerWithTimeInterval(1, target:self, selector: Selector("updateComments"), userInfo: nil, repeats: true)
                     dispatch_async(dispatch_get_main_queue(), {
-                    self.timer = NSTimer.scheduledTimerWithTimeInterval(20, target:self, selector: Selector("updateComments"), userInfo: nil, repeats: true)
+                     self.timer = NSTimer.scheduledTimerWithTimeInterval(20, target:self, selector: Selector("updateComments"), userInfo: nil, repeats: true)
                         })
                     
                     

@@ -152,7 +152,7 @@
                                 <rect key="frame" x="-4" y="0.0" width="600" height="48"/>
                                 <color key="backgroundColor" red="1" green="0.85098039215686272" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="3wE-kC-IIF"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="45" id="3wE-kC-IIF"/>
                                 </constraints>
                                 <color key="tintColor" red="0.0" green="0.0" blue="0.039215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="barTintColor" red="1" green="0.85098039215686272" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -324,9 +324,9 @@
                         </subviews>
                         <color key="backgroundColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailingMargin" secondItem="dTQ-kN-0HS" secondAttribute="trailing" constant="-16" id="2bN-cV-mCy"/>
-                            <constraint firstItem="dTQ-kN-0HS" firstAttribute="leading" secondItem="86x-Wt-HGy" secondAttribute="leadingMargin" constant="-16" id="FhC-UI-WQ8"/>
-                            <constraint firstItem="sd6-rt-Ael" firstAttribute="height" secondItem="86x-Wt-HGy" secondAttribute="height" multiplier="0.08" id="VIx-8c-pq8"/>
+                            <constraint firstAttribute="trailing" secondItem="dTQ-kN-0HS" secondAttribute="trailing" id="2bN-cV-mCy"/>
+                            <constraint firstItem="dTQ-kN-0HS" firstAttribute="leading" secondItem="86x-Wt-HGy" secondAttribute="leading" id="FhC-UI-WQ8"/>
+                            <constraint firstItem="sd6-rt-Ael" firstAttribute="height" secondItem="86x-Wt-HGy" secondAttribute="height" multiplier="0.08" priority="999" id="VIx-8c-pq8"/>
                             <constraint firstItem="sd6-rt-Ael" firstAttribute="leading" secondItem="86x-Wt-HGy" secondAttribute="leading" id="Ysn-Y8-AhR"/>
                             <constraint firstItem="dTQ-kN-0HS" firstAttribute="top" secondItem="sd6-rt-Ael" secondAttribute="bottom" id="gO8-Za-r1R"/>
                             <constraint firstAttribute="trailing" secondItem="sd6-rt-Ael" secondAttribute="trailing" id="p5Z-sg-CaE"/>
@@ -810,20 +810,23 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                 <color key="tintColor" red="0.094117647060000004" green="0.75294117650000003" blue="0.92549019610000005" alpha="1" colorSpace="calibratedRGB"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loginScreen.png" translatesAutoresizingMaskIntoConstraints="NO" id="FqC-sx-NWI">
-                                <rect key="frame" x="-14" y="40" width="628" height="480"/>
+                                <rect key="frame" x="0.0" y="40" width="600" height="800"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="FqC-sx-NWI" secondAttribute="height" multiplier="3:4" id="Fmd-tx-lFw"/>
+                                </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6p5-dU-O6j" customClass="FBLoginView">
-                                <rect key="frame" x="120" y="390" width="360" height="60"/>
+                                <rect key="frame" x="120" y="550" width="360" height="60"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="By signing in, you agree to our" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FtT-Wj-reV">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="By signing in, you agree to our" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FtT-Wj-reV">
                                 <rect key="frame" x="99" y="52" width="187" height="21"/>
                                 <fontDescription key="fontDescription" name="Raleway" family="Raleway" pointSize="12"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="terms and conditions" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wzd-sE-Axw">
-                                <rect key="frame" x="269" y="52" width="187" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="terms and conditions" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wzd-sE-Axw">
+                                <rect key="frame" x="110" y="66" width="187" height="21"/>
                                 <fontDescription key="fontDescription" name="Raleway" family="Raleway" pointSize="12"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -831,21 +834,34 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         </subviews>
                         <color key="backgroundColor" red="1" green="0.85098039215686272" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="FtT-Wj-reV" firstAttribute="centerX" secondItem="wzd-sE-Axw" secondAttribute="centerX" id="33G-2r-to9"/>
                             <constraint firstItem="6p5-dU-O6j" firstAttribute="height" secondItem="FRI-gA-h6h" secondAttribute="height" multiplier="0.2" id="4Tr-PR-kmn"/>
                             <constraint firstItem="3jo-EW-UEQ" firstAttribute="top" secondItem="zIC-CO-nWp" secondAttribute="bottom" constant="-20" id="4mY-JC-Edc"/>
                             <constraint firstItem="3jo-EW-UEQ" firstAttribute="leading" secondItem="FRI-gA-h6h" secondAttribute="leadingMargin" constant="-30" id="KVe-q7-CYj"/>
                             <constraint firstItem="wzd-sE-Axw" firstAttribute="leading" secondItem="FtT-Wj-reV" secondAttribute="trailing" constant="2" id="N25-4V-KfW"/>
-                            <constraint firstItem="6p5-dU-O6j" firstAttribute="width" secondItem="FRI-gA-h6h" secondAttribute="width" multiplier="0.6" id="PyO-wO-mXy"/>
-                            <constraint firstItem="FqC-sx-NWI" firstAttribute="leading" secondItem="FRI-gA-h6h" secondAttribute="leadingMargin" constant="-30" id="Szr-rd-cTC"/>
-                            <constraint firstItem="bX2-th-Lmf" firstAttribute="top" secondItem="FqC-sx-NWI" secondAttribute="bottom" constant="80" id="TY9-d7-s4q"/>
-                            <constraint firstItem="bX2-th-Lmf" firstAttribute="bottom" secondItem="6p5-dU-O6j" secondAttribute="bottom" constant="5" id="Ukc-5H-Jh3"/>
+                            <constraint firstItem="6p5-dU-O6j" firstAttribute="width" secondItem="FRI-gA-h6h" secondAttribute="width" multiplier="0.75" id="PyO-wO-mXy"/>
+                            <constraint firstItem="FtT-Wj-reV" firstAttribute="top" secondItem="FqC-sx-NWI" secondAttribute="top" constant="12" id="QtB-Ww-a0I"/>
+                            <constraint firstItem="FtT-Wj-reV" firstAttribute="centerX" secondItem="FqC-sx-NWI" secondAttribute="centerX" id="Rl8-A7-wbq"/>
+                            <constraint firstItem="FqC-sx-NWI" firstAttribute="leading" secondItem="FRI-gA-h6h" secondAttribute="leading" id="Szr-rd-cTC"/>
+                            <constraint firstItem="bX2-th-Lmf" firstAttribute="bottom" secondItem="6p5-dU-O6j" secondAttribute="bottom" constant="10" id="Ukc-5H-Jh3"/>
                             <constraint firstAttribute="trailingMargin" secondItem="3jo-EW-UEQ" secondAttribute="trailing" constant="-30" id="Za3-m7-PYB"/>
+                            <constraint firstItem="FtT-Wj-reV" firstAttribute="top" secondItem="zIC-CO-nWp" secondAttribute="bottom" constant="5" id="ZaM-VQ-3cd"/>
+                            <constraint firstItem="FtT-Wj-reV" firstAttribute="bottom" secondItem="wzd-sE-Axw" secondAttribute="top" constant="2" id="c7I-f0-QSw"/>
+                            <constraint firstItem="bX2-th-Lmf" firstAttribute="bottom" secondItem="6p5-dU-O6j" secondAttribute="bottom" constant="-20" id="hBk-H5-PC7"/>
                             <constraint firstItem="FtT-Wj-reV" firstAttribute="leading" secondItem="FRI-gA-h6h" secondAttribute="leadingMargin" constant="20" id="jpJ-PQ-LsU"/>
                             <constraint firstAttribute="centerX" secondItem="6p5-dU-O6j" secondAttribute="centerX" id="pUH-KX-sl4"/>
                             <constraint firstItem="FqC-sx-NWI" firstAttribute="top" secondItem="zIC-CO-nWp" secondAttribute="bottom" constant="20" id="snt-SG-Ftw"/>
                             <constraint firstItem="3jo-EW-UEQ" firstAttribute="bottom" secondItem="FqC-sx-NWI" secondAttribute="top" id="sp6-Fb-YVS"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="FqC-sx-NWI" secondAttribute="trailing" constant="-30" id="vGl-et-lhb"/>
+                            <constraint firstAttribute="trailing" secondItem="FqC-sx-NWI" secondAttribute="trailing" id="vGl-et-lhb"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="QtB-Ww-a0I"/>
+                                <exclude reference="jpJ-PQ-LsU"/>
+                                <exclude reference="N25-4V-KfW"/>
+                                <exclude reference="Ukc-5H-Jh3"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="fbLoginView" destination="6p5-dU-O6j" id="A4w-P9-5GZ"/>
@@ -883,12 +899,15 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="loginScreen.png" translatesAutoresizingMaskIntoConstraints="NO" id="w2H-ve-Qra">
                                 <rect key="frame" x="-1" y="1" width="600" height="600"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="w2H-ve-Qra" secondAttribute="height" multiplier="3:4" id="e0d-ua-Pxc"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="0.85098039219999999" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="w2H-ve-Qra" firstAttribute="leading" secondItem="uu8-Vb-aMQ" secondAttribute="leadingMargin" constant="-16" id="4pA-3Q-jmA"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="w2H-ve-Qra" secondAttribute="trailing" constant="-16" id="BeF-65-sNb"/>
+                            <constraint firstItem="w2H-ve-Qra" firstAttribute="leading" secondItem="uu8-Vb-aMQ" secondAttribute="leading" id="4pA-3Q-jmA"/>
+                            <constraint firstAttribute="trailing" secondItem="w2H-ve-Qra" secondAttribute="trailing" id="BeF-65-sNb"/>
                             <constraint firstItem="w2H-ve-Qra" firstAttribute="top" secondItem="4Zj-av-zgV" secondAttribute="bottom" id="JQJ-bi-BHv"/>
                             <constraint firstItem="4Zj-av-zgV" firstAttribute="leading" secondItem="uu8-Vb-aMQ" secondAttribute="leadingMargin" constant="-16" id="Jfu-47-hgw"/>
                             <constraint firstItem="D0C-ia-7Y3" firstAttribute="top" secondItem="w2H-ve-Qra" secondAttribute="bottom" constant="80" id="LSF-rQ-Wkf"/>
@@ -896,6 +915,11 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                             <constraint firstItem="4Zj-av-zgV" firstAttribute="top" secondItem="iTj-b3-2kV" secondAttribute="bottom" constant="-20" id="bGO-zA-UKp"/>
                             <constraint firstItem="w2H-ve-Qra" firstAttribute="top" secondItem="iTj-b3-2kV" secondAttribute="bottom" constant="20" id="fkx-HV-nTD"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="LSF-rQ-Wkf"/>
+                            </mask>
+                        </variation>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uuo-m5-iYb" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -919,7 +943,6 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <segue destination="And-Uk-cO3" kind="relationship" relationship="viewControllers" id="yBl-Li-0cs"/>
                         <segue destination="5SB-S3-Mko" kind="relationship" relationship="viewControllers" id="98T-OV-jtC"/>
                         <segue destination="twA-Ef-bAi" kind="relationship" relationship="viewControllers" id="GLs-pH-SZB"/>
-                        <segue destination="k7D-uA-Emr" kind="relationship" relationship="viewControllers" id="gPj-eX-sS9"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CmH-Pc-2rj" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1070,11 +1093,11 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <viewControllerLayoutGuide type="bottom" id="78Y-l5-ZBq"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="N6q-Fs-kIb">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AdE-8P-nhY">
-                                <rect key="frame" x="-4" y="0.0" width="608" height="55"/>
+                                <rect key="frame" x="-4" y="0.0" width="608" height="60"/>
                                 <color key="backgroundColor" red="1" green="0.82352941176470584" blue="0.043137254901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="barTintColor" red="1" green="0.82352941176470584" blue="0.043137254901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1083,7 +1106,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                 </items>
                             </navigationBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="GBt-oI-v8h">
-                                <rect key="frame" x="0.0" y="58" width="600" height="496"/>
+                                <rect key="frame" x="0.0" y="58" width="600" height="540"/>
                                 <color key="backgroundColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
@@ -1522,7 +1545,10 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                 <color key="backgroundColor" red="1" green="0.82352941176470584" blue="0.043137254901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IKo-lu-x2h">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="55"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="45" id="dGz-1t-FT1"/>
+                                </constraints>
                                 <color key="barTintColor" red="1" green="0.85098039215686272" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
                                     <navigationItem title="Title" id="jhm-rQ-FzY">
@@ -1559,7 +1585,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                             <constraint firstItem="Yr9-AI-OVn" firstAttribute="leading" secondItem="DMr-DR-N27" secondAttribute="leading" id="gM7-GP-5Q2"/>
                             <constraint firstAttribute="trailing" secondItem="p1q-B0-ypo" secondAttribute="trailing" id="j8s-Bv-d25"/>
                             <constraint firstAttribute="trailing" secondItem="SCF-6m-eih" secondAttribute="trailing" id="lmZ-ae-r3C"/>
-                            <constraint firstItem="IKo-lu-x2h" firstAttribute="height" secondItem="DMr-DR-N27" secondAttribute="height" multiplier="0.1" id="p5f-Dk-zHS"/>
+                            <constraint firstItem="IKo-lu-x2h" firstAttribute="height" secondItem="DMr-DR-N27" secondAttribute="height" multiplier="0.08" priority="999" id="p5f-Dk-zHS"/>
                             <constraint firstItem="SCF-6m-eih" firstAttribute="top" secondItem="p1q-B0-ypo" secondAttribute="bottom" id="sPE-eo-vNP"/>
                             <constraint firstAttribute="trailing" secondItem="IKo-lu-x2h" secondAttribute="trailing" id="yxc-oN-Sh0"/>
                         </constraints>
@@ -2771,7 +2797,10 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y3b-ra-Eq6">
-                                <rect key="frame" x="-4" y="0.0" width="608" height="60"/>
+                                <rect key="frame" x="-4" y="0.0" width="608" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="3Pc-8n-8IY"/>
+                                </constraints>
                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="barTintColor" red="1" green="0.85098039219999999" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
@@ -2877,7 +2906,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                         <dataDetectorType key="dataDetectorTypes" link="YES"/>
                                     </textView>
                                     <tabBar contentMode="scaleToFill" misplaced="YES" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4zf-9q-5Q5">
-                                        <rect key="frame" x="0.0" y="222" width="600" height="55"/>
+                                        <rect key="frame" x="0.0" y="222" width="600" height="54.5"/>
                                         <color key="backgroundColor" red="1" green="0.85098039219999999" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="4zf-9q-5Q5" secondAttribute="height" multiplier="11:1" id="0p9-Fd-LKY"/>
@@ -3030,14 +3059,17 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                     <constraint firstItem="CAU-8D-ohy" firstAttribute="leading" secondItem="lxG-rn-9bg" secondAttribute="leading" id="K0h-lL-5UD"/>
                                     <constraint firstItem="nog-9O-o1g" firstAttribute="top" secondItem="yJs-IX-4Sq" secondAttribute="top" constant="5" id="Kfp-Ie-9hY"/>
                                     <constraint firstItem="4zf-9q-5Q5" firstAttribute="width" secondItem="yJs-IX-4Sq" secondAttribute="width" id="LO0-Kg-iJj"/>
+                                    <constraint firstAttribute="trailing" secondItem="lxG-rn-9bg" secondAttribute="trailing" constant="5" id="LTM-nX-PS3"/>
                                     <constraint firstItem="CAU-8D-ohy" firstAttribute="leading" secondItem="WCY-5R-vF8" secondAttribute="leading" id="NYr-CU-az0"/>
                                     <constraint firstAttribute="trailing" secondItem="4zf-9q-5Q5" secondAttribute="trailing" id="O7P-K3-qHP"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="lxG-rn-9bg" secondAttribute="trailing" constant="5" id="Pw8-ui-rtB"/>
                                     <constraint firstItem="Kn1-md-ows" firstAttribute="leading" secondItem="dTV-2o-0em" secondAttribute="trailing" constant="5" id="QG1-m6-PPc"/>
                                     <constraint firstItem="biL-hQ-SKO" firstAttribute="leading" secondItem="lxG-rn-9bg" secondAttribute="leading" id="SC9-DD-rzz"/>
                                     <constraint firstAttribute="centerX" secondItem="4zf-9q-5Q5" secondAttribute="centerX" id="SMC-Qa-bfj"/>
                                     <constraint firstItem="dTV-2o-0em" firstAttribute="centerY" secondItem="Kn1-md-ows" secondAttribute="centerY" id="Td6-vx-d0P"/>
                                     <constraint firstItem="CAU-8D-ohy" firstAttribute="width" secondItem="nog-9O-o1g" secondAttribute="width" multiplier="0.4" priority="999" id="Tfc-g9-EB3"/>
                                     <constraint firstItem="4zf-9q-5Q5" firstAttribute="top" secondItem="lxG-rn-9bg" secondAttribute="bottom" constant="10" id="USV-7P-BQi"/>
+                                    <constraint firstAttribute="trailing" secondItem="lxG-rn-9bg" secondAttribute="trailing" constant="5" id="Ujk-bJ-fqr"/>
                                     <constraint firstItem="WCY-5R-vF8" firstAttribute="leading" secondItem="lxG-rn-9bg" secondAttribute="leading" id="bUb-Wi-fEK"/>
                                     <constraint firstItem="WCY-5R-vF8" firstAttribute="leading" secondItem="nog-9O-o1g" secondAttribute="trailing" constant="5" id="cKf-YB-aqW"/>
                                     <constraint firstItem="biL-hQ-SKO" firstAttribute="top" secondItem="nog-9O-o1g" secondAttribute="bottom" id="dET-yN-ZgM"/>
@@ -3057,6 +3089,9 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                         <exclude reference="K0h-lL-5UD"/>
                                         <exclude reference="SC9-DD-rzz"/>
                                         <exclude reference="fjA-HY-Kai"/>
+                                        <exclude reference="LTM-nX-PS3"/>
+                                        <exclude reference="Pw8-ui-rtB"/>
+                                        <exclude reference="Ujk-bJ-fqr"/>
                                         <exclude reference="3MG-TW-Car"/>
                                         <exclude reference="LO0-Kg-iJj"/>
                                         <exclude reference="O7P-K3-qHP"/>
@@ -3068,26 +3103,20 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <color key="backgroundColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="tintColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="Y3b-ra-Eq6" firstAttribute="height" secondItem="Xcb-zx-lXD" secondAttribute="height" multiplier="0.1" id="1Ol-dX-fYx"/>
+                            <constraint firstItem="Y3b-ra-Eq6" firstAttribute="height" secondItem="Xcb-zx-lXD" secondAttribute="height" multiplier="0.08" priority="999" id="1Ol-dX-fYx"/>
                             <constraint firstAttribute="trailingMargin" secondItem="5yU-V5-JrF" secondAttribute="trailing" constant="-20" id="2us-ix-utt"/>
                             <constraint firstItem="5yU-V5-JrF" firstAttribute="bottom" secondItem="mQv-gW-Q1k" secondAttribute="bottom" id="DMp-xX-OW5"/>
                             <constraint firstItem="yJs-IX-4Sq" firstAttribute="bottom" secondItem="5yU-V5-JrF" secondAttribute="top" id="Glw-Rz-wcH"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Y3b-ra-Eq6" secondAttribute="trailing" constant="-20" id="Ogf-Cq-iag"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="yJs-IX-4Sq" secondAttribute="trailing" constant="-20" id="WsW-dT-TBc"/>
+                            <constraint firstAttribute="trailing" secondItem="yJs-IX-4Sq" secondAttribute="trailing" id="WsW-dT-TBc"/>
                             <constraint firstItem="5yU-V5-JrF" firstAttribute="leading" secondItem="Xcb-zx-lXD" secondAttribute="leadingMargin" constant="-20" id="Xu1-4z-SZO"/>
                             <constraint firstItem="Y3b-ra-Eq6" firstAttribute="top" secondItem="0ax-B1-lMP" secondAttribute="bottom" constant="-20" id="aRx-sk-De3"/>
                             <constraint firstAttribute="centerX" secondItem="yJs-IX-4Sq" secondAttribute="centerX" id="qbx-07-nkw"/>
                             <constraint firstItem="5yU-V5-JrF" firstAttribute="height" secondItem="Xcb-zx-lXD" secondAttribute="height" multiplier="0.07" id="ruX-X8-oFX"/>
-                            <constraint firstAttribute="width" secondItem="yJs-IX-4Sq" secondAttribute="width" id="t3U-jS-zbo"/>
                             <constraint firstItem="yJs-IX-4Sq" firstAttribute="top" secondItem="Y3b-ra-Eq6" secondAttribute="bottom" id="tYL-vk-IKe"/>
-                            <constraint firstItem="yJs-IX-4Sq" firstAttribute="leading" secondItem="Xcb-zx-lXD" secondAttribute="leadingMargin" constant="-20" id="wWl-Ml-2QM"/>
+                            <constraint firstItem="yJs-IX-4Sq" firstAttribute="leading" secondItem="Xcb-zx-lXD" secondAttribute="leading" id="wWl-Ml-2QM"/>
                             <constraint firstItem="Y3b-ra-Eq6" firstAttribute="leading" secondItem="Xcb-zx-lXD" secondAttribute="leadingMargin" constant="-20" id="yWk-MJ-0qb"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="t3U-jS-zbo"/>
-                            </mask>
-                        </variation>
                     </view>
                     <connections>
                         <outlet property="authorLabel" destination="WCY-5R-vF8" id="iT2-LZ-36M"/>
@@ -3095,6 +3124,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <outlet property="bottomLayoutConstraint" destination="DMp-xX-OW5" id="Ti3-jM-ahg"/>
                         <outlet property="comImage" destination="lxG-rn-9bg" id="Tih-On-Hbg"/>
                         <outlet property="comImageConstraint" destination="USV-7P-BQi" id="9dc-RI-ibX"/>
+                        <outlet property="comWidthConstraint" destination="7Oe-zf-KHJ" id="PfQ-TC-Wcd"/>
                         <outlet property="commentView" destination="biL-hQ-SKO" id="ccd-4C-1Xv"/>
                         <outlet property="locLabel" destination="dTV-2o-0em" id="7o3-F3-gh3"/>
                         <outlet property="replyButton" destination="e2p-ed-Oi3" id="fpJ-M0-8Qa"/>
@@ -4050,7 +4080,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                             <constraint firstItem="MDH-qp-fRD" firstAttribute="centerY" secondItem="ooA-RI-V0A" secondAttribute="centerY" id="yIu-q6-V9d"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="NO2-PT-eB1"/>
+                    <tabBarItem key="tabBarItem" title="HIVE" image="HiveIcon" id="NO2-PT-eB1"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="customSC" destination="ooA-RI-V0A" id="hAZ-Bq-yAz"/>
@@ -4189,8 +4219,11 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k1g-YQ-uhz">
-                                <rect key="frame" x="-4" y="0.0" width="608" height="55"/>
+                                <rect key="frame" x="-4" y="0.0" width="608" height="45"/>
                                 <color key="backgroundColor" red="1" green="0.85098039219999999" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="45" id="qGI-ef-6ZI"/>
+                                </constraints>
                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="barTintColor" red="1" green="0.85098039219999999" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
@@ -4298,7 +4331,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                             <constraint firstAttribute="trailingMargin" secondItem="e5n-bg-rx4" secondAttribute="trailing" constant="-16" id="2NK-Da-JYe"/>
                             <constraint firstItem="k1g-YQ-uhz" firstAttribute="bottom" secondItem="e5n-bg-rx4" secondAttribute="top" id="GiO-6r-JJi"/>
                             <constraint firstAttribute="trailingMargin" secondItem="k1g-YQ-uhz" secondAttribute="trailing" constant="-20" id="LeP-Ya-8S8"/>
-                            <constraint firstItem="k1g-YQ-uhz" firstAttribute="height" secondItem="4Ly-2M-218" secondAttribute="height" multiplier="0.1" id="MGV-x0-3ga"/>
+                            <constraint firstItem="k1g-YQ-uhz" firstAttribute="height" secondItem="4Ly-2M-218" secondAttribute="height" multiplier="0.08" priority="999" id="MGV-x0-3ga"/>
                             <constraint firstItem="k1g-YQ-uhz" firstAttribute="leading" secondItem="4Ly-2M-218" secondAttribute="leadingMargin" constant="-20" id="m4K-hW-QWv"/>
                             <constraint firstItem="e5n-bg-rx4" firstAttribute="leading" secondItem="4Ly-2M-218" secondAttribute="leadingMargin" constant="-16" id="o3L-jO-p95"/>
                             <constraint firstItem="dvi-0w-Ady" firstAttribute="top" secondItem="e5n-bg-rx4" secondAttribute="bottom" id="vEm-Iu-FAv"/>
@@ -4355,11 +4388,12 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
         <image name="FeedIcon" width="60" height="60"/>
         <image name="Follow.png" width="60" height="60"/>
         <image name="FollowingIcon" width="80" height="47"/>
+        <image name="HiveIcon" width="30" height="30"/>
         <image name="Like_tab_button.png" width="60" height="60"/>
         <image name="Location.png" width="30" height="32"/>
         <image name="Me.png" width="60" height="60"/>
         <image name="Photo.png" width="60" height="60"/>
-        <image name="ProfileIcon" width="60" height="60"/>
+        <image name="ProfileIcon" width="30" height="30"/>
         <image name="Time.png" width="28" height="28"/>
         <image name="add friend_.png" width="31" height="21"/>
         <image name="back1.png" width="300" height="1000"/>

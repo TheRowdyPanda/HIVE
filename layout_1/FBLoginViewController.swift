@@ -204,7 +204,7 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRec
         let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as! UITabBarController
         
         
-        //self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismissViewControllerAnimated(true, completion: nil)
         
         //self.presentViewController(fbView, animated: false, completion: nil)
     }
@@ -219,8 +219,8 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRec
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setObject(userID, forKey: "saved_fb_id")
         self.theUserId = userID
-      // getMyFriends()
-        self.get_mutual_friends()
+       getMyFriends()
+       // self.get_mutual_friends()
         
 //        FBSession.openActiveSessionWithReadPermissions(self.fbLoginView.readPermissions, allowLoginUI: true, completionHandler: {(session, state, error) -> Void in
 //            self.sessionStateChanged(session, state: state, error: error)

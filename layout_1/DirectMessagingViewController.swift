@@ -38,11 +38,6 @@ class DirectMessagingViewController: UIViewController, UITableViewDelegate, UITa
 
         
         self.theJSON = NSMutableDictionary()
-        self.refreshControl = UIRefreshControl()
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-       // self.refreshControl.addTarget(self, action: "didPullRefresh:", forControlEvents: UIControlEvents.ValueChanged)
-        self.tableView.addSubview(refreshControl)
-       // self.refreshControl.frame = CGRect(x: 10.0, y: 200.0, width: 200.0, height: 100.0)
         self.inputTextField.delegate = self
         self.nameLabel.text = self.userName
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: nil);

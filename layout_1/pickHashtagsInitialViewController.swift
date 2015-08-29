@@ -239,6 +239,7 @@ class pickHashtagsInitialViewController: UIViewController, UIGestureRecognizerDe
         
         if(Int(testWidthFiller) > Int(self.hashtagScrollHolder.frame.width)){
             var onBut = self.hashtagButtons.count - 1
+            println("THE WIDTH:\(self.hashtagScrollHolder.frame.width)")
             println("ON THE BUTTON:\(onBut)")
             if(onBut > (self.fakeHashtags.count - 1)){
                 onBut = self.fakeHashtags.count - 1
@@ -517,6 +518,7 @@ func unpressed(dabut: UIButton){
                     for j in 0...(self.theJSON["results"]!.count - 1){
                         self.fakeHashtags.append(self.theJSON["results"]![j]["body"] as! String)
                     }
+                        self.hashtagScrollHolder.sizeToFit()
                     for i in 0...(self.fakeHashtags.count - 1){
                         let daID = self.theJSON["results"]![i]["id"] as! NSString
                         let daID2 = daID.integerValue

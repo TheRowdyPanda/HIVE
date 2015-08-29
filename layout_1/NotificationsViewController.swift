@@ -152,6 +152,16 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
             cell.tag = (theJSON["results"]![indexPath.row]["u2Id"] as! String!).toInt()!
             imTit = "Follow.png"
         }
+        if(type == "6"){
+            action = " accepted your connection"
+            cell.tag = (theJSON["results"]![indexPath.row]["u2Id"] as! String!).toInt()!
+            imTit = "Follow.png"
+        }
+        if(type == "7"){
+            action = " sent you a message"
+            cell.tag = (theJSON["results"]![indexPath.row]["u2Id"] as! String!).toInt()!
+            imTit = "chat_button.png"
+        }
         
         //let retString = otherUser + " " + action + " " + time
         let retString = action
@@ -401,6 +411,44 @@ class Notifications: UIViewController, UITableViewDelegate, UITableViewDataSourc
             self.presentViewController(profView, animated: true, completion: nil)
 
             
+            
+        }
+        if(type == "5"){
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+            let profView = mainStoryboard.instantiateViewControllerWithIdentifier("profile_scene_id") as! ProfileViewController
+            
+            let newUserName = theJSON["results"]![indexPath.row]["u2Name"] as! String!
+            let newUserId = theJSON["results"]![indexPath.row]["u2FBID"] as! String!
+            profView.userFBID = newUserId
+            profView.userName = newUserName
+            self.presentViewController(profView, animated: true, completion: nil)
+        }
+        if(type == "6"){
+            
+            let newUserName = theJSON["results"]![indexPath.row]["u2Name"] as! String!
+            let newUserId = theJSON["results"]![indexPath.row]["u2FBID"] as! String!
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+            let vc = mainStoryboard.instantiateViewControllerWithIdentifier("direct_messaging_scene_id") as! DirectMessagingViewController
+            
+            vc.userFBID = newUserId
+            vc.userName = newUserName
+            // self.navigationController?.pushViewController(vc, animated: false)
+            //   self.navigationController?.popToViewController(vc, animated: false)
+            self.presentViewController(vc, animated: false, completion: nil)
+            
+        }
+        if(type == "7"){
+            
+            let newUserName = theJSON["results"]![indexPath.row]["u2Name"] as! String!
+            let newUserId = theJSON["results"]![indexPath.row]["u2FBID"] as! String!
+            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+            let vc = mainStoryboard.instantiateViewControllerWithIdentifier("direct_messaging_scene_id") as! DirectMessagingViewController
+            
+            vc.userFBID = newUserId
+            vc.userName = newUserName
+            // self.navigationController?.pushViewController(vc, animated: false)
+            //   self.navigationController?.popToViewController(vc, animated: false)
+            self.presentViewController(vc, animated: false, completion: nil)
             
         }
     }

@@ -29,12 +29,8 @@ class MyProfileViewController: UIViewController, UIGestureRecognizerDelegate, UI
     @IBOutlet var navBar:UINavigationBar!
     @IBOutlet var navTitle:UINavigationItem!
     
-    @IBOutlet var followButton:UIButton!
-    @IBOutlet var blockButton:UIButton!
-    
     @IBOutlet var hashtagHolder:UIView!
     
-    @IBOutlet var mutualFriendsLabel:UILabel!
     
     @IBOutlet var backgroundProfileImage:UIImageView!
     //@IBOutlet var postLabelHolder: UIView!
@@ -83,17 +79,7 @@ class MyProfileViewController: UIViewController, UIGestureRecognizerDelegate, UI
         self.postSize = Double(self.view.frame.width/2.0) + 0.0
         
 
-        self.followButton.backgroundColor = UIColor(red: (141.0/255.0), green: (198.0/255.0), blue: (63.0/255.0), alpha: 1.0)
-        self.followButton.layer.cornerRadius = 5
-        self.followButton.clipsToBounds = true
-        
-        self.followButton.addTarget(self, action: "followUser", forControlEvents: UIControlEvents.TouchUpInside)
-        
-        self.blockButton.backgroundColor = UIColor(red: (242.0/255.0), green: (108.0/255.0), blue: (79.0/255.0), alpha: 1.0)
-        self.blockButton.layer.cornerRadius = 5
-        self.blockButton.clipsToBounds = true
-        self.blockButton.addTarget(self, action: "blockUser", forControlEvents: UIControlEvents.TouchUpInside)
-        
+       
         self.profilePic.layer.cornerRadius = self.profilePic.frame.width/2.0
         self.profilePic.clipsToBounds = true
         self.profilePic.layer.borderColor = UIColor(red: 0.0, green: (199.0/255.0), blue: (169.0/255.0), alpha: 1.0).CGColor
@@ -1252,7 +1238,7 @@ class MyProfileViewController: UIViewController, UIGestureRecognizerDelegate, UI
         if(byNum > 0){
             byNum*50.0
         }
-        theChanger = theChanger*4.0
+       // theChanger = theChanger
         
         topLayoutConstraint.constant = topLayoutConstraint.constant + theChanger
         
@@ -1281,92 +1267,6 @@ class MyProfileViewController: UIViewController, UIGestureRecognizerDelegate, UI
             }
         }
     }
-    
-    
-    
-    func followUser(){
-        
-        //self.followButton.titleLabel?.text = "..."
-        self.followButton.setTitle("...", forState: UIControlState.Normal)
-        
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let fbid = defaults.stringForKey("saved_fb_id") as String!
-        
-        
-        
-        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_toggle_user_follow")
-        //START AJAX
-        var request = NSMutableURLRequest(URL: url!)
-        var session = NSURLSession.sharedSession()
-        request.HTTPMethod = "POST"
-        
-        var params = ["gUser_fbID":fbid, "iUser_fbID":fbid] as Dictionary<String, String>
-        
-        var err: NSError?
-        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
-            println("Response: \(response)")
-            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
-            println("Body: \(strData)")
-            var err: NSError?
-            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
-            
-            
-            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
-            if(err != nil) {
-                println(err!.localizedDescription)
-                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
-                println("Error could not parse JSON: '\(jsonStr)'")
-            }
-            else {
-                
-                if let parseJSON = json {
-                    
-                    let valTest = parseJSON["results"]![0]["value"] as! String!
-                    
-                    if(valTest == "yes"){//user did just follow
-                        dispatch_async(dispatch_get_main_queue(),{
-                            //self.followButton.titleLabel?.text = "UNFOLLOW"
-                            self.followButton.setTitle("UNFOLLOW", forState: UIControlState.Normal)
-                            
-                            //self.followButton.titleLabel?.text = "done"
-                            //self.followButton.setTitle("unfollow", forState: UIControlState.Normal)
-                           // self.followButton.setImage(UIImage(named: "Unfollow.png"), forState: UIControlState.Normal)
-                        })
-                    }
-                    else{
-                        //user did just unfollow
-                        dispatch_async(dispatch_get_main_queue(),{
-                            
-                            self.followButton.setTitle("FOLLOW", forState: UIControlState.Normal)
-                            //self.followButton.titleLabel?.text = "FOLLOW"
-                            //self.followButton.titleLabel?.text = "done"
-                            //self.followButton.setTitle("follow", forState: UIControlState.Normal)
-                          //  self.followButton.setImage(UIImage(named: "Follow.png"), forState: UIControlState.Normal)
-                        })
-                        
-                    }
-                    
-                }
-                else {
-                    
-                    
-                }
-            }
-        })
-        task.resume()
-        //END AJAX
- 
-    }
-    
-    func blockUser(){
-        println("CLICK BLOCK USER")
-    }
-        
-    
     
 }
 

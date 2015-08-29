@@ -8,8 +8,10 @@
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <customFonts key="customFonts">
+        <mutableArray key="Lato-Bold.ttf">
+            <string>Lato-Bold</string>
+        </mutableArray>
         <mutableArray key="Lato-Light.ttf">
-            <string>Lato-Light</string>
             <string>Lato-Light</string>
             <string>Lato-Light</string>
             <string>Lato-Light</string>
@@ -22,6 +24,9 @@
             <string>Lato-Light</string>
         </mutableArray>
         <mutableArray key="Lato-Regular.ttf">
+            <string>Lato-Regular</string>
+            <string>Lato-Regular</string>
+            <string>Lato-Regular</string>
             <string>Lato-Regular</string>
             <string>Lato-Regular</string>
             <string>Lato-Regular</string>
@@ -120,7 +125,6 @@
             <string>Raleway</string>
             <string>Raleway</string>
             <string>Raleway</string>
-            <string>Raleway</string>
         </mutableArray>
         <mutableArray key="Raleway-SemiBold.ttf">
             <string>Raleway-SemiBold</string>
@@ -145,8 +149,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <navigationBar contentMode="scaleToFill" misplaced="YES" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sd6-rt-Ael">
-                                <rect key="frame" x="-4" y="0.0" width="600" height="60"/>
+                                <rect key="frame" x="-4" y="0.0" width="600" height="48"/>
                                 <color key="backgroundColor" red="1" green="0.85098039215686272" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="3wE-kC-IIF"/>
+                                </constraints>
                                 <color key="tintColor" red="0.0" green="0.0" blue="0.039215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="barTintColor" red="1" green="0.85098039215686272" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <items>
@@ -154,7 +161,7 @@
                                 </items>
                             </navigationBar>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dTQ-kN-0HS">
-                                <rect key="frame" x="0.0" y="60" width="600" height="540"/>
+                                <rect key="frame" x="0.0" y="68" width="600" height="532"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jBp-p8-Zfs">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="540"/>
@@ -175,7 +182,7 @@
                                                             <constraint firstAttribute="height" constant="110" id="57L-bc-Chi"/>
                                                         </constraints>
                                                         <color key="textColor" white="0.2491608796" alpha="1" colorSpace="calibratedWhite"/>
-                                                        <fontDescription key="fontDescription" name="Raleway" family="Raleway" pointSize="17"/>
+                                                        <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="15"/>
                                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
                                                     </textView>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="blank.png" translatesAutoresizingMaskIntoConstraints="NO" id="vxA-Q0-9ov">
@@ -222,30 +229,34 @@
                                                     </label>
                                                     <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FFq-g6-1EW">
                                                         <rect key="frame" x="140" y="250" width="280" height="4"/>
-                                                        <color key="backgroundColor" red="0.49019607843137253" green="0.49019607843137253" blue="0.49019607843137253" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="backgroundColor" red="0.88235294117647056" green="0.88235294117647056" blue="0.88235294117647056" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" constant="4" id="fnO-Kl-Opy"/>
+                                                            <constraint firstAttribute="height" constant="2" id="fnO-Kl-Opy"/>
                                                         </constraints>
                                                     </view>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SuW-U5-N8F">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Continue" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SuW-U5-N8F">
                                                         <rect key="frame" x="90" y="279" width="42" height="21"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <fontDescription key="fontDescription" name="Lato-Bold" family="Lato" pointSize="15"/>
+                                                        <color key="textColor" red="0.68627450980392157" green="0.68627450980392157" blue="0.68627450980392157" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ezF-g8-pPb">
-                                                        <rect key="frame" x="292" y="279" width="46" height="30"/>
-                                                        <state key="normal" title="Button">
+                                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ezF-g8-pPb">
+                                                        <rect key="frame" x="292" y="279" width="85" height="31"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" secondItem="ezF-g8-pPb" secondAttribute="height" multiplier="1:1" id="Rfu-ym-WMN"/>
+                                                            <constraint firstAttribute="width" constant="30" id="amj-RC-KHm"/>
+                                                        </constraints>
+                                                        <state key="normal" image="post_button.png">
                                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                         </state>
                                                         <connections>
                                                             <action selector="did_submit_comment" destination="ats-Il-3cl" eventType="touchUpInside" id="39y-e8-ezh"/>
                                                         </connections>
                                                     </button>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="apT-50-Kev">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="0/200" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="apT-50-Kev">
                                                         <rect key="frame" x="231" y="283" width="42" height="21"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="15"/>
+                                                        <color key="textColor" red="0.68627450980000004" green="0.68627450980000004" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
@@ -254,19 +265,21 @@
                                                     <constraint firstItem="jP6-2L-FOA" firstAttribute="bottom" secondItem="3cX-KY-Mxt" secondAttribute="top" constant="-10" id="5e3-MI-RKL"/>
                                                     <constraint firstAttribute="centerX" secondItem="vxA-Q0-9ov" secondAttribute="centerX" id="6vc-Mg-Ih9"/>
                                                     <constraint firstItem="vxA-Q0-9ov" firstAttribute="centerX" secondItem="Pc1-CA-tF5" secondAttribute="centerX" constant="-70" id="7KO-TR-Onu"/>
+                                                    <constraint firstAttribute="trailing" secondItem="FFq-g6-1EW" secondAttribute="trailing" constant="10" id="9a7-Kd-DWp"/>
                                                     <constraint firstItem="ezF-g8-pPb" firstAttribute="leading" secondItem="apT-50-Kev" secondAttribute="trailing" constant="5" id="9gs-Jq-ePD"/>
-                                                    <constraint firstItem="SuW-U5-N8F" firstAttribute="leading" secondItem="txL-Fb-9wZ" secondAttribute="leading" constant="30" id="DQs-h0-pCZ"/>
+                                                    <constraint firstItem="SuW-U5-N8F" firstAttribute="leading" secondItem="txL-Fb-9wZ" secondAttribute="leading" constant="25" id="DQs-h0-pCZ"/>
                                                     <constraint firstItem="FFq-g6-1EW" firstAttribute="centerX" secondItem="vxA-Q0-9ov" secondAttribute="centerX" id="J1k-hg-e9i"/>
                                                     <constraint firstAttribute="height" constant="420" id="J3g-Ea-Ryr"/>
                                                     <constraint firstItem="vxA-Q0-9ov" firstAttribute="centerY" secondItem="Pc1-CA-tF5" secondAttribute="centerY" id="KYu-t3-8KY"/>
-                                                    <constraint firstAttribute="trailing" secondItem="ezF-g8-pPb" secondAttribute="trailing" constant="30" id="Kbr-mD-QvD"/>
+                                                    <constraint firstAttribute="trailing" secondItem="ezF-g8-pPb" secondAttribute="trailing" constant="25" id="Kbr-mD-QvD"/>
                                                     <constraint firstItem="vxA-Q0-9ov" firstAttribute="centerX" secondItem="jP6-2L-FOA" secondAttribute="centerX" constant="70" id="L85-rf-YcK"/>
                                                     <constraint firstItem="ddK-Yq-w5Y" firstAttribute="centerX" secondItem="Pc1-CA-tF5" secondAttribute="centerX" id="LcB-MI-M2s"/>
                                                     <constraint firstItem="FFq-g6-1EW" firstAttribute="width" secondItem="vxA-Q0-9ov" secondAttribute="width" id="Nxc-Ps-W4S"/>
-                                                    <constraint firstAttribute="trailing" secondItem="c7h-O3-3aJ" secondAttribute="trailing" id="PxX-6E-TWn"/>
+                                                    <constraint firstAttribute="trailing" secondItem="c7h-O3-3aJ" secondAttribute="trailing" constant="5" id="PxX-6E-TWn"/>
                                                     <constraint firstItem="SuW-U5-N8F" firstAttribute="top" secondItem="FFq-g6-1EW" secondAttribute="bottom" constant="10" id="R6U-eY-iIT"/>
-                                                    <constraint firstItem="c7h-O3-3aJ" firstAttribute="leading" secondItem="txL-Fb-9wZ" secondAttribute="leading" id="SNb-8L-Yor"/>
+                                                    <constraint firstItem="c7h-O3-3aJ" firstAttribute="leading" secondItem="txL-Fb-9wZ" secondAttribute="leading" constant="8" id="SNb-8L-Yor"/>
                                                     <constraint firstItem="FFq-g6-1EW" firstAttribute="top" secondItem="vxA-Q0-9ov" secondAttribute="bottom" constant="10" id="TZb-py-h6w"/>
+                                                    <constraint firstItem="FFq-g6-1EW" firstAttribute="leading" secondItem="txL-Fb-9wZ" secondAttribute="leading" constant="10" id="V8D-ij-a0N"/>
                                                     <constraint firstItem="vxA-Q0-9ov" firstAttribute="top" secondItem="c7h-O3-3aJ" secondAttribute="bottom" id="cUA-cf-eE6"/>
                                                     <constraint firstItem="apT-50-Kev" firstAttribute="centerY" secondItem="ezF-g8-pPb" secondAttribute="centerY" id="doL-8o-s1j"/>
                                                     <constraint firstItem="ddK-Yq-w5Y" firstAttribute="top" secondItem="Pc1-CA-tF5" secondAttribute="bottom" constant="10" id="erH-Kd-ITb"/>
@@ -275,6 +288,11 @@
                                                     <constraint firstItem="ezF-g8-pPb" firstAttribute="top" secondItem="FFq-g6-1EW" secondAttribute="top" constant="10" id="wyh-eB-B1S"/>
                                                     <constraint firstItem="c7h-O3-3aJ" firstAttribute="top" secondItem="txL-Fb-9wZ" secondAttribute="top" id="y2f-zr-KY7"/>
                                                 </constraints>
+                                                <variation key="default">
+                                                    <mask key="constraints">
+                                                        <exclude reference="Nxc-Ps-W4S"/>
+                                                    </mask>
+                                                </variation>
                                             </view>
                                         </subviews>
                                         <constraints>
@@ -308,19 +326,13 @@
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="dTQ-kN-0HS" secondAttribute="trailing" constant="-16" id="2bN-cV-mCy"/>
                             <constraint firstItem="dTQ-kN-0HS" firstAttribute="leading" secondItem="86x-Wt-HGy" secondAttribute="leadingMargin" constant="-16" id="FhC-UI-WQ8"/>
-                            <constraint firstItem="jBp-p8-Zfs" firstAttribute="height" secondItem="86x-Wt-HGy" secondAttribute="height" id="RDu-kX-Pbo"/>
-                            <constraint firstItem="sd6-rt-Ael" firstAttribute="height" secondItem="86x-Wt-HGy" secondAttribute="height" multiplier="0.1" id="VIx-8c-pq8"/>
-                            <constraint firstItem="sd6-rt-Ael" firstAttribute="leading" secondItem="86x-Wt-HGy" secondAttribute="leadingMargin" constant="-20" id="Ysn-Y8-AhR"/>
+                            <constraint firstItem="sd6-rt-Ael" firstAttribute="height" secondItem="86x-Wt-HGy" secondAttribute="height" multiplier="0.08" id="VIx-8c-pq8"/>
+                            <constraint firstItem="sd6-rt-Ael" firstAttribute="leading" secondItem="86x-Wt-HGy" secondAttribute="leading" id="Ysn-Y8-AhR"/>
                             <constraint firstItem="dTQ-kN-0HS" firstAttribute="top" secondItem="sd6-rt-Ael" secondAttribute="bottom" id="gO8-Za-r1R"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="sd6-rt-Ael" secondAttribute="trailing" constant="-20" id="p5Z-sg-CaE"/>
+                            <constraint firstAttribute="trailing" secondItem="sd6-rt-Ael" secondAttribute="trailing" id="p5Z-sg-CaE"/>
                             <constraint firstItem="4Aw-K0-ok5" firstAttribute="top" secondItem="dTQ-kN-0HS" secondAttribute="bottom" id="tyn-KX-RJ4"/>
-                            <constraint firstItem="sd6-rt-Ael" firstAttribute="top" secondItem="FlA-dQ-0U6" secondAttribute="bottom" constant="-20" id="uR2-cK-922"/>
+                            <constraint firstItem="sd6-rt-Ael" firstAttribute="top" secondItem="FlA-dQ-0U6" secondAttribute="top" id="uR2-cK-922"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="RDu-kX-Pbo"/>
-                            </mask>
-                        </variation>
                     </view>
                     <connections>
                         <outlet property="cameraBLabel" destination="3cX-KY-Mxt" id="Drk-4y-cHa"/>
@@ -1505,47 +1517,10 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                     <constraint firstAttribute="width" constant="100" id="M6d-MH-2Ax"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mls-Ms-gHc">
-                                <rect key="frame" x="263" y="174" width="42" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="42" id="FDb-G0-Rz6"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="FDb-G0-Rz6"/>
-                                    </mask>
-                                </variation>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eQE-P2-JeR">
-                                <rect key="frame" x="205" y="190" width="80" height="25"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="NCs-vg-u15"/>
-                                    <constraint firstAttribute="height" constant="15" id="uUV-x9-GQj"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="10"/>
-                                <state key="normal" title="FOLLOW">
-                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
                             <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p1q-B0-ypo">
                                 <rect key="frame" x="0.0" y="200" width="600" height="50"/>
                                 <color key="backgroundColor" red="1" green="0.82352941176470584" blue="0.043137254901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GGR-4Y-f98">
-                                <rect key="frame" x="300" y="190" width="80" height="25"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="8ui-py-yDh"/>
-                                    <constraint firstAttribute="height" constant="15" id="Jws-ar-YGC"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="10"/>
-                                <state key="normal" title="BLOCK">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IKo-lu-x2h">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="55"/>
                                 <color key="barTintColor" red="1" green="0.85098039215686272" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -1571,26 +1546,20 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <color key="tintColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="IKo-lu-x2h" firstAttribute="top" secondItem="rYD-De-jA2" secondAttribute="bottom" constant="-20" id="14G-Uk-7ix"/>
-                            <constraint firstItem="mls-Ms-gHc" firstAttribute="top" secondItem="gb9-tp-yB3" secondAttribute="bottom" constant="10" id="22O-aP-YgM"/>
                             <constraint firstItem="gb9-tp-yB3" firstAttribute="top" secondItem="IKo-lu-x2h" secondAttribute="bottom" priority="900" constant="10" id="3IV-Fn-fHN"/>
                             <constraint firstItem="SCF-6m-eih" firstAttribute="leading" secondItem="DMr-DR-N27" secondAttribute="leading" id="4Zk-2I-Uf9"/>
-                            <constraint firstItem="mls-Ms-gHc" firstAttribute="centerX" secondItem="gb9-tp-yB3" secondAttribute="centerX" id="5ZR-fH-2xE"/>
+                            <constraint firstItem="gb9-tp-yB3" firstAttribute="bottom" secondItem="p1q-B0-ypo" secondAttribute="top" constant="-15" id="Brg-Oq-9Os"/>
                             <constraint firstItem="IKo-lu-x2h" firstAttribute="leading" secondItem="DMr-DR-N27" secondAttribute="leading" id="Gje-4h-4ht"/>
-                            <constraint firstItem="eQE-P2-JeR" firstAttribute="centerY" secondItem="GGR-4Y-f98" secondAttribute="centerY" id="J5i-zr-BmI"/>
                             <constraint firstAttribute="centerX" secondItem="gb9-tp-yB3" secondAttribute="centerX" id="JmF-JK-FEr"/>
                             <constraint firstAttribute="trailing" secondItem="Yr9-AI-OVn" secondAttribute="trailing" id="PcJ-dg-eNW"/>
                             <constraint firstItem="p1q-B0-ypo" firstAttribute="leading" secondItem="DMr-DR-N27" secondAttribute="leading" id="T23-MC-nEz"/>
                             <constraint firstItem="Yr9-AI-OVn" firstAttribute="top" secondItem="IKo-lu-x2h" secondAttribute="bottom" id="Vgi-gc-AsQ"/>
                             <constraint firstItem="95o-Wo-yPw" firstAttribute="top" secondItem="SCF-6m-eih" secondAttribute="bottom" id="YGw-w9-bfX"/>
-                            <constraint firstItem="eQE-P2-JeR" firstAttribute="top" secondItem="mls-Ms-gHc" secondAttribute="bottom" constant="5" id="ZcU-y2-OiN"/>
                             <constraint firstItem="Yr9-AI-OVn" firstAttribute="bottom" secondItem="SCF-6m-eih" secondAttribute="top" id="aoy-Bv-awT"/>
-                            <constraint firstItem="eQE-P2-JeR" firstAttribute="trailing" secondItem="mls-Ms-gHc" secondAttribute="centerX" constant="-10" id="c2T-YX-Yyq"/>
                             <constraint firstItem="Yr9-AI-OVn" firstAttribute="leading" secondItem="DMr-DR-N27" secondAttribute="leading" id="gM7-GP-5Q2"/>
-                            <constraint firstItem="mls-Ms-gHc" firstAttribute="centerX" secondItem="GGR-4Y-f98" secondAttribute="leading" constant="-10" id="hcf-kC-GU1"/>
                             <constraint firstAttribute="trailing" secondItem="p1q-B0-ypo" secondAttribute="trailing" id="j8s-Bv-d25"/>
                             <constraint firstAttribute="trailing" secondItem="SCF-6m-eih" secondAttribute="trailing" id="lmZ-ae-r3C"/>
                             <constraint firstItem="IKo-lu-x2h" firstAttribute="height" secondItem="DMr-DR-N27" secondAttribute="height" multiplier="0.1" id="p5f-Dk-zHS"/>
-                            <constraint firstItem="p1q-B0-ypo" firstAttribute="top" secondItem="eQE-P2-JeR" secondAttribute="bottom" constant="10" id="puH-xe-wCu"/>
                             <constraint firstItem="SCF-6m-eih" firstAttribute="top" secondItem="p1q-B0-ypo" secondAttribute="bottom" id="sPE-eo-vNP"/>
                             <constraint firstAttribute="trailing" secondItem="IKo-lu-x2h" secondAttribute="trailing" id="yxc-oN-Sh0"/>
                         </constraints>
@@ -1603,11 +1572,8 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                     <tabBarItem key="tabBarItem" title="Profile" image="ProfileIcon" id="0ax-BB-XVq"/>
                     <connections>
                         <outlet property="backgroundProfileImage" destination="Yr9-AI-OVn" id="YLM-hw-weu"/>
-                        <outlet property="blockButton" destination="GGR-4Y-f98" id="9mx-jN-7Io"/>
                         <outlet property="collectionView" destination="SCF-6m-eih" id="52L-t7-HUz"/>
-                        <outlet property="followButton" destination="eQE-P2-JeR" id="VWn-yP-x8u"/>
                         <outlet property="hashtagHolder" destination="p1q-B0-ypo" id="sho-9t-bH0"/>
-                        <outlet property="mutualFriendsLabel" destination="mls-Ms-gHc" id="Ras-uF-VNz"/>
                         <outlet property="navBar" destination="IKo-lu-x2h" id="axr-2c-MOH"/>
                         <outlet property="navTitle" destination="jhm-rQ-FzY" id="YEc-AA-c7Z"/>
                         <outlet property="profilePic" destination="gb9-tp-yB3" id="TBD-dI-Tv0"/>
@@ -1630,7 +1596,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qp9-Yb-8EB">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qp9-Yb-8EB">
                                 <rect key="frame" x="0.0" y="0.0" width="602" height="215"/>
                             </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="NUz-9W-FWK">
@@ -1751,19 +1717,11 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                     <constraint firstAttribute="width" secondItem="Qaq-pv-gro" secondAttribute="height" multiplier="1:1" id="pvO-oO-Qj2"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t8m-WY-2ky">
-                                <rect key="frame" x="263" y="174" width="42" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="42" id="kUa-Rm-WWu"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Name Name Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6gO-Uc-ITB">
+                                <rect key="frame" x="225" y="147" width="150" height="21"/>
+                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="17"/>
+                                <color key="textColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="kUa-Rm-WWu"/>
-                                    </mask>
-                                </variation>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rks-wl-UGb">
                                 <rect key="frame" x="205" y="190" width="80" height="25"/>
@@ -1771,7 +1729,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                     <constraint firstAttribute="width" constant="50" id="URy-le-LW3"/>
                                     <constraint firstAttribute="height" constant="15" id="WNw-0h-EYk"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Lato-Light" family="Lato" pointSize="10"/>
+                                <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="10"/>
                                 <state key="normal" title="FOLLOW">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -1793,23 +1751,37 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                 </state>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hyn-iQ-Gvu">
-                                <rect key="frame" x="20" y="40" width="40" height="40"/>
+                                <rect key="frame" x="20" y="20" width="30" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Hyn-iQ-Gvu" secondAttribute="height" multiplier="1:1" id="DIx-qP-M4w"/>
-                                    <constraint firstAttribute="width" constant="40" id="iJg-Aq-AHv"/>
+                                    <constraint firstAttribute="width" constant="30" id="iJg-Aq-AHv"/>
                                 </constraints>
-                                <state key="normal" title="Button" image="Feed.png">
+                                <state key="normal" image="button_whitecross.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="MUTUAL FRIENDS: 28" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="t8m-WY-2ky">
+                                <rect key="frame" x="250" y="161" width="100" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="42" id="kUa-Rm-WWu"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Lato-Regular" family="Lato" pointSize="10"/>
+                                <color key="textColor" red="0.68627450980000004" green="0.68627450980000004" blue="0.68627450980000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="kUa-Rm-WWu"/>
+                                    </mask>
+                                </variation>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="tintColor" red="0.99607843139999996" green="0.99607843139999996" blue="0.98431372549999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="m6c-G4-m3t" firstAttribute="top" secondItem="Rks-wl-UGb" secondAttribute="bottom" constant="10" id="18R-vF-ua5"/>
                             <constraint firstItem="Qp9-Yb-8EB" firstAttribute="top" secondItem="g0X-mO-S4e" secondAttribute="top" id="1lh-L3-jdT"/>
-                            <constraint firstItem="Rks-wl-UGb" firstAttribute="top" secondItem="t8m-WY-2ky" secondAttribute="bottom" constant="5" id="5LQ-54-Gtk"/>
-                            <constraint firstItem="Hyn-iQ-Gvu" firstAttribute="top" secondItem="g0X-mO-S4e" secondAttribute="bottom" constant="20" id="88i-H7-X7P"/>
+                            <constraint firstItem="Rks-wl-UGb" firstAttribute="top" secondItem="t8m-WY-2ky" secondAttribute="bottom" constant="12" id="5LQ-54-Gtk"/>
+                            <constraint firstItem="Hyn-iQ-Gvu" firstAttribute="top" secondItem="g0X-mO-S4e" secondAttribute="bottom" id="88i-H7-X7P"/>
                             <constraint firstItem="Qp9-Yb-8EB" firstAttribute="leading" secondItem="bBR-NC-Kt5" secondAttribute="leading" id="97f-Lt-sRf"/>
                             <constraint firstItem="f9t-nH-gx1" firstAttribute="top" secondItem="NUz-9W-FWK" secondAttribute="bottom" id="AIV-zj-MQ7"/>
                             <constraint firstItem="Hyn-iQ-Gvu" firstAttribute="top" secondItem="g0X-mO-S4e" secondAttribute="bottom" constant="20" id="HEY-Lv-XUK"/>
@@ -1818,7 +1790,11 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                             <constraint firstItem="NUz-9W-FWK" firstAttribute="leading" secondItem="bBR-NC-Kt5" secondAttribute="leading" id="MRZ-6H-K94"/>
                             <constraint firstAttribute="trailing" secondItem="m6c-G4-m3t" secondAttribute="trailing" id="RAW-ri-cRN"/>
                             <constraint firstItem="Hyn-iQ-Gvu" firstAttribute="leading" secondItem="bBR-NC-Kt5" secondAttribute="leading" constant="20" id="RVu-KT-tf7"/>
+                            <constraint firstItem="Qp9-Yb-8EB" firstAttribute="bottom" secondItem="m6c-G4-m3t" secondAttribute="top" priority="999" id="bKm-9I-0Ge"/>
+                            <constraint firstItem="6gO-Uc-ITB" firstAttribute="bottom" secondItem="t8m-WY-2ky" secondAttribute="top" constant="-3" id="bKr-3r-YjF"/>
+                            <constraint firstItem="6gO-Uc-ITB" firstAttribute="centerX" secondItem="t8m-WY-2ky" secondAttribute="centerX" id="i0f-DH-Vnv"/>
                             <constraint firstAttribute="trailing" secondItem="NUz-9W-FWK" secondAttribute="trailing" id="m4y-mG-c1V"/>
+                            <constraint firstItem="Qaq-pv-gro" firstAttribute="bottom" secondItem="6gO-Uc-ITB" secondAttribute="top" constant="-15" id="oIS-F6-9lc"/>
                             <constraint firstItem="t8m-WY-2ky" firstAttribute="top" secondItem="Qaq-pv-gro" secondAttribute="bottom" constant="10" id="oNM-qE-oi3"/>
                             <constraint firstItem="Rks-wl-UGb" firstAttribute="trailing" secondItem="t8m-WY-2ky" secondAttribute="centerX" constant="-10" id="pum-tl-WYy"/>
                             <constraint firstItem="t8m-WY-2ky" firstAttribute="centerX" secondItem="Qaq-pv-gro" secondAttribute="centerX" id="rvq-0U-ieb"/>
@@ -1831,6 +1807,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="HEY-Lv-XUK"/>
+                                <exclude reference="oNM-qE-oi3"/>
                             </mask>
                         </variation>
                     </view>
@@ -1843,6 +1820,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <outlet property="followButton" destination="Rks-wl-UGb" id="h4L-qg-38D"/>
                         <outlet property="hashtagHolder" destination="m6c-G4-m3t" id="VOG-Ou-OZU"/>
                         <outlet property="mutualFriendsLabel" destination="t8m-WY-2ky" id="kdU-PE-JLE"/>
+                        <outlet property="nameLabel" destination="6gO-Uc-ITB" id="i7P-cQ-KLF"/>
                         <outlet property="profilePic" destination="Qaq-pv-gro" id="cAJ-FP-qdd"/>
                         <outlet property="topLayoutConstraint" destination="1lh-L3-jdT" id="yBt-F7-USQ"/>
                     </connections>
@@ -2593,14 +2571,14 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mLz-Ik-bYW">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="35"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mLz-Ik-bYW">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pif-4h-Yff">
-                                        <rect key="frame" x="15" y="12.5" width="25" height="40"/>
+                                        <rect key="frame" x="15" y="20" width="12" height="25"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="25" id="IBA-sy-94p"/>
-                                            <constraint firstAttribute="height" constant="40" id="csn-el-Zpi"/>
+                                            <constraint firstAttribute="width" constant="12" id="IBA-sy-94p"/>
+                                            <constraint firstAttribute="height" constant="25" id="csn-el-Zpi"/>
                                         </constraints>
                                         <state key="normal" image="backIcon.png"/>
                                     </button>
@@ -2621,11 +2599,11 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                 </subviews>
                                 <color key="backgroundColor" red="0.90196078430000004" green="0.90196078430000004" blue="0.90196078430000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="centerY" secondItem="pif-4h-Yff" secondAttribute="centerY" constant="-10" id="Cbg-Hn-BVZ"/>
                                     <constraint firstItem="pif-4h-Yff" firstAttribute="leading" secondItem="mLz-Ik-bYW" secondAttribute="leading" constant="15" id="G1u-w9-pkY"/>
                                     <constraint firstAttribute="bottom" secondItem="bnX-Ti-1Jv" secondAttribute="bottom" constant="10" id="HZ6-1s-SRX"/>
-                                    <constraint firstAttribute="height" constant="45" id="b77-HJ-Mva"/>
+                                    <constraint firstAttribute="height" constant="50" id="b77-HJ-Mva"/>
                                     <constraint firstAttribute="centerX" secondItem="bnX-Ti-1Jv" secondAttribute="centerX" id="kDP-zd-wBK"/>
+                                    <constraint firstAttribute="bottom" secondItem="pif-4h-Yff" secondAttribute="bottom" constant="5" id="ybq-dh-bhz"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Qus-zG-JBz">
@@ -3633,7 +3611,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                 <color key="backgroundColor" red="1" green="0.85098039219999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ooA-RI-V0A">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="29"/>
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="37"/>
                                 <color key="backgroundColor" red="1" green="0.85098039219999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="35" id="kWM-bv-OVJ"/>
@@ -3643,6 +3621,11 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                                     <segment title="Posts"/>
                                 </segments>
                                 <color key="tintColor" red="0.0" green="0.0" blue="0.039215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="kWM-bv-OVJ"/>
+                                    </mask>
+                                </variation>
                             </segmentedControl>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MDH-qp-fRD">
                                 <rect key="frame" x="535" y="9" width="40" height="40"/>
@@ -4056,6 +4039,7 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
                             <constraint firstItem="yPs-QF-4Rj" firstAttribute="leading" secondItem="Vs7-yY-6XC" secondAttribute="leading" id="Kpf-x7-i86"/>
                             <constraint firstItem="1RI-pV-LIK" firstAttribute="top" secondItem="yPs-QF-4Rj" secondAttribute="bottom" id="LsC-wr-ht9"/>
                             <constraint firstAttribute="trailing" secondItem="yPs-QF-4Rj" secondAttribute="trailing" id="OPw-LM-dV0"/>
+                            <constraint firstItem="ooA-RI-V0A" firstAttribute="height" secondItem="Vs7-yY-6XC" secondAttribute="height" multiplier="0.06" id="Urw-hj-HyS"/>
                             <constraint firstAttribute="trailing" secondItem="1RI-pV-LIK" secondAttribute="trailing" id="W5g-8u-eRJ"/>
                             <constraint firstItem="ooA-RI-V0A" firstAttribute="bottom" secondItem="yPs-QF-4Rj" secondAttribute="bottom" constant="-5" id="WE4-TA-wXr"/>
                             <constraint firstItem="MDH-qp-fRD" firstAttribute="trailing" secondItem="Vs7-yY-6XC" secondAttribute="trailingMargin" constant="10" id="bIf-Zo-a8t"/>
@@ -4368,7 +4352,6 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
         <image name="AlertIcon" width="60" height="60"/>
         <image name="Camera Roll.png" width="60" height="60"/>
         <image name="Create.png" width="60" height="60"/>
-        <image name="Feed.png" width="60" height="60"/>
         <image name="FeedIcon" width="60" height="60"/>
         <image name="Follow.png" width="60" height="60"/>
         <image name="FollowingIcon" width="80" height="47"/>
@@ -4385,10 +4368,12 @@ i. The laws of the State of California, excluding its conflicts of law rules, go
         <image name="blank.png" width="256" height="256"/>
         <image name="button_heart.png" width="15" height="12"/>
         <image name="button_heart_empty.png" width="15" height="12"/>
+        <image name="button_whitecross.png" width="16" height="16"/>
         <image name="comment_tab_button.png" width="60" height="60"/>
         <image name="heart_empty.png" width="1000" height="874"/>
         <image name="loginScreen.png" width="882" height="1172"/>
         <image name="noun_53504_cc.png" width="515" height="516"/>
+        <image name="post_button.png" width="30" height="31"/>
         <image name="shareButton.png" width="120" height="31"/>
     </resources>
 </document>

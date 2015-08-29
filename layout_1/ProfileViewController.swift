@@ -37,10 +37,12 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate, UICo
     @IBOutlet var hashtagHolder:UIView!
     
     @IBOutlet var mutualFriendsLabel:UILabel!
+    @IBOutlet var nameLabel:UILabel!
     
     @IBOutlet var backgroundProfileImage:UIImageView!
     var userFBID = "none"
     var userName = "none"
+    var userFriends = "none"
     //@IBOutlet var postLabelHolder: UIView!
     
     //@IBOutlet var numPostLabel:UILabel!
@@ -107,6 +109,7 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate, UICo
         
         currentUserLocation = myCustomViewController.currentUserLocation
         
+        self.nameLabel.text = self.userName//.uppercaseString
         
       //  navTitle.title = "My Profile"
         
@@ -114,10 +117,20 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate, UICo
         
         self.exitButton.addTarget(self, action: "dismissSelf", forControlEvents: UIControlEvents.TouchUpInside)
         
-        getUserPicture()
+        self.exitButton.layer.masksToBounds = true
+        self.exitButton.layer.cornerRadius = self.exitButton.frame.width/2.0
+        
         loadUserComments()
         showLoadingScreen()
         
+        if(self.userFriends == "none"){
+            getMutualFriends()
+            self.mutualFriendsLabel.text = ""
+        }
+        else{
+            self.mutualFriendsLabel.text = self.userFriends
+        }
+       // self.getUserPicture()
         
     }
     
@@ -127,12 +140,18 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate, UICo
         
         
         self.getUserInfo()
+        
         // removeLoadingScreen()
     }
     
     override func viewDidLayoutSubviews() {
         
         let color: UIColor = UIColor( red: CGFloat(255.0/255.0), green: CGFloat(217.0/255.0), blue: CGFloat(0.0/255.0), alpha: CGFloat(1.0) )
+        
+        if(self.backgroundProfileImage.viewWithTag(200) == nil){
+            self.getUserPicture()
+        }
+       // self.getUserPicture()
         
     }
     
@@ -356,6 +375,59 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate, UICo
     }
     
     
+    func getMutualFriends(){
+        
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_user_get_mutual_friends")
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = userFBID//defaults.stringForKey("saved_fb_id") as String!
+        let gfbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        var params = ["fb_id":fbid, "gfb_id":gfbid] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+                
+            }
+            else {
+
+                if let parseJSON = json {
+                    let numF = parseJSON["results"] as! String! ?? ""
+                    self.mutualFriendsLabel!.text = "MUTUAL FRIENDS: \(numF)"
+
+                    
+                }
+                else {
+                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                    //   self.showErrorScreen("top")
+                }
+            }
+        })
+        task.resume()
+        //END AJAX
+
+        
+    }
     
     func getUserPicture(){
         
@@ -369,11 +441,12 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate, UICo
         if(data != nil){
             profilePic.image = UIImage(data: data!)
             backgroundProfileImage.image = UIImage(data: data!)
-            var effect =  UIBlurEffect(style: UIBlurEffectStyle.Light)
+            var effect =  UIBlurEffect(style: UIBlurEffectStyle.Dark)
             
             var effectView  = UIVisualEffectView(effect: effect)
             
             effectView.frame  = CGRectMake(0, 0, backgroundProfileImage.frame.width, backgroundProfileImage.frame.height)
+            effectView.tag = 200
             
             backgroundProfileImage.addSubview(effectView)
             
@@ -1383,7 +1456,69 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate, UICo
     }
     
     func blockUser(){
-        println("CLICK BLOCK USER")
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        
+        
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_user_block")
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        var params = ["gUser_fbID":fbid, "iUser_fbID":fbid] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+            }
+            else {
+                
+                if let parseJSON = json {
+                    
+                    let alertController = UIAlertController(title: "Blocked!", message:
+                        "This user has been blocked.", preferredStyle: UIAlertControllerStyle.Alert)
+                    alertController.addAction(UIAlertAction(title: "Awesome, thanks.", style: UIAlertActionStyle.Default,handler: nil))
+                    
+                    self.presentViewController(alertController, animated: true, completion: nil)
+
+                    
+//                    let valTest = parseJSON["results"]![0]["value"] as! String!
+//                    
+//                    if(valTest == "yes"){//user did just follow
+//              
+//                    }
+//                    else{
+//                      
+//                        
+//                    }
+                    
+                }
+                else {
+                    
+                    
+                }
+            }
+        })
+        task.resume()
+
+        
     }
     
     

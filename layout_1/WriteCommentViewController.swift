@@ -171,9 +171,10 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
         let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as! UITabBarController
         
-       //self.dismissViewControllerAnimated(true, completion: nil)
+      // self.dismissViewControllerAnimated(true, completion: nil)
         
         self.presentViewController(fbView, animated: false, completion: nil)
+        
         
     }
     

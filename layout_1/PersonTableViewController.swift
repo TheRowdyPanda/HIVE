@@ -107,7 +107,7 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
         cell.separatorInset.left = 20
         cell.separatorInset.right = 20
         cell.layoutMargins = UIEdgeInsetsZero
-        cell.tag = 100
+        cell.tag = 300
         
         
         
@@ -203,8 +203,22 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
         
         
         
+            let authorTap = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
+            // 4
+            authorTap.delegate = self
+            cell.userImage?.tag = indexPath.row
+            cell.userImage?.userInteractionEnabled = true
+            cell.userImage?.addGestureRecognizer(authorTap)
+            
         
         
+            let authorTap2 = UITapGestureRecognizer(target: self, action:Selector("showUserProfile:"))
+            // 4
+            authorTap2.delegate = self
+            cell.name_label?.tag = indexPath.row
+            cell.name_label?.userInteractionEnabled = true
+            cell.name_label?.addGestureRecognizer(authorTap2)
+            
         var mH = 0.0
         
         for i in 0...(cell.hashtags.count - 1){
@@ -914,6 +928,35 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
+        //
+        
+        println("DID RECIEVE CLICK")
+       // let indCell = collectionView.cellForItemAtIndexPath(indexPath) as! profile_post_cellCollectionViewCell
+        
+                let indCell = tableView.cellForRowAtIndexPath(indexPath)
+        
+                if(indCell?.tag == 100){
+                    let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell_no_images
+        
+                    //comView.sentLocation = currentUserLocation
+                    comView.commentID = gotCell.comment_id
+                    self.presentViewController(comView, animated: true, completion: nil)
+                }
+                if(indCell?.tag == 200){
+                    let gotCell = tableView.cellForRowAtIndexPath(indexPath) as! custom_cell
+        
+                    //comView.sentLocation = currentUserLocation
+                    comView.commentID = gotCell.comment_id
+                    self.presentViewController(comView, animated: true, completion: nil)
+                }
+        
+        
+        
+        
+
+        
 //        
 //        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
 //        let comView = mainStoryboard.instantiateViewControllerWithIdentifier("com_focus_scene_id") as! ThirdViewController
@@ -1236,6 +1279,15 @@ class PersonTableViewController: UIViewController, UITableViewDelegate, UITableV
             profView.userFBID = gotCell.user_id
             
             profView.userName = gotCell.author_label.text!
+        }
+        if(indCell?.tag == 300){
+            let gotCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: authorLabel.tag, inSection: 0)) as! custom_cell_person
+            
+            //profView.comment = gotCell.comment_label.text!
+            profView.userFBID = gotCell.user_id
+            
+            profView.userName = gotCell.name_label.text!
+            profView.userFriends = gotCell.friends_label.text!
         }
         
         

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E014DE71B9147B20071FF42 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E014DE61B91479C0071FF42 /* Lato-Bold.ttf */; };
+		8E014DE91B9148210071FF42 /* post_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E014DE81B9148210071FF42 /* post_button@2x.png */; };
+		8E014DEB1B914B490071FF42 /* button_whitecross@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8E014DEA1B914B490071FF42 /* button_whitecross@2x.png */; };
 		8E58C63F1B6472C5008BE090 /* profile_post_cellCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E58C63E1B6472C5008BE090 /* profile_post_cellCollectionViewCell.swift */; };
 		8E6E4DB41B6C63A600C8BFF0 /* lato in Resources */ = {isa = PBXBuildFile; fileRef = 8E6E4DB31B6C63A600C8BFF0 /* lato */; };
 		8E6E4DB61B6C64A700C8BFF0 /* Lato-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8E6E4DB51B6C64A600C8BFF0 /* Lato-Light.ttf */; };
@@ -127,6 +130,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8E014DE61B91479C0071FF42 /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Bold.ttf"; sourceTree = "<group>"; };
+		8E014DE81B9148210071FF42 /* post_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "post_button@2x.png"; sourceTree = "<group>"; };
+		8E014DEA1B914B490071FF42 /* button_whitecross@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button_whitecross@2x.png"; sourceTree = "<group>"; };
 		8E58C63E1B6472C5008BE090 /* profile_post_cellCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = profile_post_cellCollectionViewCell.swift; path = ../profile_post_cellCollectionViewCell.swift; sourceTree = "<group>"; };
 		8E6E4DB31B6C63A600C8BFF0 /* lato */ = {isa = PBXFileReference; lastKnownFileType = folder; path = lato; sourceTree = "<group>"; };
 		8E6E4DB51B6C64A600C8BFF0 /* Lato-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Light.ttf"; path = "layout_1/lato/Lato-Light.ttf"; sourceTree = "<group>"; };
@@ -320,6 +326,7 @@
 				8E6E4DBD1B6ED89100C8BFF0 /* add_friend@2x.png */,
 				8E6E4DB91B6D88B800C8BFF0 /* button_heart_empty@2x.png */,
 				8E6E4DBB1B6D88C000C8BFF0 /* button_heart@2x.png */,
+				8E014DEA1B914B490071FF42 /* button_whitecross@2x.png */,
 				EC8016F61B2E9AE8008CC953 /* noun_53504_cc.png */,
 				8EB5AF0A1B905B1400273428 /* chat_button@2x.png */,
 				ECF3C0171B2D616700C70CE5 /* heart_full.png */,
@@ -335,6 +342,7 @@
 				EC8139801AC9DA9700985BC5 /* Feed.png */,
 				EC96CF7F1ADEE5A2002A3133 /* Feed2.png */,
 				EC8139811AC9DA9700985BC5 /* Follow.png */,
+				8E014DE81B9148210071FF42 /* post_button@2x.png */,
 				EC96CF811AE1F083002A3133 /* following.png */,
 				ECF5BDAC1AD581320098DD95 /* comment_tab_button.png */,
 				EC8139821AC9DA9700985BC5 /* Like_Selected.png */,
@@ -366,6 +374,7 @@
 			children = (
 				8E6E4DB71B6C688500C8BFF0 /* Lato-Regular.ttf */,
 				8E6E4DB51B6C64A600C8BFF0 /* Lato-Light.ttf */,
+				8E014DE61B91479C0071FF42 /* Lato-Bold.ttf */,
 				EC8016F81B2F7660008CC953 /* Social.framework */,
 				ECDF21CE1B269084009BBC07 /* Security.framework */,
 				EC0798CE1B14122800507D7F /* MapKit.framework */,
@@ -565,6 +574,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E014DE71B9147B20071FF42 /* Lato-Bold.ttf in Resources */,
 				8E6E4DB81B6C688500C8BFF0 /* Lato-Regular.ttf in Resources */,
 				8E6E4DB61B6C64A700C8BFF0 /* Lato-Light.ttf in Resources */,
 				EC96CF7E1ADEE59A002A3133 /* Me2.png in Resources */,
@@ -604,6 +614,7 @@
 				8EDB97851B7EBB2700191514 /* loading_spinner.gif in Resources */,
 				ECA1F2021AD1F3070072DE05 /* loader2.gif in Resources */,
 				EC8139961AC9DA9700985BC5 /* Photo.png in Resources */,
+				8E014DE91B9148210071FF42 /* post_button@2x.png in Resources */,
 				EC96CF801ADEE5A2002A3133 /* Feed2.png in Resources */,
 				EC81398D1AC9DA9700985BC5 /* Create.png in Resources */,
 				8E6E4DBC1B6D88C000C8BFF0 /* button_heart@2x.png in Resources */,
@@ -614,6 +625,7 @@
 				EC8139981AC9DA9700985BC5 /* Time.png in Resources */,
 				EC81398C1AC9DA9700985BC5 /* Comment.png in Resources */,
 				EC8139991AC9DA9700985BC5 /* Unfollow.png in Resources */,
+				8E014DEB1B914B490071FF42 /* button_whitecross@2x.png in Resources */,
 				ECF3C0161B2D5F7C00C70CE5 /* shareButton.png in Resources */,
 				EC96CF821AE1F083002A3133 /* following.png in Resources */,
 				EC81398F1AC9DA9700985BC5 /* Feed.png in Resources */,

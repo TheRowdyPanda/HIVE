@@ -84,6 +84,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name:UIKeyboardWillHideNotification, object: nil);
         
         self.getUserHashtags()
+        self.createHashtag("Loading Hashtags", id: -2)
         self.hasStartedPost = false
         
         self.hashtagScrollHolder.delegate = self
@@ -158,7 +159,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
             // 4
             imageTap.delegate = self
             self.continueLabel.addGestureRecognizer(imageTap)
-
+            
         }
         else{
             self.navBar.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "backIcon.png"), style: UIBarButtonItemStyle.Plain, target: self, action:"did_press_cancel")
@@ -171,7 +172,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
         let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as! UITabBarController
         
-      // self.dismissViewControllerAnimated(true, completion: nil)
+        // self.dismissViewControllerAnimated(true, completion: nil)
         
         self.presentViewController(fbView, animated: false, completion: nil)
         
@@ -212,6 +213,7 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
                 println(err!.localizedDescription)
                 let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
                 println("Error could not parse JSON: '\(jsonStr)'")
+                self.showMessageWithError("Couldn't get hashtags", callback: "getUserHashtags")
                 
             }
             else {
@@ -225,8 +227,9 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
                     let infoJSON = parseJSON as NSDictionary
                     self.hashtagJSON = json
                     
-                    self.fakeHashtags.removeAll(keepCapacity: false)
+                    // self.fakeHashtags.removeAll(keepCapacity: false)
                     dispatch_async(dispatch_get_main_queue(), {
+                        self.clearAllHashtags()
                         for j in 0...(infoJSON["results"]!.count - 1){
                             self.fakeHashtags.append(infoJSON["results"]![j]["body"] as! String)
                         }
@@ -248,8 +251,8 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         //END AJAX
         
         
-
-       
+        
+        
     }
     
     func showUserHashtags(){
@@ -272,6 +275,19 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
             }
             
         }
+    }
+    func clearAllHashtags(){
+        if(self.hashtagButtons.count > 0){
+            for i in 0...(self.hashtagButtons.count - 1){
+                self.hashtagButtons[i]?.removeFromSuperview()
+                
+            }
+        }
+        self.fakeHashtags.removeAll(keepCapacity: false)
+        self.hashtagButtons.removeAll(keepCapacity: false)
+        self.yPos = 10.0
+        self.widthFiller = 0
+        
     }
     func createHashtag(title: NSString, id:NSInteger){
         //let width = Int(title.length)*12
@@ -308,14 +324,17 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
         self.hashtagScrollHolder.addSubview(newButton)
         self.hashtagButtons.append(newButton)
         
-        if(id != -1){
+        if(id >= -1){
             newButton.addTarget(self, action: "pressed:", forControlEvents: UIControlEvents.TouchDown)
             newButton.addTarget(self, action: "unpressed:", forControlEvents: UIControlEvents.TouchDragExit)
             newButton.addTarget(self, action: "pressed:", forControlEvents: UIControlEvents.TouchDragEnter)
             newButton.addTarget(self, action: "selected:", forControlEvents: UIControlEvents.TouchUpInside)
         }
-        else{
+        else if(id == -1){
             newButton.addTarget(self, action: "didPressAddNew", forControlEvents: UIControlEvents.TouchUpInside)
+        }
+        else{
+            
         }
         
         self.hashtagIdIndex[title] = id
@@ -667,20 +686,20 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
             self.presentViewController(alert, animated: true, completion: nil)
         }
         else{
-        println("CLICK CLICK CLICK")
-        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
-            println("Button capture")
-            
-            imagePicker = UIImagePickerController()
-            imagePicker.delegate = self
-            //imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
-            imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
-            //imagePicker.mediaTypes = [kUTTypeImage]
-            imagePicker.mediaTypes = [kUTTypeImage]
-            imagePicker.allowsEditing = true
-            
-            self.presentViewController(imagePicker, animated: true, completion: nil)
-        }
+            println("CLICK CLICK CLICK")
+            if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
+                println("Button capture")
+                
+                imagePicker = UIImagePickerController()
+                imagePicker.delegate = self
+                //imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
+                imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
+                //imagePicker.mediaTypes = [kUTTypeImage]
+                imagePicker.mediaTypes = [kUTTypeImage]
+                imagePicker.allowsEditing = true
+                
+                self.presentViewController(imagePicker, animated: true, completion: nil)
+            }
         }
         
         
@@ -719,20 +738,20 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
             self.presentViewController(alert, animated: true, completion: nil)
         }
         else{
-        println("ROLLING ROLLING ROLLING")
-        /// if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
-        println("Button capture")
-        
-        imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
-        // imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
-        //imagePicker.mediaTypes = [kUTTypeImage]
-        imagePicker.mediaTypes = [kUTTypeImage]
-        imagePicker.allowsEditing = true
-        
-        self.presentViewController(imagePicker, animated: true, completion: nil)
-        //}
+            println("ROLLING ROLLING ROLLING")
+            /// if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera){
+            println("Button capture")
+            
+            imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary;
+            // imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
+            //imagePicker.mediaTypes = [kUTTypeImage]
+            imagePicker.mediaTypes = [kUTTypeImage]
+            imagePicker.allowsEditing = true
+            
+            self.presentViewController(imagePicker, animated: true, completion: nil)
+            //}
         }
         
     }
@@ -1056,6 +1075,9 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
                 println(err!.localizedDescription)
                 let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
                 println("Error could not parse JSON: '\(jsonStr)'")
+                
+                self.showMessageWithError("Problem posting", callback: "upload_comment")
+                
             }
             else {
                 // The JSONObjectWithData constructor didn't return an error. But, we should still
@@ -1140,6 +1162,40 @@ class WriteCommentViewController: UIViewController, UINavigationControllerDelega
             
             
         })
+    }
+    
+    
+    func showMessageWithError(message: NSString, callback:NSString)
+    {
+        
+        
+        var alert = UIAlertController(title: "Error", message:message as String, preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "Reload", style: .Default, handler: { action in
+            switch action.style{
+            case .Default:
+                NSThread.detachNewThreadSelector(Selector(callback as String), toTarget:self, withObject: nil)
+                println("default")
+                
+            case .Cancel:
+                println("cancel")
+                
+            case .Destructive:
+                println("destructive")
+            }
+        }))
+        //        alert.addAction(UIAlertAction(title: "Shit!", style: .Default, handler: { action in
+        //            switch action.style{
+        //            case .Default:
+        //                println("default")
+        //
+        //            case .Cancel:
+        //                println("cancel")
+        //
+        //            case .Destructive:
+        //                println("destructive")
+        //            }
+        //        }))
+        self.presentViewController(alert, animated: true, completion: nil)
     }
     
     

@@ -11,14 +11,17 @@ import UIKit
 let fbIDConstant = "saved_fb_id"
 
 
-class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRecognizerDelegate, UIPageViewControllerDelegate, UIPageViewControllerDataSource {
+class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRecognizerDelegate, UIPageViewControllerDataSource {
     
-@IBOutlet var fbLoginView : FBLoginView!
+    @IBOutlet var fbLoginView : FBLoginView!
     @IBOutlet var tcLabel: UILabel!
     
-    let pageTitles = ["Title 1", "Title 2", "Title 3", "Title 4"]
+    let pageTitles = ["Look Up", "Chat Up", "Open Up"]
+    let pageImages = ["IntroImage1.jpg", "IntroImage2.jpg", "IntroImage3.jpg"]
+    let pageDesc = ["Check out what people around you are talking about", "Share your thoughts and opinions with others in your vicinity", "Reach out to the people whose posts spark your interest, find the people who love what you love, skip the small talk and start connecting"]
     var pageIndex: Int?
-    var pageViewController : UIPageViewController!
+    var pageViewController: UIPageViewController!
+    @IBOutlet var pgDots: UIPageControl!
     var ffList = ""
     var theUserId = ""
     var onfriend = 0
@@ -43,16 +46,79 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRec
         tcLabel.userInteractionEnabled = true
         tcLabel.addGestureRecognizer(TCTap)
         
-    //    self.reset()
+        //    self.reset()
         
+      //  self.testDaMutualFriends()
         
+        self.pageViewController = self.storyboard?.instantiateViewControllerWithIdentifier("PageViewController") as! UIPageViewController
+        self.pageViewController.dataSource = self
+        
+        var startVC = self.viewControllerAtIndex(0) as ContentViewController
+        var viewControllers = NSArray(object: startVC)
+        self.pageViewController.setViewControllers(viewControllers as [AnyObject], direction: .Forward, animated: true, completion: nil)
+        
+        let h = UIApplication.sharedApplication().statusBarFrame.size.height
+        self.pageViewController.view.frame = CGRectMake(0, h, self.view.frame.width, self.view.frame.size.height + 37 - h)
+        //self.pageViewController.view.frame = self.view.frame
+        
+        self.addChildViewController(self.pageViewController)
+        self.view.addSubview(self.pageViewController.view)
+        self.view.sendSubviewToBack(self.pageViewController.view)
+        self.pageViewController.didMoveToParentViewController(self)
+        
+        self.view.bringSubviewToFront(self.pgDots)
         
     }
     
+    func testDaMutualFriends(){
+        //testMutualFriends
+        
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/testMutualFriends")
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        var params = ["ffList":self.ffList, "fbid":self.theUserId] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+            }
+            else {
+                
+                if let parseJSON = json {
+                    
+                }
+                else {
+                    
+                }
+            }
+        })
+        task.resume()
+        //END AJAX
+    
+
+    
+    }
     func get_mutual_friends(){
-//        NSDictionary *params = @{
-//            @"fields": @"context.fields(mutual_friends)",
-//        };
+        //        NSDictionary *params = @{
+        //            @"fields": @"context.fields(mutual_friends)",
+        //        };
         var params: Dictionary<String, AnyObject> = Dictionary()
         params["fields"] = "context.fields(mutual_friends)"
         
@@ -61,29 +127,29 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRec
             println("MUTUAL: \(result)")
         })
         
-//        var params: Dictionary<String, AnyObject> = Dictionary()
-//        params["fields"] = "context.fields(mutual_friends)"
-//        
-//        FBRequestConnection.startWithGraphPath("me", parameters: params, HTTPMethod: "GET", completionHandler: {(connection: FBRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
-//            println("MUTUAL: \(result)")
-//        })
+        //        var params: Dictionary<String, AnyObject> = Dictionary()
+        //        params["fields"] = "context.fields(mutual_friends)"
+        //
+        //        FBRequestConnection.startWithGraphPath("me", parameters: params, HTTPMethod: "GET", completionHandler: {(connection: FBRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
+        //            println("MUTUAL: \(result)")
+        //        })
         
-//        var friendsRequest : FBRequest = FBRequest.requestForMyFriends()
-//        var friendList = ""
-//        friendsRequest.startWithCompletionHandler{(connection:FBRequestConnection!, result:AnyObject!, error:NSError!) -> Void in
-//            var resultdict = result as! NSDictionary
-//            println("Result Dict: \(resultdict)")
-//            var data : NSArray = resultdict.objectForKey("data") as! NSArray
-//        }
-//        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
-//            initWithGraphPath:@"/{user-id}"
-//        parameters:params
-//        HTTPMethod:@"GET"];
-//        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection,
-//        id result,
-//        NSError *error) {
-//        // Handle the result
-//        }];
+        //        var friendsRequest : FBRequest = FBRequest.requestForMyFriends()
+        //        var friendList = ""
+        //        friendsRequest.startWithCompletionHandler{(connection:FBRequestConnection!, result:AnyObject!, error:NSError!) -> Void in
+        //            var resultdict = result as! NSDictionary
+        //            println("Result Dict: \(resultdict)")
+        //            var data : NSArray = resultdict.objectForKey("data") as! NSArray
+        //        }
+        //        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
+        //            initWithGraphPath:@"/{user-id}"
+        //        parameters:params
+        //        HTTPMethod:@"GET"];
+        //        [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection,
+        //        id result,
+        //        NSError *error) {
+        //        // Handle the result
+        //        }];
     }
     
     func reset() {
@@ -93,7 +159,7 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRec
         
         
         let pageContentViewController = self.viewControllerAtIndex(0)
-       // self.pageViewController.setViewControllers([pageContentViewController!], direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
+        // self.pageViewController.setViewControllers([pageContentViewController!], direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
         
         /* We are substracting 30 because we have a start again button whose height is 30*/
         self.pageViewController.view.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height - 30)
@@ -101,43 +167,58 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRec
         self.view.addSubview(pageViewController.view)
         self.pageViewController.didMoveToParentViewController(self)
     }
-
+    
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
         
-        var index = (viewController as! FBLoginViewController).pageIndex!
-        index++
-        if(index >= self.pageTitles.count){
+        var vc = viewController as! ContentViewController
+        
+        var index = vc.pageIndex as Int
+        self.pgDots.currentPage = index
+        if(index == NSNotFound){
             return nil
         }
+        
+        index++
+        
+        if(index == self.pageTitles.count){
+            return nil
+        }
+        
         return self.viewControllerAtIndex(index)
         
     }
     
     func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
         
-        var index = (viewController as! FBLoginViewController).pageIndex!
-        if(index <= 0){
+        var vc = viewController as! ContentViewController
+        
+        var index = vc.pageIndex as Int
+        self.pgDots.currentPage = index
+        
+        if(index <= 0 || index == NSNotFound){
             return nil
         }
+        
         index--
         return self.viewControllerAtIndex(index)
         
     }
     
-    func viewControllerAtIndex(index : Int) -> UIViewController? {
-    if((self.pageTitles.count == 0) || (index >= self.pageTitles.count)) {
-    return nil
+    func viewControllerAtIndex(index : Int) -> ContentViewController {
+        if((self.pageTitles.count == 0) || (index >= self.pageTitles.count)) {
+            return ContentViewController()
+            //return nil
+        }
+        
+        var vc: ContentViewController = self.storyboard?.instantiateViewControllerWithIdentifier("ContentViewController") as! ContentViewController
+        vc.imageFile = self.pageImages[index] as String
+        vc.titleText = self.pageTitles[index] as String
+        vc.descText = self.pageDesc[index] as String
+        vc.pageIndex = index
+        return vc
     }
-    let pageContentViewController = self.storyboard?.instantiateViewControllerWithIdentifier("fb_login_scene_id") as! FBLoginViewController
     
-   // pageContentViewController.imageName = self.images[index]
-    //pageContentViewController.titleText = self.pageTitles[index]
-       // pageContentViewController.tcLabel?.text = "poop"//self.pageTitles[index]
-    pageContentViewController.pageIndex = index
-    return pageContentViewController
-    }
-
     func presentationCountForPageViewController(pageViewController: UIPageViewController) -> Int {
         return pageTitles.count
     }
@@ -152,7 +233,7 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRec
         let tcView = mainStoryboard.instantiateViewControllerWithIdentifier("terms_and_cond_id") as! TermsAndConditionsViewController
         
         
-       // self.dismissViewControllerAnimated(true, completion: nil)
+        // self.dismissViewControllerAnimated(true, completion: nil)
         
         self.presentViewController(tcView, animated: false, completion: nil)
         
@@ -169,20 +250,20 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRec
                 
             }
             else{
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
-            //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-            let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as! UITabBarController
-            
-            
-            self.dismissViewControllerAnimated(true, completion: nil)
-            
-            self.presentViewController(fbView, animated: false, completion: nil)
+                let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+                //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
+                let fbView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as! UITabBarController
+                
+                
+                self.dismissViewControllerAnimated(true, completion: nil)
+                
+                self.presentViewController(fbView, animated: false, completion: nil)
             }
             
             
             
         }
-
+        
     }
     
     
@@ -190,7 +271,7 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRec
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     
     
     // Facebook Delegate Methods
@@ -219,13 +300,13 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRec
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setObject(userID, forKey: "saved_fb_id")
         self.theUserId = userID
-       getMyFriends()
-       // self.get_mutual_friends()
+        getMyFriends()
+        // self.get_mutual_friends()
         
-//        FBSession.openActiveSessionWithReadPermissions(self.fbLoginView.readPermissions, allowLoginUI: true, completionHandler: {(session, state, error) -> Void in
-//            self.sessionStateChanged(session, state: state, error: error)
-//        })
-     //   self.getFBFriends("me/friends?")
+        //        FBSession.openActiveSessionWithReadPermissions(self.fbLoginView.readPermissions, allowLoginUI: true, completionHandler: {(session, state, error) -> Void in
+        //            self.sessionStateChanged(session, state: state, error: error)
+        //        })
+        //   self.getFBFriends("me/friends?")
     }
     
     func sessionStateChanged(session:FBSession, state:FBSessionState, error:NSError?) {
@@ -239,21 +320,21 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRec
     func loginView(loginView : FBLoginView!, handleError:NSError) {
         println("Error: \(handleError.localizedDescription)")
     }
-
+    
     
     func getFBFriends(url: String) {
         
         //var params: Dictionary<String, AnyObject> = Dictionary()
-       // params["fields"] = "context.fields(mutual_friends)"
+        // params["fields"] = "context.fields(mutual_friends)"
         
         FBRequestConnection.startWithGraphPath(url, completionHandler: {(connection: FBRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
             println("MUTUAL: \(result)")
             if(error == nil){
-               // [self parseFBResult:result];
+                // [self parseFBResult:result];
                 
                 let paging = result["paging"] as! NSDictionary
                 //NSDictionary *paging = [result objectForKey:@"paging"];
-              //  NSString *next = [paging objectForKey:@"next"];
+                //  NSString *next = [paging objectForKey:@"next"];
                 let next = paging["next"] as! NSString
                 
                 // skip the beginning of the url https://graph.facebook.com/
@@ -273,47 +354,47 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRec
                         }
                         }
                     )
-            
+                    
                 }
                 else{
                     
                     self.onfriend = self.onfriend + 25
                     println("BLAHHHHH: me/friends?&limit=25&offset=\(self.onfriend)")
                     self.getFBFriends("me/friends?&limit=25&offset=\(self.onfriend)")
-                   // self.getFBFriends(next.substringFromIndex(27))
+                    // self.getFBFriends(next.substringFromIndex(27))
                 }
                 
-               // [self getFBFriends:next.substringFromIndex(27)];
+                // [self getFBFriends:next.substringFromIndex(27)];
             }
             else{
                 println("ERROR ERROR\(error)")
             }
         })
         
-//        FBRequestConnection.startWithGraphPath(url, HTTPMethod: "GET", completionHandler: {(connection: FBRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
-//            println("MUTUAL: \(result)")
-//        })
+        //        FBRequestConnection.startWithGraphPath(url, HTTPMethod: "GET", completionHandler: {(connection: FBRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
+        //            println("MUTUAL: \(result)")
+        //        })
         
-//    [FBRequestConnection startWithGraphPath:url
-//    completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-//    if (!error) {
-//    [self parseFBResult:result];
-//    
-//    NSDictionary *paging = [result objectForKey:@"paging"];
-//    NSString *next = [paging objectForKey:@"next"];
-//    
-//    // skip the beginning of the url https://graph.facebook.com/
-//    // there's probably a more elegant way of doing this
-//    
-//    NSLog(@"next:%@", [next substringFromIndex:27]);
-//    
-//    [self getFBFriends:[next substringFromIndex:27]];
-//    
-//    } else {
-//    NSLog(@"An error occurred getting friends: %@", [error localizedDescription]);
-//    }
-//    }];
-//        
+        //    [FBRequestConnection startWithGraphPath:url
+        //    completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        //    if (!error) {
+        //    [self parseFBResult:result];
+        //
+        //    NSDictionary *paging = [result objectForKey:@"paging"];
+        //    NSString *next = [paging objectForKey:@"next"];
+        //
+        //    // skip the beginning of the url https://graph.facebook.com/
+        //    // there's probably a more elegant way of doing this
+        //
+        //    NSLog(@"next:%@", [next substringFromIndex:27]);
+        //
+        //    [self getFBFriends:[next substringFromIndex:27]];
+        //
+        //    } else {
+        //    NSLog(@"An error occurred getting friends: %@", [error localizedDescription]);
+        //    }
+        //    }];
+        //
     }
     
     
@@ -341,7 +422,7 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRec
                 
             }
             
-          //  var friends = resultdict.objectForKey("data") as! NSArray
+            //  var friends = resultdict.objectForKey("data") as! NSArray
             //println("Found \(friends.count) friends")
             
             
@@ -357,46 +438,46 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRec
     func sendFinalList(){
         println("FINAL FRIENDS FINAL LIST:\(ffList)")
         dispatch_async(dispatch_get_main_queue(), {
-                //START AJAX
-                //let url = NSURL(string: "http://www.groopie.co/mobile_get2_top_comments")
-                let url = NSURL(string: "http://groopie.pythonanywhere.com/recieve_fbfriends_list")
-                var request = NSMutableURLRequest(URL: url!)
-                var session = NSURLSession.sharedSession()
-                request.HTTPMethod = "POST"
-        
-                var params = ["ffList":self.ffList, "fbid":self.theUserId] as Dictionary<String, String>
-        
+            //START AJAX
+            //let url = NSURL(string: "http://www.groopie.co/mobile_get2_top_comments")
+            let url = NSURL(string: "http://groopie.pythonanywhere.com/recieve_fbfriends_list")
+            var request = NSMutableURLRequest(URL: url!)
+            var session = NSURLSession.sharedSession()
+            request.HTTPMethod = "POST"
+            
+            var params = ["ffList":self.ffList, "fbid":self.theUserId] as Dictionary<String, String>
+            
+            var err: NSError?
+            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+            
+            var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+                println("Response: \(response)")
+                var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Body: \(strData)")
                 var err: NSError?
-                request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
-                request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-                request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-                var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
-                    println("Response: \(response)")
-                    var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
-                    println("Body: \(strData)")
-                    var err: NSError?
-                    var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
-        
-        
-                    // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
-                    if(err != nil) {
-                        println(err!.localizedDescription)
-                        let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
-                        println("Error could not parse JSON: '\(jsonStr)'")
+                var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+                
+                
+                // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+                if(err != nil) {
+                    println(err!.localizedDescription)
+                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                    println("Error could not parse JSON: '\(jsonStr)'")
+                }
+                else {
+                    
+                    if let parseJSON = json {
+                        
                     }
                     else {
-        
-                        if let parseJSON = json {
-        
-                        }
-                        else {
-        
-                        }
+                        
                     }
-                })
-                task.resume()
-                //END AJAX
+                }
+            })
+            task.resume()
+            //END AJAX
         })
         
         
@@ -405,47 +486,47 @@ class FBLoginViewController: UIViewController, FBLoginViewDelegate, UIGestureRec
     func testUserLogin(){
         
         
-//        //START AJAX
-//        //let url = NSURL(string: "http://www.groopie.co/mobile_get2_top_comments")
-//        let url = NSURL(string: "http://groopie.pythonanywhere.com/login")
-//        var request = NSMutableURLRequest(URL: url!)
-//        var session = NSURLSession.sharedSession()
-//        request.HTTPMethod = "GET"
-//        
-//        var params = ["username":"jameson", "password":"password"] as Dictionary<String, String>
-//        
-//        var err: NSError?
-//        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
-//        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-//        request.addValue("application/json", forHTTPHeaderField: "Accept")
-//        
-//        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
-//            println("Response: \(response)")
-//            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
-//            println("Body: \(strData)")
-//            var err: NSError?
-//            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
-//            
-//            
-//            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
-//            if(err != nil) {
-//                println(err!.localizedDescription)
-//                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
-//                println("Error could not parse JSON: '\(jsonStr)'")
-//            }
-//            else {
-//
-//                if let parseJSON = json {
-//
-//                }
-//                else {
-//
-//                }
-//            }
-//        })
-//        task.resume()
-//        //END AJAX
-
+        //        //START AJAX
+        //        //let url = NSURL(string: "http://www.groopie.co/mobile_get2_top_comments")
+        //        let url = NSURL(string: "http://groopie.pythonanywhere.com/login")
+        //        var request = NSMutableURLRequest(URL: url!)
+        //        var session = NSURLSession.sharedSession()
+        //        request.HTTPMethod = "GET"
+        //
+        //        var params = ["username":"jameson", "password":"password"] as Dictionary<String, String>
+        //
+        //        var err: NSError?
+        //        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        //        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        //        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        //
+        //        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+        //            println("Response: \(response)")
+        //            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+        //            println("Body: \(strData)")
+        //            var err: NSError?
+        //            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+        //            
+        //            
+        //            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+        //            if(err != nil) {
+        //                println(err!.localizedDescription)
+        //                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+        //                println("Error could not parse JSON: '\(jsonStr)'")
+        //            }
+        //            else {
+        //
+        //                if let parseJSON = json {
+        //
+        //                }
+        //                else {
+        //
+        //                }
+        //            }
+        //        })
+        //        task.resume()
+        //        //END AJAX
+        
     }
     
 }

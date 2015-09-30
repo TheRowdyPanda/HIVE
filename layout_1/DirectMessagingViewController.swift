@@ -317,7 +317,7 @@ class DirectMessagingViewController: UIViewController, UITableViewDelegate, UITa
                     
                     //self.timer = NSTimer.scheduledTimerWithTimeInterval(1, target:self, selector: Selector("updateComments"), userInfo: nil, repeats: true)
                     dispatch_async(dispatch_get_main_queue(), {
-                     self.timer = NSTimer.scheduledTimerWithTimeInterval(20, target:self, selector: Selector("updateComments"), userInfo: nil, repeats: true)
+                     self.timer = NSTimer.scheduledTimerWithTimeInterval(8, target:self, selector: Selector("updateComments"), userInfo: nil, repeats: true)
                         })
                     
                     

@@ -19,6 +19,7 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate, UICo
     //@IBOutlet var loadingScreen: UIImageView!
     @IBOutlet var collectionView: UICollectionView!
     @IBOutlet var exitButton: UIButton!
+    @IBOutlet var connectButton: UIButton!
     
     
     @IBOutlet weak var topLayoutConstraint: NSLayoutConstraint!
@@ -119,9 +120,13 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate, UICo
         
         self.exitButton.layer.masksToBounds = true
         self.exitButton.layer.cornerRadius = self.exitButton.frame.width/2.0
+        self.connectButton?.alpha = 1.0
+        self.connectButton?.userInteractionEnabled = true
         
         loadUserComments()
         showLoadingScreen()
+        getConnectionStatus()
+        
         
         if(self.userFriends == "none"){
             getMutualFriends()
@@ -559,6 +564,104 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate, UICo
     }
     //AJAX
     
+    func getConnectionStatus(){
+        
+        
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_user_get_connection_status")
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = userFBID//defaults.stringForKey("saved_fb_id") as String!
+        let gfbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        var params = ["fb_id":fbid, "gfb_id":gfbid] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            
+            //self.theJSON = NSJSONSerialization.JSONObjectWithData(json, options:.MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                println(err!.localizedDescription)
+                let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Error could not parse JSON: '\(jsonStr)'")
+                
+            }
+            else {
+                
+                // The JSONObjectWithData constructor didn't return an error. But, we should still
+                
+                
+                
+                // check and make sure that json has a value using optional binding.
+                if let parseJSON = json {
+                    
+                    dispatch_async(dispatch_get_main_queue(), {
+                    self.connectButton?.alpha = 1.0
+                    self.connectButton?.userInteractionEnabled = true
+
+                    let status = parseJSON["results"] as! String!
+                    
+                    if(status == "requester"){
+                        //cell.relationshipLabel?.text = "pending"
+                        var lGif = NSBundle.mainBundle().URLForResource("loading_spinner", withExtension: "gif")
+                        var imageDatagif = NSData(contentsOfURL: lGif!)
+                        let image = UIImage.animatedImageWithData(imageDatagif!)
+                        //cell.interactionButton?.imageView?.image = UIImage(data: imageDatagif!);
+                        self.connectButton?.setImage(image, forState: UIControlState.Normal)
+                        //cell.interactionButton?.addTarget(self, action:"sendRequest:", forControlEvents: UIControlEvents.TouchUpInside)
+                    }
+                    else if(status == "requested"){
+                        let image = UIImage(named: "chat_button.png")
+                        self.connectButton?.setImage(image, forState: UIControlState.Normal)
+                        //cell.relationshipLabel?.text = "confirm"
+                        self.connectButton?.addTarget(self, action:"confirmRequest:", forControlEvents: UIControlEvents.TouchUpInside)
+                    }
+                    else if(status == "friend"){
+                        let image = UIImage(named: "chat_button.png")
+                        self.connectButton?.setImage(image, forState: UIControlState.Normal)
+                        //cell.relationshipLabel?.text = "message"
+                        self.connectButton?.addTarget(self, action:"message:", forControlEvents: UIControlEvents.TouchUpInside)
+                    }
+                    else if(status == "connect"){
+                        let image = UIImage(named: "add_friend.png")
+                        self.connectButton?.setImage(image, forState: UIControlState.Normal)
+                        //cell.relationshipLabel?.text = "connect"
+                        self.connectButton?.addTarget(self, action:"sendRequest:", forControlEvents: UIControlEvents.TouchUpInside)
+                    }
+                    
+                    })
+
+                    
+                }
+                else {
+                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                    //   self.showErrorScreen("top")
+                }
+            }
+        })
+        task.resume()
+
+
+        
+        
+    }
     func getUserInfo(){
         
         let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_user_get_hashtags")
@@ -1521,6 +1624,165 @@ class ProfileViewController: UIViewController, UIGestureRecognizerDelegate, UICo
         
     }
     
+    
+    
+    
+    func sendRequest(dabut: UIButton){
+        
+
+        var lGif = NSBundle.mainBundle().URLForResource("loading_spinner", withExtension: "gif")
+        var imageDatagif = NSData(contentsOfURL: lGif!)
+        
+        let image = UIImage.animatedImageWithData(imageDatagif!)
+        self.connectButton?.setImage(image, forState: UIControlState.Normal)
+        //cell.interactionButton?.addTarget(self, action:"sendReqest:", forControlEvents: UIControlEvents.TouchUpInside)
+        
+        let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_user_request_friend")
+        //START AJAX
+        var request = NSMutableURLRequest(URL: url!)
+        var session = NSURLSession.sharedSession()
+        request.HTTPMethod = "POST"
+        
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let fbid = defaults.stringForKey("saved_fb_id") as String!
+        
+        var params = ["gfbid":fbid, "rfbid": userFBID] as Dictionary<String, String>
+        
+        var err: NSError?
+        request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        
+        var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            println("Response: \(response)")
+            var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+            println("Body: \(strData)")
+            var err: NSError?
+            var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+            
+            
+            // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+            if(err != nil) {
+                dispatch_async(dispatch_get_main_queue(),{
+                   // self.userStatusCache[daCellIndex] = "connect"
+                    let image = UIImage(named: "add_friend.png")
+                    self.connectButton?.setImage(image, forState: UIControlState.Normal)
+                  //  cell.relationshipLabel?.text = "try again"
+                    
+                    println(err!.localizedDescription)
+                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                    println("Error could not parse JSON: '\(jsonStr)'")
+                });
+                //CHANGE THE IMAGE BACK TO CONNECT
+                
+            }
+            else {
+                // The JSONObjectWithData constructor didn't return an error. But, we should still
+                
+                
+                
+                // check and make sure that json has a value using optional binding.
+                if let parseJSON = json {
+                }
+                else {
+                    // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                    
+                }
+            }
+        })
+        task.resume()
+        //END AJAX
+
+    }
+    
+    func message(dabut: UIButton){
+
+        let requestedid = userFBID
+        let requestername = userName
+        
+        let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
+        let vc = mainStoryboard.instantiateViewControllerWithIdentifier("direct_messaging_scene_id") as! DirectMessagingViewController
+        
+        vc.userFBID = requestedid
+        vc.userName = requestername
+        // self.navigationController?.pushViewController(vc, animated: false)
+        //   self.navigationController?.popToViewController(vc, animated: false)
+        self.presentViewController(vc, animated: false, completion: nil)
+    }
+   
+    func confirmRequest(dabut: UIButton){
+        
+        let requestedid = userFBID
+        
+        
+       // cell.relationshipLabel?.text = "message"
+        
+        self.connectButton?.addTarget(self, action:"message:", forControlEvents: UIControlEvents.TouchUpInside)
+        
+        
+        dispatch_async(dispatch_get_main_queue(),{
+
+            let url = NSURL(string: "http://groopie.pythonanywhere.com/mobile_user_confirm_friend")
+            //START AJAX
+            var request = NSMutableURLRequest(URL: url!)
+            var session = NSURLSession.sharedSession()
+            request.HTTPMethod = "POST"
+            
+            let defaults = NSUserDefaults.standardUserDefaults()
+            let fbid = defaults.stringForKey("saved_fb_id") as String!
+            
+            var params = ["gfbid":fbid, "rfbid": requestedid] as Dictionary<String, String>
+            
+            var err: NSError?
+            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(params, options: nil, error: &err)
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.addValue("application/json", forHTTPHeaderField: "Accept")
+            
+            var task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+                println("Response: \(response)")
+                var strData = NSString(data: data, encoding: NSUTF8StringEncoding)
+                println("Body: \(strData)")
+                var err: NSError?
+                var json = NSJSONSerialization.JSONObjectWithData(data, options: .MutableLeaves, error: &err) as? NSDictionary
+                
+                
+                // Did the JSONObjectWithData constructor return an error? If so, log the error to the console
+                if(err != nil) {
+                    println(err!.localizedDescription)
+                    let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
+                    println("Error could not parse JSON: '\(jsonStr)'")
+                    
+                    
+                }
+                else {
+                    // The JSONObjectWithData constructor didn't return an error. But, we should still
+                    
+                    
+                    
+                    // check and make sure that json has a value using optional binding.
+                    if let parseJSON = json {
+                    }
+                    else {
+                        // Woa, okay the json object was nil, something went worng. Maybe the server isn't running?
+                        
+                    }
+                }
+            })
+            task.resume()
+            //END AJAX
+            
+        })
+        
+        
+        
+        
+        
+    }
+    
+    
+    
+    
+
     
     
 }

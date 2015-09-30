@@ -14,7 +14,13 @@ class CustomTabBarViewController: UITabBarController {
         super.viewDidLoad()
         
         self.tabBar.tintColor = UIColor.blackColor()
-        self.tabBar.selectedImageTintColor = UIColor.whiteColor()
+       // self.tabBar.layer.borderColor = UIColor.blackColor().CGColor
+        let topBorder = UIView(frame: CGRect(x: 0, y: 0, width: self.tabBar.frame.width, height: 1.0))
+        topBorder.backgroundColor = UIColor(red: (85.0/255.0), green: (85.0/255.0), blue: (85.0/255.0), alpha: 1.0)
+        self.tabBar.addSubview(topBorder)
+     //   self.tabBar.layer.borderWidth = 20
+        self.tabBar.selectedImageTintColor = UIColor(red: (255.0/255.0), green: (210.0/255.0), blue: (11.0/255.0), alpha: 1.0)
+      //  self.tabBar.selectedImageTintColor = UIColor.whiteColor()
         
 
 //        //feed item

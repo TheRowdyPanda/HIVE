@@ -48,6 +48,7 @@ class MyProfileViewController: UIViewController, UIGestureRecognizerDelegate, UI
     var imageCache = [String : UIImage]()
     var userImageCache = [String: UIImage]()
     var postImageCache = [String: UIImage]()
+    var commingFrom = "none"
     
     var voterCache = [Int : String]()
     var voterValueCache = [Int : String]()
@@ -107,6 +108,9 @@ class MyProfileViewController: UIViewController, UIGestureRecognizerDelegate, UI
         
        
         self.getUserInfo()
+        if(self.commingFrom == "delete_comment"){
+            loadUserComments()
+        }
         // removeLoadingScreen()
     }
     

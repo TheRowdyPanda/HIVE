@@ -52,6 +52,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         alaume.initializeWithAppId("s9", apiKey: "fff5a48b7c7e4999b7a5691d7458eed7")
         
         
+        var pageController = UIPageControl.appearance()
+        pageController.pageIndicatorTintColor = UIColor.lightGrayColor()
+        pageController.currentPageIndicatorTintColor = UIColor.blackColor()
+        pageController.backgroundColor = UIColor.clearColor()
+//        pageController.frame = CGRectMake(0, 0, pageController.frame.width, pageController.frame.height)
+        
+        
+          Instabug.startWithToken("882ce2b68fad34d8104d66fbbb42f839", captureSource: IBGCaptureSourceUIKit, invocationEvent: IBGInvocationEventShake)
+        
         return true
     }
 

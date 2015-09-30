@@ -24,4 +24,7 @@
 #import "GAITrackedViewController.h"
 #import "GAITracker.h"
 
+#import <CommonCrypto/CommonHMAC.h>
+#import <Instabug/Instabug.h>
+
 #endif

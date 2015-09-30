@@ -17,7 +17,7 @@ class pickHashtagsInitialViewController: UIViewController, UIGestureRecognizerDe
     @IBOutlet var hashtagScrollHolder:UIScrollView!
     @IBOutlet weak var bottomLayoutConsttraint: NSLayoutConstraint!
 
-    var fakeHashtags = ["MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj", "Oijfodsijfoidj", "ofjijf", "Ijfi", "OSIDJFOSFSDF", "SODJFOSI", "OSIDJF", "OSIDJFOSIDJF", "ISJDFOISJ", "MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj", "Oijfodsijfoidj", "ofjijf", "Ijfi", "OSIDJFOSFSDF", "SODJFOSI", "OSIDJF", "OSIDJFOSIDJF", "ISJDFOISJ", "MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj", "Oijfodsijfoidj", "ofjijf", "Ijfi", "OSIDJFOSFSDF", "SODJFOSI", "OSIDJF", "OSIDJFOSIDJF", "ISJDFOISJ", "MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj", "Oijfodsijfoidj", "ofjijf", "Ijfi", "OSIDJFOSFSDF", "SODJFOSI", "OSIDJF", "OSIDJFOSIDJF", "ISJDFOISJ", "MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj", "Oijfodsijfoidj", "ofjijf", "Ijfi", "OSIDJFOSFSDF", "SODJFOSI", "OSIDJF", "OSIDJFOSIDJF", "ISJDFOISJ", "MarioKart", "InsideOut", "YoMomma", "Fakeroi1", "Ifjofj", "Oijfodsijfoidj", "ofjijf", "Ijfi", "OSIDJFOSFSDF", "SODJFOSI", "OSIDJF", "OSIDJFOSIDJF", "ISJDFOISJ"]
+    var fakeHashtags = ["MarioKart"]
     var hashtagIDs = [NSString?]()
     var hashtagViews = [UIView?]()
     var hashtagButtons = [UIButton?]()
@@ -47,17 +47,50 @@ class pickHashtagsInitialViewController: UIViewController, UIGestureRecognizerDe
         
         self.hashtagScrollHolder.delegate = self
         
+       // self.createHashtag("Loading Hashtags", id: -1);
+        
         if(self.commingFrom == "firstView"){
+            self.descriptionLabel.text = "Loading..."
             self.exitButton.alpha = 0.0
             self.exitButton.userInteractionEnabled = false
             loadHashtags()
         }
         else{
+            self.descriptionLabel.text = "Loading..."
             loadHashtagsForUser()
-            self.descriptionLabel.text = "Check out some new hashtags."
+            //self.descriptionLabel.text = "Check out some new hashtags."
             self.exitButton.addTarget(self, action: "dismissSelf", forControlEvents: UIControlEvents.TouchUpInside)
         }
-        }
+        
+        
+        //self.testDaMutualFriends()
+        
+    }
+    
+    func testDaMutualFriends(){
+        //testMutualFriends
+//        
+//        NSDictionary *params = @{
+//            @"fields": @"context.fields(mutual_friends)",
+//        };
+      //  FBSession.activeSession().accessTokenData.userID
+        //FBSession.openActiveSessionWithAllowLoginUI(true)
+        print("TOKEN:\(FBSession.activeSession().accessTokenData.accessToken)")
+       // println(FBSDKAccessToken.currentAccessToken().tokenString)
+        var params = ["fields":"context.fields(mutual_friends)", "access_token":FBSession.activeSession().accessTokenData.accessToken]
+        /* make the API call */
+        
+        //dXNlcl9jb250ZAXh0OgGQgfRrBrfFMQrZC9POld0N9TnUSgeyL0560CZAXJt1p7Y4ZA3vXErNCgWaIZC7QZCh7ZCcSxbT3KjUxjjtfHg00C0jJ7lC9S4zkWsh8ZCLN9FEl1qG1sZD
+        //var t = FBSDKGraphRequest(graphPath: "/100000118201399", parameters: params)
+        //var t2 = FBSDKGraphRequest(graphPath: "/100000118201399", parameters: params, HTTPMethod: "GET")
+        var t2 = FBSDKGraphRequest(graphPath: "/dXNlcl9jb250ZAXh0OgGQgfRrBrfFMQrZC9POld0N9TnUSgeyL0560CZAXJt1p7Y4ZA3vXErNCgWaIZC7QZCh7ZCcSxbT3KjUxjjtfHg00C0jJ7lC9S4zkWsh8ZCLN9FEl1qG1sZD/all_mutual_friends", parameters: params, HTTPMethod: "GET")
+        t2.startWithCompletionHandler({(connection: FBSDKGraphRequestConnection!, result: AnyObject!, error: NSError!) -> Void in
+            println("MUTUAL: \(result)")
+            println(error)
+        })
+        
+    }
+
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -237,9 +270,10 @@ class pickHashtagsInitialViewController: UIViewController, UIGestureRecognizerDe
         let testWidthFiller = self.widthFiller + width + Int(widthSpacing)
         //self.widthFiller += width + Int(widthSpacing)
         
-        if(Int(testWidthFiller) > Int(self.hashtagScrollHolder.frame.width)){
+        if(Int(testWidthFiller) > Int(self.view.frame.width - 22)){//self.hashtagScrollHolder.frame.width
             var onBut = self.hashtagButtons.count - 1
             println("THE WIDTH:\(self.hashtagScrollHolder.frame.width)")
+            println("The WIDTH2:\(self.view.frame.width)")
             println("ON THE BUTTON:\(onBut)")
             if(onBut > (self.fakeHashtags.count - 1)){
                 onBut = self.fakeHashtags.count - 1
@@ -248,7 +282,7 @@ class pickHashtagsInitialViewController: UIViewController, UIGestureRecognizerDe
                 if(self.hashtagIdIndex[self.fakeHashtags[i]] == nil){//if these hashtags haven't been used for
                     let testWidth = Int(self.fakeHashtags[i].sizeWithAttributes([NSFontAttributeName: f!]).width) + 15
                     let testFiller2 = self.widthFiller + testWidth + Int(widthSpacing)
-                    if(Int(testFiller2) <= Int(self.hashtagScrollHolder.frame.width)){
+                    if(Int(testFiller2) <= Int(self.view.frame.width - 22)){//hashtagScrollHolder
                         let hashId = self.theJSON["results"]![i]["id"] as! NSString
                         let hashId2 = hashId.integerValue
                         self.createHashtag(self.fakeHashtags[i], id: hashId2)
@@ -501,6 +535,8 @@ func unpressed(dabut: UIButton){
                 println(err!.localizedDescription)
                 let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
                 println("Error could not parse JSON: '\(jsonStr)'")
+                
+                self.showMessageWithError("Couldn't get hashtags", callback: "loadHashtags")
             }
             else {
                 // The JSONObjectWithData constructor didn't return an error. But, we should still
@@ -513,6 +549,7 @@ func unpressed(dabut: UIButton){
                     dispatch_async(dispatch_get_main_queue(),{
                         // self.removeLoadingScreen()
                     
+                    self.descriptionLabel.text = "What do you like talking about?"
                     self.clearAllHashtags()
                     self.theJSON = json
                     for j in 0...(self.theJSON["results"]!.count - 1){
@@ -576,6 +613,9 @@ func unpressed(dabut: UIButton){
                 println(err!.localizedDescription)
                 let jsonStr = NSString(data: data, encoding: NSUTF8StringEncoding)
                 println("Error could not parse JSON: '\(jsonStr)'")
+                
+                self.showMessageWithError("Couldn't get hashtags", callback: "loadHashtagsForUser")
+                
             }
             else {
                 // The JSONObjectWithData constructor didn't return an error. But, we should still
@@ -588,6 +628,7 @@ func unpressed(dabut: UIButton){
                     dispatch_async(dispatch_get_main_queue(),{
                         // self.removeLoadingScreen()
                         
+                        self.descriptionLabel.text = "Check out some new hashtags."
                         self.clearAllHashtags()
                         self.theJSON = json
                         for j in 0...(self.theJSON["results"]!.count - 1){
@@ -684,6 +725,40 @@ func unpressed(dabut: UIButton){
      override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
 
+    }
+    
+    
+    func showMessageWithError(message: NSString, callback:NSString)
+    {
+        
+        
+        var alert = UIAlertController(title: "Error", message:message as String, preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "Reload", style: .Default, handler: { action in
+            switch action.style{
+            case .Default:
+                NSThread.detachNewThreadSelector(Selector(callback as String), toTarget:self, withObject: nil)
+                println("default")
+                
+            case .Cancel:
+                println("cancel")
+                
+            case .Destructive:
+                println("destructive")
+            }
+        }))
+//        alert.addAction(UIAlertAction(title: "Shit!", style: .Default, handler: { action in
+//            switch action.style{
+//            case .Default:
+//                println("default")
+//                
+//            case .Cancel:
+//                println("cancel")
+//                
+//            case .Destructive:
+//                println("destructive")
+//            }
+//        }))
+        self.presentViewController(alert, animated: true, completion: nil)
     }
     
         

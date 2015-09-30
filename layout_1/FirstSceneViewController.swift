@@ -58,10 +58,10 @@ class FirstSceneViewController: UIViewController{
                     
                     let mainStoryboard = UIStoryboard(name: "Main", bundle: NSBundle.mainBundle())
                     //let vc : UIViewController = mainStoryboard.instantiateViewControllerWithIdentifier("test_view_switcher") as UIViewController
-                    let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as! UITabBarController
-                    //let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("pick_hashtags_id") as! pickHashtagsInitialViewController
+                    //let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("main_tab_bar_scene_id") as! UITabBarController
+                    let mainView = mainStoryboard.instantiateViewControllerWithIdentifier("pick_hashtags_id") as! pickHashtagsInitialViewController
                     
-                    //mainView.commingFrom = "firstView"
+                    mainView.commingFrom = "firstView"
                     self.dismissViewControllerAnimated(true, completion: nil)
                     
                     self.presentViewController(mainView, animated: false, completion: nil)
